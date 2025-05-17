@@ -12,9 +12,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2a3ce0e-9ecf-45ee-ac4b-0bd6699fc59f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/FastEngine/Source/Application/EngineApp.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FastEngine/Source/Application/EngineApp.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FastEngine/Source/Core/Entrypoint.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitmodules" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FastEngine/Source/Logging/Log.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FastEngine/Source/Logging/Log.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FastEngine/ThirdParty/SPDLog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.FastEngine/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FastEngine/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Binaries/Debug/FastEditor.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Debug/FastEditor.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Binaries/Debug/FastEngine.exp" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Debug/FastEngine.exp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Binaries/Debug/FastEngine.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Debug/FastEngine.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FastEditor/FastEditor.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/FastEditor/FastEditor.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FastEngine/FastEngine.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/FastEngine/FastEngine.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FastEngine/FastEngine.vcxproj.filters" beforeDir="false" afterPath="$PROJECT_DIR$/FastEngine/FastEngine.vcxproj.filters" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/FastEditor.ilk" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/FastEditor.ilk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/FastEditor.tlog/link.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/FastEditor.tlog/link.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.ilk" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.ilk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/CL.command.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/CL.command.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/CL.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/CL.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/CL.write.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/CL.write.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/Cl.items.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/Cl.items.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.command.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.command.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.secondary.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.secondary.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.write.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.write.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/vc143.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/vc143.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/premake5.lua" beforeDir="false" afterPath="$PROJECT_DIR$/premake5.lua" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +72,7 @@
   &quot;associatedIndex&quot;: 1
 }</component>
   <component name="ProjectId" id="2xDWrVlLufkh60jsX3Sv8FViAkg" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />

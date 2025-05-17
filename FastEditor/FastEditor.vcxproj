@@ -116,9 +116,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Source\EditorApp.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="Source\EditorApp.cpp" />
   </ItemGroup>
   <ItemGroup>

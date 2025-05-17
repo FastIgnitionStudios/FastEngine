@@ -12,14 +12,18 @@ project "FastEngine"
     objdir "Intermediate/%{cfg.buildcfg}"
     
     files {
-        "FastEngine/Source/**.cpp",
-        "FastEngine/Source/**.h",
-        "FastEngine/Engine.h"
+        "%{prj.name}/Source/**.cpp",
+        "%{prj.name}/Source/**.h",
+        "%{prj.name}/ThirdParty/SPDLog/**.h",
+        "%{prj.name}/Engine.h"
     }
 
     includedirs {
-        "FastEngine/Source",
+        "%{prj.name}/Source",
+        "%{prj.name}/ThirdParty/SPDLog/include/"
     }
+
+    buildoptions {"/utf-8"}
 
     filter "system:windows"
         defines { 
@@ -37,10 +41,10 @@ project "FastEditor"
     targetdir "Binaries/%{cfg.buildcfg}"
     objdir "Intermediate/%{cfg.buildcfg}"
 
-    files {"FastEditor/Source/**.cpp", "FastEditor/Source/**.h"}
+    files {"%{prj.name}/Source/**.cpp", "%{prj.name}Source/**.h"}
 
     includedirs {
-        "FastEditor/Source",
+        "%{prj.name}/Source",
         "FastEngine/",
         "FastEngine/Source"
     }

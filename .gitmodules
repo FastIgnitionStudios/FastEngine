@@ -1,0 +1,4 @@
+
+[submodule "FastEngine/ThirdParty/SPDLog"]
+	path = FastEngine/ThirdParty/SPDLog
+	url = https://github.com/FastIgnitionStudios/spdlog
