@@ -39,3 +39,7 @@ obj/
 *.exe
 *.out
 *.app
+
+# Include premake5.exe
+!Setup/premake5.exe
+.idea/.idea.FastEngine/.idea/workspace.xml
