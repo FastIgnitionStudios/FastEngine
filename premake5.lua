@@ -13,11 +13,16 @@ project "FastEngine"
     targetdir "Binaries/%{cfg.buildcfg}"
     objdir "Intermediate/%{cfg.buildcfg}"
     
+    pchheader "EnginePCH.h"
+    pchsource "FastEngine/EnginePCH.cpp"
+
     files {
         "%{prj.name}/Source/**.cpp",
         "%{prj.name}/Source/**.h",
         "%{prj.name}/ThirdParty/SPDLog/**.h",
-        "%{prj.name}/Engine.h"
+        "%{prj.name}/Engine.h",
+        "%{prj.name}/EnginePCH.h",
+        "%{prj.name}/EnginePCH.cpp",
     }
 
     includedirs {

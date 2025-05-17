@@ -72,7 +72,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>EnginePCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;ENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -87,7 +88,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dev|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>EnginePCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -102,7 +104,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>EnginePCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -117,9 +120,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="EnginePCH.h" />
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Source\Core\EngineApp.h" />
     <ClInclude Include="Source\Core\EntryPoint.h" />
+    <ClInclude Include="Source\Core\Events\ApplicationEvent.h" />
+    <ClInclude Include="Source\Core\Events\Event.h" />
+    <ClInclude Include="Source\Core\Events\KeyEvent.h" />
+    <ClInclude Include="Source\Core\Events\MouseEvent.h" />
     <ClInclude Include="Source\Core\Utils\Log.h" />
     <ClInclude Include="ThirdParty\SPDLog\bench\utils.h" />
     <ClInclude Include="ThirdParty\SPDLog\include\spdlog\async.h" />
@@ -231,6 +239,9 @@
     <ClInclude Include="ThirdParty\SPDLog\tests\utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EnginePCH.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Source\Core\EngineApp.cpp" />
     <ClCompile Include="Source\Core\Utils\Log.cpp" />
   </ItemGroup>

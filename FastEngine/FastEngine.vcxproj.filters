@@ -7,6 +7,9 @@
     <Filter Include="Source\Core">
       <UniqueIdentifier>{6E95150F-DA4A-8E04-633F-88DBCFF38408}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Events">
+      <UniqueIdentifier>{92191B46-7EFD-DB9B-E75D-D6EED360C61D}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core\Utils">
       <UniqueIdentifier>{4E719D77-BA87-9B0D-03FF-262F6F546C95}</UniqueIdentifier>
     </Filter>
@@ -46,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="EnginePCH.h" />
     <ClInclude Include="Source\Core\Core.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -54,6 +58,18 @@
     </ClInclude>
     <ClInclude Include="Source\Core\EntryPoint.h">
       <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Events\ApplicationEvent.h">
+      <Filter>Source\Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Events\Event.h">
+      <Filter>Source\Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Events\KeyEvent.h">
+      <Filter>Source\Core\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Events\MouseEvent.h">
+      <Filter>Source\Core\Events</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Utils\Log.h">
       <Filter>Source\Core\Utils</Filter>
@@ -384,6 +400,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EnginePCH.cpp" />
     <ClCompile Include="Source\Core\EngineApp.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>

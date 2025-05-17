@@ -7,6 +7,8 @@
 # Binaries and Intermediate files
 Binaries/
 Intermediate/
+bin/
+obj/
 
 # Compiled Object files
 *.slo
