@@ -2,9 +2,11 @@ workspace "FastEngine"
     architecture "x64"
     configurations {"Debug", "Dev", "Release"}
 
+    
+
 project "FastEngine"
     location "FastEngine"
-    kind "SharedLib"
+    kind "StaticLib"
     language "C++"
     cppdialect "C++20"
 
@@ -20,6 +22,7 @@ project "FastEngine"
 
     includedirs {
         "%{prj.name}/Source",
+        "%{prj.name}/Source/Core",
         "%{prj.name}/ThirdParty/SPDLog/include/"
     }
 
@@ -31,6 +34,9 @@ project "FastEngine"
             "ENGINE_BUILD_DLL"
         }
 
+    filter "configurations:Debug"
+        defines {"ENGINE_DEBUG"}
+
 
 project "FastEditor"
     location "FastEditor"
@@ -41,17 +47,26 @@ project "FastEditor"
     targetdir "Binaries/%{cfg.buildcfg}"
     objdir "Intermediate/%{cfg.buildcfg}"
 
-    files {"%{prj.name}/Source/**.cpp", "%{prj.name}Source/**.h"}
+    files {
+        "%{prj.name}/Source/**.cpp",
+        "%{prj.name}/Source/**.h"
+    }
 
     includedirs {
         "%{prj.name}/Source",
         "FastEngine/",
-        "FastEngine/Source"
+        "FastEngine/Source",
+        "FastEngine/ThirdParty/SPDLog/Include/"
     }
 
     links {"FastEngine"}
+
+    buildoptions {"/utf-8"}
 
     defines {"EDITOR"}
 
     filter "system:windows"
         defines {"PLATFORM_WINDOWS"}
+
+    filter "configurations:Debug"
+        defines {"EDITOR_DEBUG"}

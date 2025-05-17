@@ -2,9 +2,6 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\joshb\Documents\Projects\GameEngine\FastEngine\Binaries\Debug\FastEngine.dll</FullPath>
-    </ProjectOutput>
-    <ProjectOutput>
       <FullPath>C:\Users\joshb\Documents\Projects\GameEngine\FastEngine\Binaries\Debug\FastEditor.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>

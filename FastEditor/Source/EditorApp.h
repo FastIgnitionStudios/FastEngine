@@ -4,6 +4,8 @@
 class ENGINE_API EditorApp : Engine::EngineApp
 {
 public:
+    EditorApp();
+    ~EditorApp();
     
 };
 

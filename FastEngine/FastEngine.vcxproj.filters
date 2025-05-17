@@ -7,8 +7,8 @@
     <Filter Include="Source\Core">
       <UniqueIdentifier>{6E95150F-DA4A-8E04-633F-88DBCFF38408}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Logging">
-      <UniqueIdentifier>{ECC1ED38-D88F-E13E-C123-5265AD90BDA3}</UniqueIdentifier>
+    <Filter Include="Source\Core\Utils">
+      <UniqueIdentifier>{4E719D77-BA87-9B0D-03FF-262F6F546C95}</UniqueIdentifier>
     </Filter>
     <Filter Include="ThirdParty">
       <UniqueIdentifier>{107145F9-FC28-8746-6530-60A251072237}</UniqueIdentifier>
@@ -55,8 +55,8 @@
     <ClInclude Include="Source\Core\EntryPoint.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Logging\Log.h">
-      <Filter>Source\Logging</Filter>
+    <ClInclude Include="Source\Core\Utils\Log.h">
+      <Filter>Source\Core\Utils</Filter>
     </ClInclude>
     <ClInclude Include="ThirdParty\SPDLog\bench\utils.h">
       <Filter>ThirdParty\SPDLog\bench</Filter>
@@ -387,8 +387,8 @@
     <ClCompile Include="Source\Core\EngineApp.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Logging\Log.cpp">
-      <Filter>Source\Logging</Filter>
+    <ClCompile Include="Source\Core\Utils\Log.cpp">
+      <Filter>Source\Core\Utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

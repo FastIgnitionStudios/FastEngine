@@ -3,11 +3,12 @@
 
 /** Core **/
 
-#include "Source/Core/Core.h"
+#include "Core/Core.h"
+#include "Core/Utils/Log.h"
 
 /** Application **/
 
-#include "Source/Core/EngineApp.h"
+#include "Core/EngineApp.h"
 
 /** Entry Point **/
 

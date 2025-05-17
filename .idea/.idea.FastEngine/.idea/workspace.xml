@@ -12,29 +12,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2a3ce0e-9ecf-45ee-ac4b-0bd6699fc59f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitmodules" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FastEngine/Source/Logging/Log.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FastEngine/Source/Logging/Log.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FastEngine/ThirdParty/SPDLog" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FastEngine/Source/Core/Utils/Log.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FastEngine/Source/Core/Utils/Log.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.FastEngine/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FastEngine/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FastEngine/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FastEngine/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Binaries/Debug/FastEditor.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Debug/FastEditor.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Binaries/Debug/FastEngine.exp" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Debug/FastEngine.exp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Binaries/Debug/FastEngine.exp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Binaries/Debug/FastEngine.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Debug/FastEngine.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FastEditor/FastEditor.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/FastEditor/FastEditor.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FastEditor/Source/EditorApp.h" beforeDir="false" afterPath="$PROJECT_DIR$/FastEditor/Source/EditorApp.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FastEngine/Engine.h" beforeDir="false" afterPath="$PROJECT_DIR$/FastEngine/Engine.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FastEngine/FastEngine.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/FastEngine/FastEngine.vcxproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FastEngine/FastEngine.vcxproj.filters" beforeDir="false" afterPath="$PROJECT_DIR$/FastEngine/FastEngine.vcxproj.filters" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FastEngine/Source/Core/Core.h" beforeDir="false" afterPath="$PROJECT_DIR$/FastEngine/Source/Core/Core.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FastEngine/Source/Core/EntryPoint.h" beforeDir="false" afterPath="$PROJECT_DIR$/FastEngine/Source/Core/EntryPoint.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FastEngine/Source/Logging/Log.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FastEngine/Source/Logging/Log.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/FastEditor.exe.recipe" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/FastEditor.exe.recipe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/FastEditor.ilk" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/FastEditor.ilk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/FastEditor.tlog/CL.command.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/FastEditor.tlog/CL.command.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/FastEditor.tlog/CL.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/FastEditor.tlog/CL.read.1.tlog" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/FastEditor.tlog/link.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/FastEditor.tlog/link.read.1.tlog" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.ilk" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.ilk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/vc143.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEditor/vc143.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.dll.recipe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.ilk" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/CL.command.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/CL.command.1.tlog" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/CL.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/CL.read.1.tlog" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/CL.write.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/CL.write.1.tlog" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/Cl.items.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/Cl.items.tlog" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.command.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.command.1.tlog" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.read.1.tlog" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.secondary.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.secondary.1.tlog" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.write.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.write.1.tlog" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/vc143.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/vc143.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.command.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.read.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.secondary.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/FastEngine.tlog/link.write.1.tlog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Intermediate/Debug/Debug/FastEngine/vc143.pdb" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/premake5.lua" beforeDir="false" afterPath="$PROJECT_DIR$/premake5.lua" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -54,14 +64,14 @@
     &quot;assignee&quot;: &quot;FastIgnitionStudios&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/FastIgnitionStudios/FastEngine.git&quot;,
-    &quot;accountId&quot;: &quot;88f0d3b9-c886-4876-9716-0c6eeea7e3c7&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/FastIgnitionStudios/FastEngine",
+    "accountId": "88f0d3b9-c886-4876-9716-0c6eeea7e3c7"
   }
-}</component>
+}]]></component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="cidr-memory-view://0" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/FastEditor/Source/EditorApp.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/FastEngine/Source/Core/Core.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/FastEngine/Source/Core/EngineApp.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/FastEngine/Source/Core/EngineApp.h" root0="FORCE_HIGHLIGHTING" />
@@ -134,6 +144,7 @@
       <workItem from="1747489997491" duration="3513000" />
       <workItem from="1747493695176" duration="271000" />
       <workItem from="1747496042023" duration="529000" />
+      <workItem from="1747499731960" duration="6680000" />
     </task>
     <servers />
   </component>
