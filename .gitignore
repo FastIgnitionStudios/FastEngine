@@ -1,6 +1,13 @@
 # Prerequisites
 *.d
 
+# Rider IDE Temp files
+.idea/
+
+# Binaries and Intermediate files
+Binaries/
+Intermediate/
+
 # Compiled Object files
 *.slo
 *.lo
