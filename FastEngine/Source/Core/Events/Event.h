@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "spdlog/fmt/ostr.h"
 
 #include <string>
 #include <functional>
@@ -42,8 +43,7 @@ namespace Engine
         virtual std::string ToString() const { return GetName(); }
 
         inline bool IsInCategory(EventCategory category) { return GetCategoryFlags() & category; }
-
-    protected:
+        
         bool isHandled = false;
     };
 

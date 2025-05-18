@@ -75,8 +75,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>EnginePCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;ENGINE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;ENGINE_DEBUG;ENGINE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;ThirdParty\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -92,7 +92,7 @@
       <PrecompiledHeaderFile>EnginePCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;ThirdParty\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -108,7 +108,7 @@
       <PrecompiledHeaderFile>EnginePCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;ThirdParty\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -128,7 +128,11 @@
     <ClInclude Include="Source\Core\Events\Event.h" />
     <ClInclude Include="Source\Core\Events\KeyEvent.h" />
     <ClInclude Include="Source\Core\Events\MouseEvent.h" />
+    <ClInclude Include="Source\Core\Layers\Layer.h" />
+    <ClInclude Include="Source\Core\Layers\LayerStack.h" />
     <ClInclude Include="Source\Core\Utils\Log.h" />
+    <ClInclude Include="Source\Core\Window.h" />
+    <ClInclude Include="Source\Platforms\WindWindow.h" />
     <ClInclude Include="ThirdParty\SPDLog\bench\utils.h" />
     <ClInclude Include="ThirdParty\SPDLog\include\spdlog\async.h" />
     <ClInclude Include="ThirdParty\SPDLog\include\spdlog\async_logger-inl.h" />
@@ -243,7 +247,15 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Core\EngineApp.cpp" />
+    <ClCompile Include="Source\Core\Layers\Layer.cpp" />
+    <ClCompile Include="Source\Core\Layers\LayerStack.cpp" />
     <ClCompile Include="Source\Core\Utils\Log.cpp" />
+    <ClCompile Include="Source\Platforms\WindWindow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="ThirdParty\GLFW\GLFW.vcxproj">
+      <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

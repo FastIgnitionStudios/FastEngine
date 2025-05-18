@@ -2,46 +2,12 @@ workspace "FastEngine"
     architecture "x64"
     configurations {"Debug", "Dev", "Release"}
 
-    
 
-project "FastEngine"
-    location "FastEngine"
-    kind "StaticLib"
-    language "C++"
-    cppdialect "C++20"
+IncludeDir = {}
+IncludeDir["GLFW"] = "%{wks.location}/FastEngine/ThirdParty/GLFW/include"
 
-    targetdir "Binaries/%{cfg.buildcfg}"
-    objdir "Intermediate/%{cfg.buildcfg}"
-    
-    pchheader "EnginePCH.h"
-    pchsource "FastEngine/EnginePCH.cpp"
-
-    files {
-        "%{prj.name}/Source/**.cpp",
-        "%{prj.name}/Source/**.h",
-        "%{prj.name}/ThirdParty/SPDLog/**.h",
-        "%{prj.name}/Engine.h",
-        "%{prj.name}/EnginePCH.h",
-        "%{prj.name}/EnginePCH.cpp",
-    }
-
-    includedirs {
-        "%{prj.name}/Source",
-        "%{prj.name}/Source/Core",
-        "%{prj.name}/ThirdParty/SPDLog/include/"
-    }
-
-    buildoptions {"/utf-8"}
-
-    filter "system:windows"
-        defines { 
-            "PLATFORM_WINDOWS",
-            "ENGINE_BUILD_DLL"
-        }
-
-    filter "configurations:Debug"
-        defines {"ENGINE_DEBUG"}
-
+include "FastEngine/ThirdParty/GLFW/"
+include "FastEngine/"
 
 project "FastEditor"
     location "FastEditor"

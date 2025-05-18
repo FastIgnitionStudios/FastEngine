@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FastEditor", "FastEditor\Fa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FastEngine", "FastEngine\FastEngine.vcxproj", "{494BA31F-3503-E56C-9E0A-BEC88AE17F5D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFW", "FastEngine\ThirdParty\GLFW\GLFW.vcxproj", "{154B857C-0182-860D-AA6E-6C109684020F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -24,6 +26,12 @@ Global
 		{494BA31F-3503-E56C-9E0A-BEC88AE17F5D}.Dev|x64.Build.0 = Dev|x64
 		{494BA31F-3503-E56C-9E0A-BEC88AE17F5D}.Release|x64.ActiveCfg = Release|x64
 		{494BA31F-3503-E56C-9E0A-BEC88AE17F5D}.Release|x64.Build.0 = Release|x64
+		{154B857C-0182-860D-AA6E-6C109684020F}.Debug|x64.ActiveCfg = Debug|x64
+		{154B857C-0182-860D-AA6E-6C109684020F}.Debug|x64.Build.0 = Debug|x64
+		{154B857C-0182-860D-AA6E-6C109684020F}.Dev|x64.ActiveCfg = Dev|x64
+		{154B857C-0182-860D-AA6E-6C109684020F}.Dev|x64.Build.0 = Dev|x64
+		{154B857C-0182-860D-AA6E-6C109684020F}.Release|x64.ActiveCfg = Release|x64
+		{154B857C-0182-860D-AA6E-6C109684020F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

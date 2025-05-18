@@ -2,3 +2,6 @@
 [submodule "FastEngine/ThirdParty/SPDLog"]
 	path = FastEngine/ThirdParty/SPDLog
 	url = https://github.com/FastIgnitionStudios/spdlog
+[submodule "FastEngine/ThirdParty/GLFW"]
+	path = FastEngine/ThirdParty/GLFW
+	url = https://github.com/FastIgnitionStudios/glfw.git

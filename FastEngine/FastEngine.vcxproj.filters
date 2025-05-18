@@ -10,8 +10,14 @@
     <Filter Include="Source\Core\Events">
       <UniqueIdentifier>{92191B46-7EFD-DB9B-E75D-D6EED360C61D}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Layers">
+      <UniqueIdentifier>{6D04FE54-59E8-BEAA-C248-B9FDAE4BA92C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core\Utils">
       <UniqueIdentifier>{4E719D77-BA87-9B0D-03FF-262F6F546C95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platforms">
+      <UniqueIdentifier>{1D56D288-094F-F1DA-3281-D65F1ED9D0E6}</UniqueIdentifier>
     </Filter>
     <Filter Include="ThirdParty">
       <UniqueIdentifier>{107145F9-FC28-8746-6530-60A251072237}</UniqueIdentifier>
@@ -71,8 +77,20 @@
     <ClInclude Include="Source\Core\Events\MouseEvent.h">
       <Filter>Source\Core\Events</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Layers\Layer.h">
+      <Filter>Source\Core\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Layers\LayerStack.h">
+      <Filter>Source\Core\Layers</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Utils\Log.h">
       <Filter>Source\Core\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Window.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platforms\WindWindow.h">
+      <Filter>Source\Platforms</Filter>
     </ClInclude>
     <ClInclude Include="ThirdParty\SPDLog\bench\utils.h">
       <Filter>ThirdParty\SPDLog\bench</Filter>
@@ -404,8 +422,17 @@
     <ClCompile Include="Source\Core\EngineApp.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Layers\Layer.cpp">
+      <Filter>Source\Core\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Layers\LayerStack.cpp">
+      <Filter>Source\Core\Layers</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\Utils\Log.cpp">
       <Filter>Source\Core\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\WindWindow.cpp">
+      <Filter>Source\Platforms</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
