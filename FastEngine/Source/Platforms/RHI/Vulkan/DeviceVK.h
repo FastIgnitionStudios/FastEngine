@@ -22,6 +22,10 @@ namespace Engine
 
         static Ref<Device> InitVkDevice(const DeviceInitInfo& initInfo);
 
+        VkDevice GetDevice() { return logicalDevice; }
+        VkPhysicalDevice GetPhysicalDevice() { return physicalDevice; }
+        VkSurfaceKHR GetSurface() { return surface; }
+
     private:
 
         void CreateDevice();

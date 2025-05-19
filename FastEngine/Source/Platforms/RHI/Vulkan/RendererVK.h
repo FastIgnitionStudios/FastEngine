@@ -1,4 +1,5 @@
 #pragma once
+#include "SwapchainVK.h"
 #include "Rendering/Renderer.h"
 #include "vulkan/vulkan.h"
 
@@ -27,6 +28,7 @@ namespace Engine
         VkInstance Instance;
         VkDebugUtilsMessengerEXT DebugMessenger;
         Ref<Device> Device;
+        Ref<SwapchainVK> Swapchain;
 
         
         

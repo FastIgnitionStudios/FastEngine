@@ -2,6 +2,7 @@
 #include "RendererVK.h"
 #include "Utils/Log.h"
 #include "DeviceVK.h"
+#include "EngineApp.h"
 #include "vkbootstrap/VkBootstrap.h"
 
 #ifndef ENGINE_RELEASE
@@ -52,6 +53,8 @@ namespace Engine
 
     void RendererVK::CreateInstance()
     {
+        /*    Create Vulkan Instance  */
+        
         vkb::InstanceBuilder builder;
         auto instance = builder.set_app_name("Fast Engine")
             .request_validation_layers(bUseValidationLayers)
@@ -64,8 +67,25 @@ namespace Engine
         Instance = vkbInstance.instance;
         DebugMessenger = vkbInstance.debug_messenger;
 
+        /*    Create Vulkan Device    */
+
         DeviceInitInfo vkDeviceInitInfo;
         vkDeviceInitInfo.instance = instance.value();
         Device = DeviceVK::InitVkDevice(vkDeviceInitInfo);
+
+        /*    Create Vulkan Swapchain    */
+
+        SwapchainInitInfo vkSwapchainInitInfo{};
+        vkSwapchainInitInfo.device = Ref<DeviceVK>(Device)->GetDevice();
+        vkSwapchainInitInfo.physicalDevice = Ref<DeviceVK>(Device)->GetPhysicalDevice();
+        vkSwapchainInitInfo.surface = Ref<DeviceVK>(Device)->GetSurface();
+        uint32_t windowWidth, windowHeight;
+        windowWidth = EngineApp::GetEngineApp()->GetWindow()->GetWidth();
+        windowHeight = EngineApp::GetEngineApp()->GetWindow()->GetHeight();
+        vkSwapchainInitInfo.width = windowWidth;
+        vkSwapchainInitInfo.height = windowHeight;
+
+        Swapchain = Ref<SwapchainVK>::Create(vkSwapchainInitInfo);
+        
     }
 }
