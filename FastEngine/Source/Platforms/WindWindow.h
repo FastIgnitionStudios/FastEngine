@@ -17,6 +17,8 @@ namespace Engine
         inline unsigned int GetWidth() const { return Data.Width; }
         inline unsigned int GetHeight() const { return Data.Height; }
 
+        inline void* GetNativeWindow() override { return window; }
+
         inline void SetEventCallback(const EventCallbackFn& callback) override { Data.EventCallback = callback; }
         void SetVSync(bool enabled) override;
         bool IsVSync() const override;

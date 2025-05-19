@@ -5,3 +5,6 @@
 [submodule "FastEngine/ThirdParty/GLFW"]
 	path = FastEngine/ThirdParty/GLFW
 	url = https://github.com/FastIgnitionStudios/glfw.git
+[submodule "FastEngine/ThirdParty/VMA"]
+	path = FastEngine/ThirdParty/VMA
+	url = https://github.com/FastIgnitionStudios/VulkanMemoryAllocator.git

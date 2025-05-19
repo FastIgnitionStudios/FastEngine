@@ -8,9 +8,14 @@
 
 namespace Engine
 {
+    class WindowCloseEvent;
+}
+
+namespace Engine
+{
     
 
-    class ENGINE_API EngineApp
+    class ENGINE_API EngineApp : public Engine
     {
     public:
         EngineApp();
@@ -23,12 +28,20 @@ namespace Engine
         void PushLayer(Layer* layer);
         void PushOverlay(Layer* overlay);
 
+        Ref<Window> GetWindow() { return window; }
+
+        static Ref<EngineApp> GetEngineApp() { return AppInstance; }
+
     private:
+
+        bool OnWindowClose(WindowCloseEvent& event);
 
         bool isRunning = true;
         LayerStack LayerStack;
 
-        std::unique_ptr<Window> window;
+        Ref<Window> window;
+
+        static Ref<EngineApp> AppInstance;
     
     };
 

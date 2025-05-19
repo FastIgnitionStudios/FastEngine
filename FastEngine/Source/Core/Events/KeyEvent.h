@@ -29,6 +29,7 @@ namespace Engine
         {
             std::stringstream ss;
             ss << "KeyPressedEvent: " << KeyCode << "(" << RepeatCount << " repeates)";
+            return ss.str();
         }
 
         EVENT_CLASS_TYPE(KeyPressed)

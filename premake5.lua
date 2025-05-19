@@ -3,10 +3,15 @@ workspace "FastEngine"
     configurations {"Debug", "Dev", "Release"}
 
 
-IncludeDir = {}
-IncludeDir["GLFW"] = "%{wks.location}/FastEngine/ThirdParty/GLFW/include"
 
-include "FastEngine/ThirdParty/GLFW/"
+
+group "dependencies"
+    include "FastEngine/ThirdParty/GLFW/"
+    include "FastEngine/ThirdParty/VMA"
+group ""
+
+include "Dependencies.lua"
+
 include "FastEngine/"
 
 project "FastEditor"
@@ -14,6 +19,7 @@ project "FastEditor"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++20"
+    staticruntime "on"
 
     targetdir "Binaries/%{cfg.buildcfg}"
     objdir "Intermediate/%{cfg.buildcfg}"
@@ -40,4 +46,17 @@ project "FastEditor"
         defines {"PLATFORM_WINDOWS"}
 
     filter "configurations:Debug"
-        defines {"EDITOR_DEBUG"}
+        defines { "EDITOR_DEBUG", "EDITOR_ENABLE_ASSERTS" }
+        symbols "on"
+    
+    
+    filter "configurations:Release"
+        defines { "EDITOR_RELEASE" }
+        optimize "on"
+    
+    
+    
+    filter "configurations:Dev"
+        defines { "EDITOR_DEV", "EDITOR_ENABLE_ASSERTS" }
+        optimize "on"
+

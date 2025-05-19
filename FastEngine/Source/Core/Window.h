@@ -18,7 +18,7 @@ namespace Engine
      * Abstract window class. \n
      * Use Window::Create() to create the window for the compiled platform
      */
-    class Window
+    class Window : public Engine
     {
     public:
         using EventCallbackFn = std::function<void(Event&)>;
@@ -34,6 +34,8 @@ namespace Engine
 
         virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 
+        virtual void* GetNativeWindow() = 0;
+
         /// Likely obsolete
         virtual void SetVSync(bool enabled) = 0;
         virtual bool IsVSync() const = 0;
@@ -43,5 +45,7 @@ namespace Engine
         /// @param params Window settings
         /// @return Pointer to created window
         static Window* Create(const WindowParams& params = WindowParams());
+
+    private:
     };
 }

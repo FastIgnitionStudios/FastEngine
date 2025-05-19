@@ -13,11 +13,23 @@
     <Filter Include="Source\Core\Layers">
       <UniqueIdentifier>{6D04FE54-59E8-BEAA-C248-B9FDAE4BA92C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Rendering">
+      <UniqueIdentifier>{3B809D38-A7EC-5833-70E0-F090DC0B7B9B}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core\Utils">
       <UniqueIdentifier>{4E719D77-BA87-9B0D-03FF-262F6F546C95}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Platforms">
       <UniqueIdentifier>{1D56D288-094F-F1DA-3281-D65F1ED9D0E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platforms\RHI">
+      <UniqueIdentifier>{CF4835B8-BBD7-BE81-64F6-D27C5064CF27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platforms\RHI\Vulkan">
+      <UniqueIdentifier>{6F77BE4A-DB84-EC30-646B-E81BD077B8E7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platforms\RHI\Vulkan\vkbootstrap">
+      <UniqueIdentifier>{DD4FDA94-49DF-9B7F-52DB-7C97BEE9D68B}</UniqueIdentifier>
     </Filter>
     <Filter Include="ThirdParty">
       <UniqueIdentifier>{107145F9-FC28-8746-6530-60A251072237}</UniqueIdentifier>
@@ -77,17 +89,41 @@
     <ClInclude Include="Source\Core\Events\MouseEvent.h">
       <Filter>Source\Core\Events</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Filesystem.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Layers\Layer.h">
       <Filter>Source\Core\Layers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Layers\LayerStack.h">
       <Filter>Source\Core\Layers</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Rendering\Device.h">
+      <Filter>Source\Core\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Rendering\Renderer.h">
+      <Filter>Source\Core\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Rendering\RendererAPI.h">
+      <Filter>Source\Core\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Utils\Log.h">
       <Filter>Source\Core\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Window.h">
       <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\DeviceVK.h">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\RendererVK.h">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrap.h">
+      <Filter>Source\Platforms\RHI\Vulkan\vkbootstrap</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrapDispatch.h">
+      <Filter>Source\Platforms\RHI\Vulkan\vkbootstrap</Filter>
     </ClInclude>
     <ClInclude Include="Source\Platforms\WindWindow.h">
       <Filter>Source\Platforms</Filter>
@@ -422,14 +458,41 @@
     <ClCompile Include="Source\Core\EngineApp.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Filesystem.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\Layers\Layer.cpp">
       <Filter>Source\Core\Layers</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Layers\LayerStack.cpp">
       <Filter>Source\Core\Layers</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Rendering\Device.cpp">
+      <Filter>Source\Core\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Rendering\Renderer.cpp">
+      <Filter>Source\Core\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Rendering\RendererAPI.cpp">
+      <Filter>Source\Core\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\Utils\Log.cpp">
       <Filter>Source\Core\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Utils\Utils.cpp">
+      <Filter>Source\Core\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\DeviceVK.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\RendererVK.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrap.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan\vkbootstrap</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\vmaimpl.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platforms\WindWindow.cpp">
       <Filter>Source\Platforms</Filter>

@@ -23,7 +23,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
+    <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
@@ -76,47 +76,77 @@
       <PrecompiledHeaderFile>EnginePCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;ENGINE_DEBUG;ENGINE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;ThirdParty\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;ThirdParty\GLFW\include;C:\VulkanSDK\1.3.296.0\include;ThirdParty\VMA\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>C:\VulkanSDK\1.3.296.0\Lib\vulkan-1.lib;C:\VulkanSDK\1.3.296.0\Lib\shaderc_sharedd.lib;C:\VulkanSDK\1.3.296.0\Lib\spirv-cross-cored.lib;C:\VulkanSDK\1.3.296.0\Lib\spirv-cross-glsld.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dev|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>EnginePCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;ThirdParty\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;ENGINE_DEV;ENGINE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;ThirdParty\GLFW\include;C:\VulkanSDK\1.3.296.0\include;ThirdParty\VMA\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <AdditionalDependencies>C:\VulkanSDK\1.3.296.0\Lib\vulkan-1.lib;C:\VulkanSDK\1.3.296.0\Lib\shaderc_shared.lib;C:\VulkanSDK\1.3.296.0\Lib\spirv-cross-core.lib;C:\VulkanSDK\1.3.296.0\Lib\spirv-cross-glsl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>EnginePCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;ThirdParty\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;ENGINE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;ThirdParty\GLFW\include;C:\VulkanSDK\1.3.296.0\include;ThirdParty\VMA\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <AdditionalDependencies>C:\VulkanSDK\1.3.296.0\Lib\vulkan-1.lib;C:\VulkanSDK\1.3.296.0\Lib\shaderc_shared.lib;C:\VulkanSDK\1.3.296.0\Lib\spirv-cross-core.lib;C:\VulkanSDK\1.3.296.0\Lib\spirv-cross-glsl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
@@ -128,10 +158,18 @@
     <ClInclude Include="Source\Core\Events\Event.h" />
     <ClInclude Include="Source\Core\Events\KeyEvent.h" />
     <ClInclude Include="Source\Core\Events\MouseEvent.h" />
+    <ClInclude Include="Source\Core\Filesystem.h" />
     <ClInclude Include="Source\Core\Layers\Layer.h" />
     <ClInclude Include="Source\Core\Layers\LayerStack.h" />
+    <ClInclude Include="Source\Core\Rendering\Device.h" />
+    <ClInclude Include="Source\Core\Rendering\Renderer.h" />
+    <ClInclude Include="Source\Core\Rendering\RendererAPI.h" />
     <ClInclude Include="Source\Core\Utils\Log.h" />
     <ClInclude Include="Source\Core\Window.h" />
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\DeviceVK.h" />
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\RendererVK.h" />
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrap.h" />
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrapDispatch.h" />
     <ClInclude Include="Source\Platforms\WindWindow.h" />
     <ClInclude Include="ThirdParty\SPDLog\bench\utils.h" />
     <ClInclude Include="ThirdParty\SPDLog\include\spdlog\async.h" />
@@ -247,14 +285,26 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Core\EngineApp.cpp" />
+    <ClCompile Include="Source\Core\Filesystem.cpp" />
     <ClCompile Include="Source\Core\Layers\Layer.cpp" />
     <ClCompile Include="Source\Core\Layers\LayerStack.cpp" />
+    <ClCompile Include="Source\Core\Rendering\Device.cpp" />
+    <ClCompile Include="Source\Core\Rendering\Renderer.cpp" />
+    <ClCompile Include="Source\Core\Rendering\RendererAPI.cpp" />
     <ClCompile Include="Source\Core\Utils\Log.cpp" />
+    <ClCompile Include="Source\Core\Utils\Utils.cpp" />
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\DeviceVK.cpp" />
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\RendererVK.cpp" />
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrap.cpp" />
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\vmaimpl.cpp" />
     <ClCompile Include="Source\Platforms\WindWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="ThirdParty\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="ThirdParty\VMA\VulkanMemoryAllocator.vcxproj">
+      <Project>{7052B37B-DCBE-6E76-A5B2-06D411DE90DE}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
