@@ -25,6 +25,7 @@ namespace Engine
         VkDevice GetDevice() { return logicalDevice; }
         VkPhysicalDevice GetPhysicalDevice() { return physicalDevice; }
         VkSurfaceKHR GetSurface() { return surface; }
+        vkb::Device GetVKBDevice() { return vkbDevice; }
 
     private:
 
@@ -36,6 +37,7 @@ namespace Engine
         
         VkPhysicalDevice physicalDevice;
         VkDevice logicalDevice;
+        vkb::Device vkbDevice;
         
     };
 }

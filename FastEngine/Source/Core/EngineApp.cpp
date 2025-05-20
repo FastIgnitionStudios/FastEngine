@@ -25,6 +25,7 @@ namespace Engine
         while (isRunning)
         {
             window->OnUpdate();
+            renderer->DrawFrame();
         }
 
         ENGINE_CORE_INFO("Engine shutting down");

@@ -10,5 +10,7 @@ namespace Engine
 
 
         static Ref<Renderer> CreateRenderer();
+
+        virtual void DrawFrame() = 0;
     };
 }

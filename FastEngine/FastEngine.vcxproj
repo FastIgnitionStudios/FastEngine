@@ -166,8 +166,9 @@
     <ClInclude Include="Source\Core\Rendering\RendererAPI.h" />
     <ClInclude Include="Source\Core\Utils\Log.h" />
     <ClInclude Include="Source\Core\Window.h" />
-    <ClInclude Include="Source\Platforms\RHI\Vulkan\CommandQueueVK.h" />
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\DeviceVK.h" />
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\ImageVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\RendererVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\SwapchainVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrap.h" />
@@ -295,8 +296,9 @@
     <ClCompile Include="Source\Core\Rendering\RendererAPI.cpp" />
     <ClCompile Include="Source\Core\Utils\Log.cpp" />
     <ClCompile Include="Source\Core\Utils\Utils.cpp" />
-    <ClCompile Include="Source\Platforms\RHI\Vulkan\CommandQueueVK.cpp" />
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\DeviceVK.cpp" />
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\ImageVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\RendererVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\SwapchainVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrap.cpp" />

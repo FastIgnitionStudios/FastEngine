@@ -20,6 +20,9 @@ namespace Engine
         SwapchainVK(const SwapchainInitInfo& initInfo);
         ~SwapchainVK();
 
+        VkSwapchainKHR GetSwapchain() { return Swapchain; }
+        VkImage GetSwapchainImage(int imageIndex) { return SwapchainImages[imageIndex]; }
+
     private:
 
         void CreateSwapchain(uint32_t width, uint32_t height);
