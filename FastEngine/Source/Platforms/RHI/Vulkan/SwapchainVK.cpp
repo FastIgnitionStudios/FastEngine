@@ -37,6 +37,37 @@ namespace Engine
         SwapchainImageViews = vkbSwapchain.get_image_views().value();
 
         ENGINE_CORE_INFO("Vulkan Swapchain created");
+
+        VkExtent3D drawImageExtent = {
+        width, height, 1};
+
+        DrawImage.imageFormat = VK_FORMAT_R16G16B16A16_SFLOAT;
+        DrawImage.imageExtent = drawImageExtent;
+
+        VkImageUsageFlags drawImageUsages{};
+        drawImageUsages |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+        drawImageUsages |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+        drawImageUsages |= VK_IMAGE_USAGE_STORAGE_BIT;
+        drawImageUsages |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+        VkImageCreateInfo drawImageInfo = ImageVK::CreateImageInfo(DrawImage.imageFormat, drawImageUsages, drawImageExtent);
+
+        VmaAllocationCreateInfo drawImageAllocInfo {};
+        drawImageAllocInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+        drawImageAllocInfo.requiredFlags = VkMemoryPropertyFlags(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+        vmaCreateImage(SwapchainInfo.allocator, &drawImageInfo, &drawImageAllocInfo, &DrawImage.image, &DrawImage.allocation, nullptr);
+
+        VkImageViewCreateInfo drawImageViewInfo = ImageVK::CreateImageViewInfo(DrawImage.imageFormat, DrawImage.image, VK_IMAGE_ASPECT_COLOR_BIT);
+
+        ENGINE_CORE_ASSERT(vkCreateImageView(SwapchainInfo.device, &drawImageViewInfo, nullptr, &DrawImage.imageView) == VK_SUCCESS, "Failed to create image view");
+
+        SwapchainInfo.MainDeletionQueue->PushFunction([&]()
+        {
+            vkDestroyImageView(SwapchainInfo.device, DrawImage.imageView, nullptr);
+            vmaDestroyImage(SwapchainInfo.allocator, DrawImage.image, DrawImage.allocation);
+        });
+        
     }
 
     void SwapchainVK::DestroySwapchain()
@@ -47,5 +78,7 @@ namespace Engine
         {
             vkDestroyImageView(SwapchainInfo.device, SwapchainImageViews[i], nullptr);
         }
+
+        
     }
 }

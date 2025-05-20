@@ -2,6 +2,8 @@
 #include <vulkan/vulkan.h>
 
 #include "Core.h"
+#include "ImageVK.h"
+#include "UtilsVK.h"
 
 namespace Engine
 {
@@ -12,6 +14,8 @@ namespace Engine
         VkPhysicalDevice physicalDevice;
         VkDevice device;
         VkSurfaceKHR surface;
+        VmaAllocator allocator;
+        DeletionQueue* MainDeletionQueue;
     };
     
     class SwapchainVK : public Engine
@@ -32,6 +36,9 @@ namespace Engine
         
         VkSwapchainKHR Swapchain;
         VkFormat SwapchainImageFormat;
+
+        ImageVK::AllocatedImage DrawImage;
+        VkExtent2D DrawExtent;
 
         std::vector<VkImage> SwapchainImages;
         std::vector<VkImageView> SwapchainImageViews;

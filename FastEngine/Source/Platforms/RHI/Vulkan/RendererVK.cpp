@@ -48,6 +48,7 @@ namespace Engine
 
     RendererVK::~RendererVK()
     {
+        MainDeletionQueue.Flush();
     }
 
     void RendererVK::DrawFrame()
@@ -57,6 +58,9 @@ namespace Engine
         ENGINE_CORE_ASSERT(
             vkWaitForFences(deviceRef->GetDevice(), 1, &CommandStructure->GetCurrentFrame().renderFence, true,
                 1000000000) == VK_SUCCESS, "vkWaitForFences failed");
+
+        CommandStructure->GetCurrentFrame().DeletionQueue.Flush();
+
         ENGINE_CORE_ASSERT(
             vkResetFences(deviceRef->GetDevice(), 1, &CommandStructure->GetCurrentFrame().renderFence) == VK_SUCCESS,
             "vkWaitForFences failed");
@@ -102,10 +106,12 @@ namespace Engine
         VkSubmitInfo2 submit = CreateSubmitInfo(&cmdinfo, &signalInfo, &waitInfo);
 
 
-        ENGINE_CORE_ASSERT(vkQueueSubmit2(CommandStructure->GetGraphicsQueue(), 1, &submit, CommandStructure->GetCurrentFrame().renderFence) == VK_SUCCESS, "vkQueuePresentKHR failed");
+        ENGINE_CORE_ASSERT(
+            vkQueueSubmit2(CommandStructure->GetGraphicsQueue(), 1, &submit, CommandStructure->GetCurrentFrame().
+                renderFence) == VK_SUCCESS, "vkQueuePresentKHR failed");
 
         VkSwapchainKHR swapchain = Swapchain->GetSwapchain();
-        
+
         VkPresentInfoKHR presentInfo = {};
         presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
         presentInfo.pNext = nullptr;
@@ -117,8 +123,9 @@ namespace Engine
 
         presentInfo.pImageIndices = &swapchainImageIndex;
 
-        ENGINE_CORE_ASSERT(vkQueuePresentKHR(CommandStructure->GetGraphicsQueue(), &presentInfo) == VK_SUCCESS, "vkQueuePresentKHR failed");
-        
+        ENGINE_CORE_ASSERT(vkQueuePresentKHR(CommandStructure->GetGraphicsQueue(), &presentInfo) == VK_SUCCESS,
+                           "vkQueuePresentKHR failed");
+
         CommandStructure->NewFrame();
     }
 
@@ -144,6 +151,20 @@ namespace Engine
         vkDeviceInitInfo.instance = instance.value();
         Device = DeviceVK::InitVkDevice(vkDeviceInitInfo);
 
+        /*    Initialize Vulkan Memory Allocator      */
+
+        VmaAllocatorCreateInfo allocatorInfo{};
+        allocatorInfo.physicalDevice = Ref<DeviceVK>(Device)->GetPhysicalDevice();
+        allocatorInfo.device = Ref<DeviceVK>(Device)->GetVKBDevice();
+        allocatorInfo.instance = Instance;
+        allocatorInfo.flags = VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT;
+        vmaCreateAllocator(&allocatorInfo, &Allocator);
+
+        MainDeletionQueue.PushFunction([&]()
+        {
+            vmaDestroyAllocator(Allocator);
+        });
+
         /*    Create Vulkan Swapchain    */
 
         SwapchainInitInfo vkSwapchainInitInfo{};
@@ -155,6 +176,8 @@ namespace Engine
         windowHeight = EngineApp::GetEngineApp()->GetWindow()->GetHeight();
         vkSwapchainInitInfo.width = windowWidth;
         vkSwapchainInitInfo.height = windowHeight;
+        vkSwapchainInitInfo.allocator = Allocator;
+        vkSwapchainInitInfo.MainDeletionQueue = &MainDeletionQueue;
 
         Swapchain = Ref<SwapchainVK>::Create(vkSwapchainInitInfo);
 
@@ -166,6 +189,8 @@ namespace Engine
         CommandStructure = Ref<CommandStructureVK>::Create(vkCommandQueueInfo);
 
         ENGINE_CORE_INFO("Vulkan Command Buffer Created");
+
+
     }
 
     VkCommandBufferBeginInfo RendererVK::CreateCommandBufferBeginInfo(VkCommandBufferUsageFlags flags)

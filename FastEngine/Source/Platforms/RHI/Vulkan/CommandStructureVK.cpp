@@ -16,6 +16,12 @@ namespace Engine
         for (int i = 0; i < FRAME_OVERLAP; i++)
         {
             vkDestroyCommandPool(cmdQueueInfo.device, frames[i].commandPool, nullptr);
+
+            vkDestroyFence(cmdQueueInfo.device, frames[i].renderFence, nullptr);
+            vkDestroySemaphore(cmdQueueInfo.device, frames[i].renderSemaphore, nullptr);
+            vkDestroySemaphore(cmdQueueInfo.device, frames[i].swapchainSemaphore, nullptr);
+
+            frames[i].DeletionQueue.Flush();
         }
     }
 

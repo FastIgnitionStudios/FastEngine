@@ -171,6 +171,7 @@
     <ClInclude Include="Source\Platforms\RHI\Vulkan\ImageVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\RendererVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\SwapchainVK.h" />
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\UtilsVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrap.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrapDispatch.h" />
     <ClInclude Include="Source\Platforms\WindWindow.h" />
@@ -301,6 +302,7 @@
     <ClCompile Include="Source\Platforms\RHI\Vulkan\ImageVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\RendererVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\SwapchainVK.cpp" />
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\UtilsVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrap.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\vmaimpl.cpp" />
     <ClCompile Include="Source\Platforms\WindWindow.cpp" />

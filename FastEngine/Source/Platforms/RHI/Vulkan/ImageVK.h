@@ -1,12 +1,24 @@
 #pragma once
 
+#include "vk_mem_alloc.h"
 #include "vulkan/vulkan.h"
 
 namespace Engine
 {
     namespace ImageVK
     {
+        struct AllocatedImage
+        {
+            VkImage image;
+            VkImageView imageView;
+            VmaAllocation allocation;
+            VkExtent3D imageExtent;
+            VkFormat imageFormat;
+        };
+        
         void TransitionImage(VkCommandBuffer cmd, VkImage image, VkImageLayout currentLayout, VkImageLayout newLayout);
         VkImageSubresourceRange GetSubresourceRange(VkImageAspectFlags aspectMask);
+        VkImageCreateInfo CreateImageInfo(VkFormat format, VkImageUsageFlags usageFlags, VkExtent3D extent);
+        VkImageViewCreateInfo CreateImageViewInfo(VkFormat format, VkImage image, VkImageAspectFlags aspectFlags);
     }
 }

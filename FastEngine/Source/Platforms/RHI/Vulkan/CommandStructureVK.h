@@ -3,16 +3,20 @@
 #include <vulkan/vulkan.h>
 
 #include "Core.h"
+#include "UtilsVK.h"
 #include "vkbootstrap/VkBootstrap.h"
 
 namespace Engine
 {
+    
     struct FrameData
     {
         VkCommandPool commandPool;
         VkCommandBuffer commandBuffer;
         VkSemaphore swapchainSemaphore, renderSemaphore;
         VkFence renderFence;
+
+        DeletionQueue DeletionQueue;
     };
 
     struct CommandQueueInfo
