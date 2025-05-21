@@ -26,6 +26,12 @@ namespace Engine
 
         VkSwapchainKHR GetSwapchain() { return Swapchain; }
         VkImage GetSwapchainImage(int imageIndex) { return SwapchainImages[imageIndex]; }
+        VkExtent2D GetSwapchainExtent() { return SwapchainExtent; }
+
+        ImageVK::AllocatedImage GetDrawImage() { return DrawImage; }
+
+        void SetDrawExtent(uint32_t width, uint32_t height) { DrawExtent = { width, height }; }
+        VkExtent2D GetDrawExtent() { return DrawExtent; }
 
     private:
 

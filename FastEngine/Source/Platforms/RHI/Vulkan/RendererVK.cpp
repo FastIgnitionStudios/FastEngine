@@ -48,12 +48,18 @@ namespace Engine
 
     RendererVK::~RendererVK()
     {
+        CommandStructure = nullptr;
         MainDeletionQueue.Flush();
     }
 
     void RendererVK::DrawFrame()
     {
+
+        // Get DeviceVK
+        
         Ref<DeviceVK> deviceRef = Ref<DeviceVK>(Device);
+
+        // Wait for previous frame to complete
 
         ENGINE_CORE_ASSERT(
             vkWaitForFences(deviceRef->GetDevice(), 1, &CommandStructure->GetCurrentFrame().renderFence, true,
@@ -65,37 +71,50 @@ namespace Engine
             vkResetFences(deviceRef->GetDevice(), 1, &CommandStructure->GetCurrentFrame().renderFence) == VK_SUCCESS,
             "vkWaitForFences failed");
 
+        // Get the next image index from the swapchain
+
         uint32_t swapchainImageIndex;
         ENGINE_CORE_ASSERT(
             vkAcquireNextImageKHR(deviceRef->GetDevice(), Swapchain->GetSwapchain(), 1000000000, CommandStructure->
                 GetCurrentFrame().swapchainSemaphore, nullptr, &swapchainImageIndex) == VK_SUCCESS,
             "vkAcquireNextImageKHR failed");
 
+        // Get the current frames command buffer
+        
         VkCommandBuffer cmd = CommandStructure->GetCurrentFrame().commandBuffer;
 
+        // Reset command buffer ready for this frame
+        
         ENGINE_CORE_ASSERT(vkResetCommandBuffer(cmd, 0) == VK_SUCCESS, "vkResetCommandBuffer failed");
 
-        VkCommandBufferBeginInfo beginInfo = CreateCommandBufferBeginInfo(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+        // Setup command buffer and swapchain for this frame
+        
+        VkCommandBufferBeginInfo beginInfo = CommandStructure->CreateCommandBufferBeginInfo(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
+        Swapchain->SetDrawExtent(Swapchain->GetDrawImage().imageExtent.width, Swapchain->GetDrawImage().imageExtent.height);
+
+        // Begin work on this frame
+        // All rendering code should be called between vkBeginCommandBuffer and vkEndCommandBuffer
+        
         ENGINE_CORE_ASSERT(vkBeginCommandBuffer(cmd, &beginInfo) == VK_SUCCESS, "vkBeginCommandBuffer failed");
 
-        ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(swapchainImageIndex), VK_IMAGE_LAYOUT_UNDEFINED,
+        ImageVK::TransitionImage(cmd, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_UNDEFINED,
                                  VK_IMAGE_LAYOUT_GENERAL);
 
-        VkClearColorValue clearValue;
-        float flash = std::abs(std::sin(CommandStructure->GetFrameNumber() / 120.f));
-        clearValue = {{0.0f, 0.0f, flash, 1.0f}};
+        DrawBackground(cmd);
 
-        VkImageSubresourceRange clearRange = ImageVK::GetSubresourceRange(VK_IMAGE_ASPECT_COLOR_BIT);
+        ImageVK::TransitionImage(cmd, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_GENERAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+        ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(swapchainImageIndex), VK_IMAGE_LAYOUT_UNDEFINED,
+                                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
-        vkCmdClearColorImage(cmd, Swapchain->GetSwapchainImage(swapchainImageIndex), VK_IMAGE_LAYOUT_GENERAL,
-                             &clearValue, 1, &clearRange);
+        ImageVK::CopyImageToImage(cmd, Swapchain->GetDrawImage().image, Swapchain->GetSwapchainImage(swapchainImageIndex), Swapchain->GetDrawExtent(), Swapchain->GetSwapchainExtent());
 
-        ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(swapchainImageIndex), VK_IMAGE_LAYOUT_GENERAL,
-                                 VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+        ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(swapchainImageIndex), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
 
         ENGINE_CORE_ASSERT(vkEndCommandBuffer(cmd) == VK_SUCCESS, "vkEndCommandBuffer failed");
 
+        // Work on this frame is complete, prepare to submit frame to present queue
+        
         VkCommandBufferSubmitInfo cmdinfo = CommandStructure->CreateCommandBufferSubmitInfo(cmd);
 
         VkSemaphoreSubmitInfo waitInfo = CommandStructure->CreateSemaphoreSubmitInfo(
@@ -110,6 +129,8 @@ namespace Engine
             vkQueueSubmit2(CommandStructure->GetGraphicsQueue(), 1, &submit, CommandStructure->GetCurrentFrame().
                 renderFence) == VK_SUCCESS, "vkQueuePresentKHR failed");
 
+        // Prepare to present queue to screen
+        
         VkSwapchainKHR swapchain = Swapchain->GetSwapchain();
 
         VkPresentInfoKHR presentInfo = {};
@@ -123,6 +144,8 @@ namespace Engine
 
         presentInfo.pImageIndices = &swapchainImageIndex;
 
+        // Present queue
+        
         ENGINE_CORE_ASSERT(vkQueuePresentKHR(CommandStructure->GetGraphicsQueue(), &presentInfo) == VK_SUCCESS,
                            "vkQueuePresentKHR failed");
 
@@ -193,16 +216,17 @@ namespace Engine
 
     }
 
-    VkCommandBufferBeginInfo RendererVK::CreateCommandBufferBeginInfo(VkCommandBufferUsageFlags flags)
+    void RendererVK::DrawBackground(VkCommandBuffer cmd)
     {
-        VkCommandBufferBeginInfo beginInfo{};
-        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-        beginInfo.pNext = nullptr;
+        VkClearColorValue clearValue;
+        float flash = std::abs(std::sin(CommandStructure->GetFrameNumber() / 120.f));
+        clearValue = {{0.0f, 0.0f, flash, 1.0f}};
 
-        beginInfo.pInheritanceInfo = nullptr;
-        beginInfo.flags = flags;
-        return beginInfo;
+        VkImageSubresourceRange clearRange = ImageVK::GetSubresourceRange(VK_IMAGE_ASPECT_COLOR_BIT);
+
+        vkCmdClearColorImage(cmd, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_GENERAL, &clearValue, 1, &clearRange);
     }
+    
 
     VkSubmitInfo2 RendererVK::CreateSubmitInfo(VkCommandBufferSubmitInfo* cmd,
                                                VkSemaphoreSubmitInfo* signalSemaphoreInfo,

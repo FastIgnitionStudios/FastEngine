@@ -32,9 +32,10 @@ namespace Engine
 
         void CreateInstance();
 
+        // TODO: Replace with function to call queue of lambdas
+        void DrawBackground(VkCommandBuffer cmd);
+
         
-        // TODO: Move this function into CommandStructureVK.h
-        VkCommandBufferBeginInfo CreateCommandBufferBeginInfo(VkCommandBufferUsageFlags flags = 0);
 
         VkSubmitInfo2 CreateSubmitInfo(VkCommandBufferSubmitInfo* cmd, VkSemaphoreSubmitInfo* signalSemaphoreInfo, VkSemaphoreSubmitInfo* waitSemaphoreInfo);
         

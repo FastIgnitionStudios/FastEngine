@@ -83,8 +83,19 @@ namespace Engine
         return semaphoreInfo;
     }
 
+    VkCommandBufferBeginInfo CommandStructureVK::CreateCommandBufferBeginInfo(VkCommandBufferUsageFlags flags)
+    {
+        VkCommandBufferBeginInfo beginInfo{};
+        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        beginInfo.pNext = nullptr;
+
+        beginInfo.pInheritanceInfo = nullptr;
+        beginInfo.flags = flags;
+        return beginInfo;
+    }
+
     VkSemaphoreSubmitInfo CommandStructureVK::CreateSemaphoreSubmitInfo(VkPipelineStageFlags2 stageMask,
-    VkSemaphore semaphore)
+                                                                        VkSemaphore semaphore)
     {
         VkSemaphoreSubmitInfo submitInfo = {};
         submitInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO;

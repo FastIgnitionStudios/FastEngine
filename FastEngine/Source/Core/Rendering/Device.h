@@ -10,7 +10,7 @@ namespace Engine
 
         virtual ~Device();
 
-        static Ref<Device> CreateDevice();
+        
     
     };
 }

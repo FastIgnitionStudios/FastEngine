@@ -164,12 +164,14 @@
     <ClInclude Include="Source\Core\Rendering\Device.h" />
     <ClInclude Include="Source\Core\Rendering\Renderer.h" />
     <ClInclude Include="Source\Core\Rendering\RendererAPI.h" />
+    <ClInclude Include="Source\Core\Rendering\Shader.h" />
     <ClInclude Include="Source\Core\Utils\Log.h" />
     <ClInclude Include="Source\Core\Window.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\DeviceVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\ImageVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\RendererVK.h" />
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\ShaderVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\SwapchainVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\UtilsVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrap.h" />
@@ -295,12 +297,14 @@
     <ClCompile Include="Source\Core\Rendering\Device.cpp" />
     <ClCompile Include="Source\Core\Rendering\Renderer.cpp" />
     <ClCompile Include="Source\Core\Rendering\RendererAPI.cpp" />
+    <ClCompile Include="Source\Core\Rendering\Shader.cpp" />
     <ClCompile Include="Source\Core\Utils\Log.cpp" />
     <ClCompile Include="Source\Core\Utils\Utils.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\DeviceVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\ImageVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\RendererVK.cpp" />
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\ShaderVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\SwapchainVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\UtilsVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrap.cpp" />
@@ -314,6 +318,9 @@
     <ProjectReference Include="ThirdParty\VMA\VulkanMemoryAllocator.vcxproj">
       <Project>{7052B37B-DCBE-6E76-A5B2-06D411DE90DE}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Source\Assets\Shaders\" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

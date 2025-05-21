@@ -26,7 +26,7 @@ namespace Engine
 
     constexpr unsigned int FRAME_OVERLAP = 2;
 
-    // TODO: Complete the command queue and buffer submission to prepare for rendering commands
+    // TODO: Add queue of lambdas to execute rendering code from anywhere in the engine that can be added to the queue outside of the rendering loop
     
     class CommandStructureVK : public Engine
     {
@@ -40,8 +40,10 @@ namespace Engine
         unsigned int GetFrameNumber() { return frameNumber; }
         void NewFrame() { frameNumber++; }
 
+        VkCommandBufferBeginInfo CreateCommandBufferBeginInfo(VkCommandBufferUsageFlags flags = 0);
         VkSemaphoreSubmitInfo CreateSemaphoreSubmitInfo(VkPipelineStageFlags2 stageMask, VkSemaphore semaphore);
         VkCommandBufferSubmitInfo CreateCommandBufferSubmitInfo(VkCommandBuffer commandBuffer);
+        
 
     private:
 
