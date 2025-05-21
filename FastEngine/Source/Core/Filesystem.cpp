@@ -17,10 +17,10 @@ namespace Engine
 
     void Filesystem::SetBaseDirectory()
     {
-        std::filesystem::path appDataPath = GetEnvironmentPath("APPDATA");
+        std::filesystem::path appDataPath = GetEnvironmentPath("CSIDL_MYDOCUMENTS");
 
         baseDir = std::filesystem::absolute(appDataPath / "FastEngine");
-        baseEngineDir = std::filesystem::absolute(baseDir / "Engine");
+        baseEngineDir = std::filesystem::absolute(baseDir / "FastEngine");
         baseAppDir = std::filesystem::absolute(baseDir / "Application");
 
         CreateDir(baseDir);

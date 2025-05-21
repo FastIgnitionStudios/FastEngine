@@ -3,6 +3,7 @@
 
 namespace Engine
 {
+
     CommandStructureVK::CommandStructureVK(const CommandQueueInfo& info) : cmdQueueInfo(info)
     {
         CreateGraphicsQueues();
@@ -62,6 +63,23 @@ namespace Engine
             
             
         }
+
+        ENGINE_CORE_ASSERT(vkCreateCommandPool(cmdQueueInfo.device, &cmdPoolInfo, nullptr, &immCommandStruct.ImmCommandPool) == VK_SUCCESS, "Failed to create command pool!");
+        
+        VkCommandBufferAllocateInfo cmdAllocInfo = {};
+        cmdAllocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        cmdAllocInfo.pNext = VK_NULL_HANDLE;
+        cmdAllocInfo.commandPool = immCommandStruct.ImmCommandPool;
+        cmdAllocInfo.commandBufferCount = 1;
+        cmdAllocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+
+        ENGINE_CORE_ASSERT(vkCreateFence(cmdQueueInfo.device, &fenceCreateInfo, nullptr, &immCommandStruct.ImmFence) == VK_SUCCESS, "Failed to create fence!");
+
+        cmdQueueInfo.MainDeletionQueue->PushFunction([=]()
+        {
+            vkDestroyCommandPool(cmdQueueInfo.device, immCommandStruct.ImmCommandPool, nullptr);
+            vkDestroyFence(cmdQueueInfo.device, immCommandStruct.ImmFence, nullptr);
+        });
     }
 
     VkFenceCreateInfo CommandStructureVK::CreateFenceInfo(VkFenceCreateFlags flags)

@@ -1,6 +1,7 @@
 #pragma once
 #include "CommandStructureVK.h"
 #include "ImageVK.h"
+#include "PipelineVK.h"
 #include "SwapchainVK.h"
 #include "UtilsVK.h"
 #include "vk_mem_alloc.h"
@@ -14,8 +15,7 @@
 namespace Engine
 {
     class Device;
-
-
+    
     
     class RendererVK : public Renderer
     {
@@ -25,6 +25,8 @@ namespace Engine
         virtual ~RendererVK();
 
         virtual void DrawFrame() override;
+
+        void ImmediateSubmit(std::function<void(VkCommandBuffer cmd)>&& function);
 
         
 
@@ -47,6 +49,7 @@ namespace Engine
         Ref<Device> Device;
         Ref<SwapchainVK> Swapchain;
         Ref<CommandStructureVK> CommandStructure;
+        Ref<PipelineVK> GradientPipeline;
 
         DeletionQueue MainDeletionQueue;
         

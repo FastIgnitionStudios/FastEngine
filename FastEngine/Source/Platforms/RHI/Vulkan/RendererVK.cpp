@@ -152,6 +152,31 @@ namespace Engine
         CommandStructure->NewFrame();
     }
 
+    void RendererVK::ImmediateSubmit(std::function<void(VkCommandBuffer cmd)>&& function)
+    {
+        Ref<DeviceVK> deviceRef = Ref<DeviceVK>(Device);
+        CommandStructureVK::ImmediateCommandStructure cmdStruct = CommandStructure->GetImmediateCommandStructure();
+        ENGINE_CORE_ASSERT(vkResetFences(deviceRef->GetDevice(), 1, &cmdStruct.ImmFence) ==  VK_SUCCESS, "vkResetFences failed");
+        ENGINE_CORE_ASSERT(vkResetCommandBuffer(cmdStruct.ImmCommandBuffer, 0) ==  VK_SUCCESS, "vkResetCommandBuffer failed");
+
+        VkCommandBuffer cmd = cmdStruct.ImmCommandBuffer;
+
+        VkCommandBufferBeginInfo cmdBeginInfo = CommandStructure->CreateCommandBufferBeginInfo(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+
+        ENGINE_CORE_ASSERT(vkBeginCommandBuffer(cmd, &cmdBeginInfo) == VK_SUCCESS, "vkBeginCommandBuffer failed");
+
+        function(cmd);
+
+        ENGINE_CORE_ASSERT(vkEndCommandBuffer(cmd) == VK_SUCCESS, "vkEndCommandBuffer failed");
+
+        VkCommandBufferSubmitInfo cmdInfo = CommandStructure->CreateCommandBufferSubmitInfo(cmd);
+        VkSubmitInfo2 submit = CreateSubmitInfo(&cmdInfo, nullptr, nullptr);
+
+        ENGINE_CORE_ASSERT(vkQueueSubmit2(CommandStructure->GetGraphicsQueue(), 1, &submit, cmdStruct.ImmFence) == VK_SUCCESS, "vkQueueSubmit failed");
+        ENGINE_CORE_ASSERT(vkWaitForFences(deviceRef->GetDevice(), 1, &cmdStruct.ImmFence, true, 9999999999) ==  VK_SUCCESS, "vkWaitForFences failed");
+        
+    }
+
     void RendererVK::CreateInstance()
     {
         /*    Create Vulkan Instance  */
@@ -208,10 +233,19 @@ namespace Engine
 
         CommandQueueInfo vkCommandQueueInfo{};
         vkCommandQueueInfo.device = Ref<DeviceVK>(Device)->GetVKBDevice();
+        vkCommandQueueInfo.MainDeletionQueue = &MainDeletionQueue;
 
         CommandStructure = Ref<CommandStructureVK>::Create(vkCommandQueueInfo);
 
         ENGINE_CORE_INFO("Vulkan Command Buffer Created");
+
+        /*    Create Vulkan Compute Pipeline */
+
+        PipelineVKInitInfo vkPipelineInitInfo{};
+        vkPipelineInitInfo.Device = Ref<DeviceVK>(Device)->GetVKBDevice();
+        vkPipelineInitInfo.DrawImageView = Swapchain->GetDrawImage().imageView;
+        vkPipelineInitInfo.MainDeletionQueue = &MainDeletionQueue;
+        GradientPipeline = Ref<PipelineVK>::Create(vkPipelineInitInfo);
 
 
     }
@@ -224,7 +258,12 @@ namespace Engine
 
         VkImageSubresourceRange clearRange = ImageVK::GetSubresourceRange(VK_IMAGE_ASPECT_COLOR_BIT);
 
-        vkCmdClearColorImage(cmd, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_GENERAL, &clearValue, 1, &clearRange);
+        vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_COMPUTE, GradientPipeline->GetPipeline());
+
+        auto descriptors = GradientPipeline->GetDescriptorSet();
+        vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_COMPUTE, GradientPipeline->GetPipelineLayout(), 0, 1, &descriptors, 0, nullptr);
+
+        vkCmdDispatch(cmd, std::ceil(Swapchain->GetDrawExtent().width / 16.0), std::ceil(Swapchain->GetDrawExtent().height / 16.0), 1);
     }
     
 

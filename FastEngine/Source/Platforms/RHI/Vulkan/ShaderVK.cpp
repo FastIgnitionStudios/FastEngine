@@ -1,5 +1,6 @@
 #include "EnginePCH.h"
 #include "ShaderVK.h"
+#include "PipelineVK.h"
 #include "shaderc/shaderc.hpp"
 
 #include "Filesystem.h"
@@ -61,6 +62,27 @@ namespace Engine
 
             SPIRVCode.insert_or_assign(shader.first, std::vector<uint32_t>(result.cbegin(), result.cend()));
             isCompiled = true;
+        }
+    }
+    
+
+    void ShaderVK::CreateShaderModule(VkDevice device)
+    {
+        for (const auto& code : SPIRVCode)
+        {
+            VkShaderModuleCreateInfo createInfo = {};
+            createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+            createInfo.pNext = nullptr;
+
+            createInfo.codeSize = code.second.size() * sizeof(uint32_t);
+            createInfo.pCode = code.second.data();
+
+            VkShaderModule shaderModule;
+
+            ENGINE_CORE_ASSERT(vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule) == VK_SUCCESS, "Failed to create shader module!");
+
+            shaderModules.insert_or_assign(code.first, shaderModule);
+
         }
     }
 }

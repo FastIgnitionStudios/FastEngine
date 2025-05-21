@@ -170,6 +170,8 @@
     <ClInclude Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\DeviceVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\ImageVK.h" />
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\DescriptorSetsVK.h" />
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\PipelineVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\RendererVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\ShaderVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\SwapchainVK.h" />
@@ -303,6 +305,8 @@
     <ClCompile Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\DeviceVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\ImageVK.cpp" />
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\DescriptorSetsVK.cpp" />
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\PipelineVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\RendererVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\ShaderVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\SwapchainVK.cpp" />
@@ -320,7 +324,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Source\Assets\Shaders\" />
+    <Content Include="Source\Assets\Shaders\gradient.comp.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

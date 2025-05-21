@@ -8,6 +8,8 @@
 
 namespace Engine
 {
+
+
     
     struct FrameData
     {
@@ -22,6 +24,7 @@ namespace Engine
     struct CommandQueueInfo
     {
         vkb::Device device;
+        DeletionQueue* MainDeletionQueue;
     };
 
     constexpr unsigned int FRAME_OVERLAP = 2;
@@ -31,6 +34,15 @@ namespace Engine
     class CommandStructureVK : public Engine
     {
     public:
+
+        struct ImmediateCommandStructure
+        {
+            VkFence ImmFence;
+            VkCommandBuffer ImmCommandBuffer;
+            VkCommandPool ImmCommandPool;
+        
+        };
+        
         CommandStructureVK(const CommandQueueInfo& info);
         ~CommandStructureVK();
 
@@ -39,6 +51,7 @@ namespace Engine
         FrameData& GetCurrentFrame() { return frames[frameNumber % FRAME_OVERLAP]; }
         unsigned int GetFrameNumber() { return frameNumber; }
         void NewFrame() { frameNumber++; }
+        ImmediateCommandStructure GetImmediateCommandStructure() { return immCommandStruct; }
 
         VkCommandBufferBeginInfo CreateCommandBufferBeginInfo(VkCommandBufferUsageFlags flags = 0);
         VkSemaphoreSubmitInfo CreateSemaphoreSubmitInfo(VkPipelineStageFlags2 stageMask, VkSemaphore semaphore);
@@ -64,6 +77,7 @@ namespace Engine
         uint32_t GraphicsQueueFamily;
 
         CommandQueueInfo cmdQueueInfo;
+        ImmediateCommandStructure immCommandStruct;
         
     
     };
