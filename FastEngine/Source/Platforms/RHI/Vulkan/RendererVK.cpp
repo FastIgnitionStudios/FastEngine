@@ -4,6 +4,8 @@
 #include "DeviceVK.h"
 #include "EngineApp.h"
 #include "ImageVK.h"
+#include "ImGUIVK.h"
+#include "backends/imgui_impl_vulkan.h"
 #include "vkbootstrap/VkBootstrap.h"
 
 #ifndef ENGINE_RELEASE
@@ -48,8 +50,11 @@ namespace Engine
 
     RendererVK::~RendererVK()
     {
-        CommandStructure = nullptr;
+        vkDeviceWaitIdle(Ref<DeviceVK>(Device)->GetDevice());
         MainDeletionQueue.Flush();
+        CommandStructure = nullptr;
+        GradientPipeline = nullptr;
+        Device = nullptr;
     }
 
     void RendererVK::DrawFrame()
@@ -109,7 +114,11 @@ namespace Engine
 
         ImageVK::CopyImageToImage(cmd, Swapchain->GetDrawImage().image, Swapchain->GetSwapchainImage(swapchainImageIndex), Swapchain->GetDrawExtent(), Swapchain->GetSwapchainExtent());
 
-        ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(swapchainImageIndex), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+        ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(swapchainImageIndex), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+
+        DrawImgui(cmd, Swapchain->GetSwapchainImageView(swapchainImageIndex));
+        
+        ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(swapchainImageIndex), VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
 
         ENGINE_CORE_ASSERT(vkEndCommandBuffer(cmd) == VK_SUCCESS, "vkEndCommandBuffer failed");
 
@@ -175,6 +184,18 @@ namespace Engine
         ENGINE_CORE_ASSERT(vkQueueSubmit2(CommandStructure->GetGraphicsQueue(), 1, &submit, cmdStruct.ImmFence) == VK_SUCCESS, "vkQueueSubmit failed");
         ENGINE_CORE_ASSERT(vkWaitForFences(deviceRef->GetDevice(), 1, &cmdStruct.ImmFence, true, 9999999999) ==  VK_SUCCESS, "vkWaitForFences failed");
         
+    }
+
+    void RendererVK::DrawImgui(VkCommandBuffer cmd, VkImageView targetView)
+    {
+        VkRenderingAttachmentInfo colorAttachment = ImageVK::CreateAttachmentInfo(targetView, nullptr, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+        VkRenderingInfo renderInfo = CreateRenderingInfo(Swapchain->GetSwapchainExtent(), &colorAttachment, nullptr);
+
+        vkCmdBeginRendering(cmd, &renderInfo);
+
+        ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd);
+
+        vkCmdEndRendering(cmd);
     }
 
     void RendererVK::CreateInstance()
@@ -247,7 +268,17 @@ namespace Engine
         vkPipelineInitInfo.MainDeletionQueue = &MainDeletionQueue;
         GradientPipeline = Ref<PipelineVK>::Create(vkPipelineInitInfo);
 
+        /*    Initialize ImGUI    */
 
+        Ref<ImGUIVK> ImGui = Ref<ImGUIVK>::Create();
+        ImGUIVKInfo guiInfo{};
+        guiInfo.Device = Ref<DeviceVK>(Device)->GetVKBDevice();
+        guiInfo.Instance = Instance;
+        guiInfo.Queue = CommandStructure->GetGraphicsQueue();
+        guiInfo.DeletionQueue = &MainDeletionQueue;
+        guiInfo.ImageFormat = Swapchain->GetSwapchainImageFormat();
+        guiInfo.PhysicalDevice = Ref<DeviceVK>(Device)->GetPhysicalDevice();
+        ImGui->InitImGUI(guiInfo);
     }
 
     void RendererVK::DrawBackground(VkCommandBuffer cmd)
@@ -285,5 +316,22 @@ namespace Engine
         info.pCommandBufferInfos = cmd;
 
         return info;
+    }
+
+    VkRenderingInfo RendererVK::CreateRenderingInfo(VkExtent2D renderExtent, VkRenderingAttachmentInfo* colorAttachment,
+        VkRenderingAttachmentInfo* depthAttachment)
+    {
+        VkRenderingInfo renderInfo {};
+        renderInfo.sType = VK_STRUCTURE_TYPE_RENDERING_INFO;
+        renderInfo.pNext = nullptr;
+
+        renderInfo.renderArea = VkRect2D { VkOffset2D { 0, 0 }, renderExtent };
+        renderInfo.layerCount = 1;
+        renderInfo.colorAttachmentCount = 1;
+        renderInfo.pColorAttachments = colorAttachment;
+        renderInfo.pDepthAttachment = depthAttachment;
+        renderInfo.pStencilAttachment = nullptr;
+        
+        return renderInfo;
     }
 }

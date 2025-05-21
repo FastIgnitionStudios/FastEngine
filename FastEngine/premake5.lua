@@ -25,13 +25,15 @@ project "FastEngine"
         "ThirdParty/SPDLog/include/",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.VulkanSDK}",
-        "%{IncludeDir.VMA}"
+        "%{IncludeDir.VMA}",
+        "%{IncludeDir.ImGui}"
     }
 
     links {
         "GLFW",
         "%{Library.Vulkan}",
-        "VulkanMemoryAllocator"
+        "VulkanMemoryAllocator",
+        "ImGUI"
     }
     
     buildoptions {"/utf-8"}

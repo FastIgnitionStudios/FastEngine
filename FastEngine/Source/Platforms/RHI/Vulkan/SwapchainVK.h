@@ -26,7 +26,9 @@ namespace Engine
 
         VkSwapchainKHR GetSwapchain() { return Swapchain; }
         VkImage GetSwapchainImage(int imageIndex) { return SwapchainImages[imageIndex]; }
+        VkImageView GetSwapchainImageView(int imageIndex) { return SwapchainImageViews[imageIndex]; }
         VkExtent2D GetSwapchainExtent() { return SwapchainExtent; }
+        VkFormat GetSwapchainImageFormat() { return SwapchainImageFormat; }
 
         ImageVK::AllocatedImage GetDrawImage() { return DrawImage; }
 

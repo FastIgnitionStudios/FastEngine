@@ -19,6 +19,9 @@
     <Filter Include="Source\Core\Utils">
       <UniqueIdentifier>{4E719D77-BA87-9B0D-03FF-262F6F546C95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\GUI">
+      <UniqueIdentifier>{6AA5C236-565D-0484-BF64-DDDFAB3B9F74}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Platforms">
       <UniqueIdentifier>{1D56D288-094F-F1DA-3281-D65F1ED9D0E6}</UniqueIdentifier>
     </Filter>
@@ -107,16 +110,46 @@
     <ClInclude Include="Source\Core\Rendering\RendererAPI.h">
       <Filter>Source\Core\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Rendering\Shader.h">
+      <Filter>Source\Core\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Utils\Log.h">
       <Filter>Source\Core\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Window.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Source\GUI\ImGUI.h">
+      <Filter>Source\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.h">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\DescriptorSetsVK.h">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Platforms\RHI\Vulkan\DeviceVK.h">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\ImGUIVK.h">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\ImageVK.h">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\PipelineVK.h">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Platforms\RHI\Vulkan\RendererVK.h">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\ShaderVK.h">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\SwapchainVK.h">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\UtilsVK.h">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrap.h">
@@ -476,16 +509,46 @@
     <ClCompile Include="Source\Core\Rendering\RendererAPI.cpp">
       <Filter>Source\Core\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Rendering\Shader.cpp">
+      <Filter>Source\Core\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\Utils\Log.cpp">
       <Filter>Source\Core\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Utils\Utils.cpp">
       <Filter>Source\Core\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GUI\ImGUI.cpp">
+      <Filter>Source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\DescriptorSetsVK.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Platforms\RHI\Vulkan\DeviceVK.cpp">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\ImGUIVK.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\ImageVK.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\PipelineVK.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Platforms\RHI\Vulkan\RendererVK.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\ShaderVK.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\SwapchainVK.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\UtilsVK.cpp">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrap.cpp">

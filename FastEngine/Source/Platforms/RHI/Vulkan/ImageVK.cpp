@@ -84,8 +84,26 @@ VkImageViewCreateInfo Engine::ImageVK::CreateImageViewInfo(VkFormat format, VkIm
     return info;
 }
 
+VkRenderingAttachmentInfo Engine::ImageVK::CreateAttachmentInfo(VkImageView view, VkClearValue* clear, VkImageLayout layout)
+{
+    VkRenderingAttachmentInfo info {};
+    info.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+    info.pNext = NULL;
+
+    info.imageView = view;
+    info.imageLayout = layout;
+    info.loadOp = clear ? VK_ATTACHMENT_LOAD_OP_CLEAR : VK_ATTACHMENT_LOAD_OP_LOAD;
+    info.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    if (clear)
+    {
+        info.clearValue = *clear;
+    }
+
+    return info;
+}
+
 void Engine::ImageVK::CopyImageToImage(VkCommandBuffer cmd, VkImage source, VkImage destination, VkExtent2D srcSize,
-    VkExtent2D dstSize)
+                                       VkExtent2D dstSize)
 {
     VkImageBlit2 blitRegion {.sType = VK_STRUCTURE_TYPE_IMAGE_BLIT_2, .pNext = NULL};
 

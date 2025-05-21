@@ -25,9 +25,10 @@ namespace Engine
         virtual ~RendererVK();
 
         virtual void DrawFrame() override;
-
+        
+    
         void ImmediateSubmit(std::function<void(VkCommandBuffer cmd)>&& function);
-
+        void DrawImgui(VkCommandBuffer cmd, VkImageView targetView);
         
 
     private:
@@ -40,7 +41,7 @@ namespace Engine
         
 
         VkSubmitInfo2 CreateSubmitInfo(VkCommandBufferSubmitInfo* cmd, VkSemaphoreSubmitInfo* signalSemaphoreInfo, VkSemaphoreSubmitInfo* waitSemaphoreInfo);
-        
+        VkRenderingInfo CreateRenderingInfo(VkExtent2D renderExtent, VkRenderingAttachmentInfo* colorAttachment, VkRenderingAttachmentInfo* depthAttachment);
         
 
             
@@ -57,6 +58,5 @@ namespace Engine
         VmaAllocator Allocator;
         
     };
-
-
+    
 }

@@ -8,3 +8,6 @@
 [submodule "FastEngine/ThirdParty/VMA"]
 	path = FastEngine/ThirdParty/VMA
 	url = https://github.com/FastIgnitionStudios/VulkanMemoryAllocator.git
+[submodule "FastEngine/ThirdParty/ImGUI"]
+	path = FastEngine/ThirdParty/ImGUI
+	url = https://github.com/FastIgnitionStudios/imgui.git

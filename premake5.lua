@@ -8,6 +8,7 @@ workspace "FastEngine"
 group "dependencies"
     include "FastEngine/ThirdParty/GLFW/"
     include "FastEngine/ThirdParty/VMA"
+    include "FastEngine/ThirdParty/ImGUI"
 group ""
 
 include "Dependencies.lua"

@@ -75,7 +75,7 @@ namespace Engine
 
         ENGINE_CORE_ASSERT(vkCreateFence(cmdQueueInfo.device, &fenceCreateInfo, nullptr, &immCommandStruct.ImmFence) == VK_SUCCESS, "Failed to create fence!");
 
-        cmdQueueInfo.MainDeletionQueue->PushFunction([=]()
+        cmdQueueInfo.MainDeletionQueue->PushFunction([&]()
         {
             vkDestroyCommandPool(cmdQueueInfo.device, immCommandStruct.ImmCommandPool, nullptr);
             vkDestroyFence(cmdQueueInfo.device, immCommandStruct.ImmFence, nullptr);

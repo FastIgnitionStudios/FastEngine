@@ -1,5 +1,8 @@
 #include "EnginePCH.h"
 #include "EngineApp.h"
+
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_vulkan.h"
 #include "Utils/Log.h"
 #include "Events/ApplicationEvent.h"
 #include "Rendering/Renderer.h"
@@ -25,6 +28,15 @@ namespace Engine
         while (isRunning)
         {
             window->OnUpdate();
+
+            ImGui_ImplVulkan_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
+
+            ImGui::ShowDemoWindow();
+
+            ImGui::Render();
+            
             renderer->DrawFrame();
         }
 
