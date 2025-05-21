@@ -122,6 +122,9 @@
     <ClInclude Include="Source\GUI\ImGUI.h">
       <Filter>Source\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Source\GUI\ImGUILayer.h">
+      <Filter>Source\GUI</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.h">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClInclude>
@@ -519,6 +522,9 @@
       <Filter>Source\Core\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Source\GUI\ImGUI.cpp">
+      <Filter>Source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GUI\ImGUILayer.cpp">
       <Filter>Source\GUI</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.cpp">

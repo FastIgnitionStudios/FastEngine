@@ -79,7 +79,7 @@ namespace Engine
 
             VkShaderModule shaderModule;
 
-            ENGINE_CORE_ASSERT(vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule) == VK_SUCCESS, "Failed to create shader module!");
+            VK_CHECK(vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule));
 
             shaderModules.insert_or_assign(code.first, shaderModule);
 

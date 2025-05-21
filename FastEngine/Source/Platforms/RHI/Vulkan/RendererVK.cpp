@@ -66,23 +66,21 @@ namespace Engine
 
         // Wait for previous frame to complete
 
-        ENGINE_CORE_ASSERT(
+        VK_CHECK(
             vkWaitForFences(deviceRef->GetDevice(), 1, &CommandStructure->GetCurrentFrame().renderFence, true,
-                1000000000) == VK_SUCCESS, "vkWaitForFences failed");
+                1000000000));
 
         CommandStructure->GetCurrentFrame().DeletionQueue.Flush();
 
-        ENGINE_CORE_ASSERT(
-            vkResetFences(deviceRef->GetDevice(), 1, &CommandStructure->GetCurrentFrame().renderFence) == VK_SUCCESS,
-            "vkWaitForFences failed");
+        VK_CHECK(
+            vkResetFences(deviceRef->GetDevice(), 1, &CommandStructure->GetCurrentFrame().renderFence));
 
         // Get the next image index from the swapchain
 
         uint32_t swapchainImageIndex;
-        ENGINE_CORE_ASSERT(
+        VK_CHECK(
             vkAcquireNextImageKHR(deviceRef->GetDevice(), Swapchain->GetSwapchain(), 1000000000, CommandStructure->
-                GetCurrentFrame().swapchainSemaphore, nullptr, &swapchainImageIndex) == VK_SUCCESS,
-            "vkAcquireNextImageKHR failed");
+                GetCurrentFrame().swapchainSemaphore, nullptr, &swapchainImageIndex));
 
         // Get the current frames command buffer
         
@@ -90,7 +88,7 @@ namespace Engine
 
         // Reset command buffer ready for this frame
         
-        ENGINE_CORE_ASSERT(vkResetCommandBuffer(cmd, 0) == VK_SUCCESS, "vkResetCommandBuffer failed");
+        VK_CHECK(vkResetCommandBuffer(cmd, 0));
 
         // Setup command buffer and swapchain for this frame
         
@@ -101,7 +99,7 @@ namespace Engine
         // Begin work on this frame
         // All rendering code should be called between vkBeginCommandBuffer and vkEndCommandBuffer
         
-        ENGINE_CORE_ASSERT(vkBeginCommandBuffer(cmd, &beginInfo) == VK_SUCCESS, "vkBeginCommandBuffer failed");
+        VK_CHECK(vkBeginCommandBuffer(cmd, &beginInfo));
 
         ImageVK::TransitionImage(cmd, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_UNDEFINED,
                                  VK_IMAGE_LAYOUT_GENERAL);
@@ -120,7 +118,7 @@ namespace Engine
         
         ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(swapchainImageIndex), VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
 
-        ENGINE_CORE_ASSERT(vkEndCommandBuffer(cmd) == VK_SUCCESS, "vkEndCommandBuffer failed");
+        VK_CHECK(vkEndCommandBuffer(cmd));
 
         // Work on this frame is complete, prepare to submit frame to present queue
         
@@ -134,9 +132,9 @@ namespace Engine
         VkSubmitInfo2 submit = CreateSubmitInfo(&cmdinfo, &signalInfo, &waitInfo);
 
 
-        ENGINE_CORE_ASSERT(
+        VK_CHECK(
             vkQueueSubmit2(CommandStructure->GetGraphicsQueue(), 1, &submit, CommandStructure->GetCurrentFrame().
-                renderFence) == VK_SUCCESS, "vkQueuePresentKHR failed");
+                renderFence));
 
         // Prepare to present queue to screen
         
@@ -155,8 +153,7 @@ namespace Engine
 
         // Present queue
         
-        ENGINE_CORE_ASSERT(vkQueuePresentKHR(CommandStructure->GetGraphicsQueue(), &presentInfo) == VK_SUCCESS,
-                           "vkQueuePresentKHR failed");
+        VK_CHECK(vkQueuePresentKHR(CommandStructure->GetGraphicsQueue(), &presentInfo));
 
         CommandStructure->NewFrame();
     }
@@ -165,24 +162,24 @@ namespace Engine
     {
         Ref<DeviceVK> deviceRef = Ref<DeviceVK>(Device);
         CommandStructureVK::ImmediateCommandStructure cmdStruct = CommandStructure->GetImmediateCommandStructure();
-        ENGINE_CORE_ASSERT(vkResetFences(deviceRef->GetDevice(), 1, &cmdStruct.ImmFence) ==  VK_SUCCESS, "vkResetFences failed");
-        ENGINE_CORE_ASSERT(vkResetCommandBuffer(cmdStruct.ImmCommandBuffer, 0) ==  VK_SUCCESS, "vkResetCommandBuffer failed");
+        VK_CHECK(vkResetFences(deviceRef->GetDevice(), 1, &cmdStruct.ImmFence));
+        VK_CHECK(vkResetCommandBuffer(cmdStruct.ImmCommandBuffer, 0));
 
         VkCommandBuffer cmd = cmdStruct.ImmCommandBuffer;
 
         VkCommandBufferBeginInfo cmdBeginInfo = CommandStructure->CreateCommandBufferBeginInfo(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 
-        ENGINE_CORE_ASSERT(vkBeginCommandBuffer(cmd, &cmdBeginInfo) == VK_SUCCESS, "vkBeginCommandBuffer failed");
+        VK_CHECK(vkBeginCommandBuffer(cmd, &cmdBeginInfo));
 
         function(cmd);
 
-        ENGINE_CORE_ASSERT(vkEndCommandBuffer(cmd) == VK_SUCCESS, "vkEndCommandBuffer failed");
+        VK_CHECK(vkEndCommandBuffer(cmd));
 
         VkCommandBufferSubmitInfo cmdInfo = CommandStructure->CreateCommandBufferSubmitInfo(cmd);
         VkSubmitInfo2 submit = CreateSubmitInfo(&cmdInfo, nullptr, nullptr);
 
-        ENGINE_CORE_ASSERT(vkQueueSubmit2(CommandStructure->GetGraphicsQueue(), 1, &submit, cmdStruct.ImmFence) == VK_SUCCESS, "vkQueueSubmit failed");
-        ENGINE_CORE_ASSERT(vkWaitForFences(deviceRef->GetDevice(), 1, &cmdStruct.ImmFence, true, 9999999999) ==  VK_SUCCESS, "vkWaitForFences failed");
+        VK_CHECK(vkQueueSubmit2(CommandStructure->GetGraphicsQueue(), 1, &submit, cmdStruct.ImmFence));
+        VK_CHECK(vkWaitForFences(deviceRef->GetDevice(), 1, &cmdStruct.ImmFence, true, 9999999999));
         
     }
 

@@ -62,7 +62,7 @@ namespace Engine
         computeLayout.pSetLayouts = &DrawImageDescriptorLayout;
         computeLayout.setLayoutCount = 1;
 
-        ENGINE_CORE_ASSERT(vkCreatePipelineLayout(initInfo.Device, &computeLayout, nullptr, &GradientPipelineLayout) == VK_SUCCESS, "Failed to create pipeline layout!");
+        VK_CHECK(vkCreatePipelineLayout(initInfo.Device, &computeLayout, nullptr, &GradientPipelineLayout));
         
         Ref<ShaderVK> computeDrawShader = Shader::Create((std::filesystem::current_path() / "../FastEngine/Source/Assets/Shaders/gradient.comp.glsl").generic_string());
         computeDrawShader->CreateShaderModule(initInfo.Device);
@@ -80,7 +80,7 @@ namespace Engine
         computePipeline.layout = GradientPipelineLayout;
         computePipeline.stage = stageInfo;
 
-        ENGINE_CORE_ASSERT(vkCreateComputePipelines(initInfo.Device, VK_NULL_HANDLE, 1, &computePipeline, nullptr, &GradientPipeline) == VK_SUCCESS, "Failed to create compute pipeline!");
+        VK_CHECK(vkCreateComputePipelines(initInfo.Device, VK_NULL_HANDLE, 1, &computePipeline, nullptr, &GradientPipeline));
         initInfo.MainDeletionQueue->PushFunction([&]()
         {
             vkDestroyPipelineLayout(initInfo.Device, GradientPipelineLayout, nullptr);

@@ -45,7 +45,7 @@ namespace Engine
 
         for (int i = 0; i < FRAME_OVERLAP; i++)
         {
-            ENGINE_CORE_ASSERT(vkCreateCommandPool(cmdQueueInfo.device, &cmdPoolInfo, nullptr, &frames[i].commandPool) == VK_SUCCESS, "Failed to create command pool!");
+            VK_CHECK(vkCreateCommandPool(cmdQueueInfo.device, &cmdPoolInfo, nullptr, &frames[i].commandPool));
 
             VkCommandBufferAllocateInfo cmdAllocInfo = {};
             cmdAllocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -54,17 +54,17 @@ namespace Engine
             cmdAllocInfo.commandBufferCount = 1;
             cmdAllocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 
-            ENGINE_CORE_ASSERT(vkAllocateCommandBuffers(cmdQueueInfo.device, &cmdAllocInfo, &frames[i].commandBuffer) == VK_SUCCESS, "Failed to allocate command buffers!");
+            VK_CHECK(vkAllocateCommandBuffers(cmdQueueInfo.device, &cmdAllocInfo, &frames[i].commandBuffer));
 
-            ENGINE_CORE_ASSERT(vkCreateFence(cmdQueueInfo.device, &fenceCreateInfo, nullptr, &frames[i].renderFence) == VK_SUCCESS, "Failed to allocate command buffers!");
+            VK_CHECK(vkCreateFence(cmdQueueInfo.device, &fenceCreateInfo, nullptr, &frames[i].renderFence));
             
-            ENGINE_CORE_ASSERT(vkCreateSemaphore(cmdQueueInfo.device, &semaphoreCreateInfo, nullptr, &frames[i].swapchainSemaphore) == VK_SUCCESS, "Failed to create semaphore!");
-            ENGINE_CORE_ASSERT(vkCreateSemaphore(cmdQueueInfo.device, &semaphoreCreateInfo, nullptr, &frames[i].renderSemaphore) == VK_SUCCESS, "Failed to create semaphore!");
+            VK_CHECK(vkCreateSemaphore(cmdQueueInfo.device, &semaphoreCreateInfo, nullptr, &frames[i].swapchainSemaphore));
+            VK_CHECK(vkCreateSemaphore(cmdQueueInfo.device, &semaphoreCreateInfo, nullptr, &frames[i].renderSemaphore));
             
             
         }
 
-        ENGINE_CORE_ASSERT(vkCreateCommandPool(cmdQueueInfo.device, &cmdPoolInfo, nullptr, &immCommandStruct.ImmCommandPool) == VK_SUCCESS, "Failed to create command pool!");
+        VK_CHECK(vkCreateCommandPool(cmdQueueInfo.device, &cmdPoolInfo, nullptr, &immCommandStruct.ImmCommandPool));
         
         VkCommandBufferAllocateInfo cmdAllocInfo = {};
         cmdAllocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -73,7 +73,7 @@ namespace Engine
         cmdAllocInfo.commandBufferCount = 1;
         cmdAllocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 
-        ENGINE_CORE_ASSERT(vkCreateFence(cmdQueueInfo.device, &fenceCreateInfo, nullptr, &immCommandStruct.ImmFence) == VK_SUCCESS, "Failed to create fence!");
+        VK_CHECK(vkCreateFence(cmdQueueInfo.device, &fenceCreateInfo, nullptr, &immCommandStruct.ImmFence));
 
         cmdQueueInfo.MainDeletionQueue->PushFunction([&]()
         {

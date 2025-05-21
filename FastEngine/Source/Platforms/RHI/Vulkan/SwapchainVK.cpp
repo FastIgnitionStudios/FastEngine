@@ -60,7 +60,7 @@ namespace Engine
 
         VkImageViewCreateInfo drawImageViewInfo = ImageVK::CreateImageViewInfo(DrawImage.imageFormat, DrawImage.image, VK_IMAGE_ASPECT_COLOR_BIT);
 
-        ENGINE_CORE_ASSERT(vkCreateImageView(SwapchainInfo.device, &drawImageViewInfo, nullptr, &DrawImage.imageView) == VK_SUCCESS, "Failed to create image view");
+        VK_CHECK(vkCreateImageView(SwapchainInfo.device, &drawImageViewInfo, nullptr, &DrawImage.imageView));
 
         SwapchainInfo.MainDeletionQueue->PushFunction([&]()
         {

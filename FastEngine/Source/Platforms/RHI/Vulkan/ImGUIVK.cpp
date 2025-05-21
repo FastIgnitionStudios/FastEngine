@@ -28,7 +28,7 @@ void Engine::ImGUIVK::InitImGUI(ImGUIVKInfo info)
     pool_info.pPoolSizes = pool_sizes;
 
     VkDescriptorPool imguiPool;
-    ENGINE_CORE_ASSERT(vkCreateDescriptorPool(info.Device, &pool_info, nullptr, &imguiPool) == VK_SUCCESS, "Failed to create descriptor pool!");
+    VK_CHECK(vkCreateDescriptorPool(info.Device, &pool_info, nullptr, &imguiPool));
 
     ImGui::CreateContext();
 

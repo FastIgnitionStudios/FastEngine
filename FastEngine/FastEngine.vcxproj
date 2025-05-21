@@ -168,6 +168,7 @@
     <ClInclude Include="Source\Core\Utils\Log.h" />
     <ClInclude Include="Source\Core\Window.h" />
     <ClInclude Include="Source\GUI\ImGUI.h" />
+    <ClInclude Include="Source\GUI\ImGUILayer.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\DescriptorSetsVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\DeviceVK.h" />
@@ -305,6 +306,7 @@
     <ClCompile Include="Source\Core\Utils\Log.cpp" />
     <ClCompile Include="Source\Core\Utils\Utils.cpp" />
     <ClCompile Include="Source\GUI\ImGUI.cpp" />
+    <ClCompile Include="Source\GUI\ImGUILayer.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\DescriptorSetsVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\DeviceVK.cpp" />

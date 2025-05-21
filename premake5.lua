@@ -34,10 +34,11 @@ project "FastEditor"
         "%{prj.name}/Source",
         "FastEngine/",
         "FastEngine/Source",
-        "FastEngine/ThirdParty/SPDLog/Include/"
+        "FastEngine/ThirdParty/SPDLog/Include/",
+        "%{IncludeDir.ImGui}"
     }
 
-    links {"FastEngine"}
+    links {"FastEngine", "ImGUI"}
 
     buildoptions {"/utf-8"}
 

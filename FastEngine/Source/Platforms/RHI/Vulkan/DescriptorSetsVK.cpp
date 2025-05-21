@@ -1,6 +1,8 @@
 #include "EnginePCH.h"
 #include "DescriptorSetsVK.h"
 
+#include "UtilsVK.h"
+
 namespace Engine
 {
     void DescriptorLayoutBuilder::AddBinding(uint32_t binding, VkDescriptorType type)
@@ -34,7 +36,7 @@ namespace Engine
         info.flags = flags;
 
         VkDescriptorSetLayout Set;
-        ENGINE_CORE_ASSERT(vkCreateDescriptorSetLayout(device, &info, nullptr, &Set) == VK_SUCCESS, "Failed to create descriptor set layout!");
+        VK_CHECK(vkCreateDescriptorSetLayout(device, &info, nullptr, &Set));
         return Set;
     }
 
@@ -77,7 +79,7 @@ namespace Engine
         allocInfo.pSetLayouts = &layout;
 
         VkDescriptorSet ds;
-        ENGINE_CORE_ASSERT(vkAllocateDescriptorSets(device, &allocInfo, &ds) == VK_SUCCESS, "Failed to allocate descriptor sets!");
+        VK_CHECK(vkAllocateDescriptorSets(device, &allocInfo, &ds));
         return ds;
     }
 }
