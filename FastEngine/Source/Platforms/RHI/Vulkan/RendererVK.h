@@ -1,7 +1,7 @@
 #pragma once
 #include "CommandStructureVK.h"
 #include "ImageVK.h"
-#include "PipelineVK.h"
+#include "ComputePipelineVK.h"
 #include "SwapchainVK.h"
 #include "UtilsVK.h"
 #include "vk_mem_alloc.h"
@@ -15,7 +15,16 @@
 namespace Engine
 {
     class Device;
-    
+
+    struct ComputeEffect
+    {
+        const char* name;
+
+        VkPipeline pipeline;
+        VkPipelineLayout pipelineLayout;
+
+        ComputePushConstants data;
+    };
     
     class RendererVK : public Renderer
     {
@@ -50,12 +59,15 @@ namespace Engine
         Ref<Device> Device;
         Ref<SwapchainVK> Swapchain;
         Ref<CommandStructureVK> CommandStructure;
-        Ref<PipelineVK> GradientPipeline;
+        Ref<ComputePipelineVK> GradientPipeline;
 
         DeletionQueue MainDeletionQueue;
         
         
         VmaAllocator Allocator;
+
+        std::vector<ComputeEffect> backgroundEffects;
+        int currentBackgroundEffect{0};
         
     };
     

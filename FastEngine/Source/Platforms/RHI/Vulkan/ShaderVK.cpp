@@ -1,6 +1,6 @@
 #include "EnginePCH.h"
 #include "ShaderVK.h"
-#include "PipelineVK.h"
+#include "ComputePipelineVK.h"
 #include "shaderc/shaderc.hpp"
 
 #include "Filesystem.h"

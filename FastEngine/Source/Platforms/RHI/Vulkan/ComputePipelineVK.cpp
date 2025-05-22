@@ -1,5 +1,5 @@
 #include "EnginePCH.h"
-#include "PipelineVK.h"
+#include "ComputePipelineVK.h"
 
 #include "Filesystem.h"
 #include "ShaderVK.h"
@@ -8,13 +8,13 @@
 namespace Engine
 {
 
-    PipelineVK::PipelineVK(PipelineVKInitInfo info) : initInfo(info)
+    ComputePipelineVK::ComputePipelineVK(ComputePipelineVKInitInfo info) : initInfo(info)
     {
         InitDescriptors();
         InitPipeline();
     }
 
-    void PipelineVK::InitDescriptors()
+    void ComputePipelineVK::InitDescriptors()
     {
         std::vector<DescriptorAllocator::PoolSizeRatio> sizes = {
             { VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1}
@@ -54,7 +54,7 @@ namespace Engine
         
     }
 
-    void PipelineVK::InitPipeline()
+    void ComputePipelineVK::InitPipeline()
     {
         VkPipelineLayoutCreateInfo computeLayout{};
         computeLayout.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -62,10 +62,21 @@ namespace Engine
         computeLayout.pSetLayouts = &DrawImageDescriptorLayout;
         computeLayout.setLayoutCount = 1;
 
+        VkPushConstantRange pushConstant{};
+        pushConstant.offset = 0;
+        pushConstant.size = sizeof(ComputePushConstants);
+        pushConstant.stageFlags = VK_SHADER_STAGE_COMPUTE_BIT;
+
+        computeLayout.pPushConstantRanges = &pushConstant;
+        computeLayout.pushConstantRangeCount = 1;
+
         VK_CHECK(vkCreatePipelineLayout(initInfo.Device, &computeLayout, nullptr, &GradientPipelineLayout));
         
-        Ref<ShaderVK> computeDrawShader = Shader::Create((std::filesystem::current_path() / "../FastEngine/Source/Assets/Shaders/gradient.comp.glsl").generic_string());
+        Ref<ShaderVK> computeDrawShader = Shader::Create((std::filesystem::current_path() / "../FastEngine/Source/Assets/Shaders/gradient_color.comp.glsl").generic_string());
         computeDrawShader->CreateShaderModule(initInfo.Device);
+
+        Ref<ShaderVK> computeSkyShader = Shader::Create((std::filesystem::current_path() / "../FastEngine/Source/Assets/Shaders/gradient_inv_color.comp.glsl").generic_string());
+        computeSkyShader->CreateShaderModule(initInfo.Device);
 
         VkPipelineShaderStageCreateInfo stageInfo {};
         stageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;

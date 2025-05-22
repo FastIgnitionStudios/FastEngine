@@ -35,7 +35,8 @@ project "FastEditor"
         "FastEngine/",
         "FastEngine/Source",
         "FastEngine/ThirdParty/SPDLog/Include/",
-        "%{IncludeDir.ImGui}"
+        "%{IncludeDir.ImGui}",
+        "%{IncludeDir.GLM}"
     }
 
     links {"FastEngine", "ImGUI"}

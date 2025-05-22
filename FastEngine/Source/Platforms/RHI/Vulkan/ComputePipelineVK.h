@@ -2,20 +2,30 @@
 #include "Core.h"
 #include "DescriptorSetsVK.h"
 #include "UtilsVK.h"
+#include "glm.hpp"
 
 namespace Engine
 {
-    struct PipelineVKInitInfo
+
+    struct ComputePushConstants
+    {
+        glm::vec4 data1;
+        glm::vec4 data2;
+        glm::vec4 data3;
+        glm::vec4 data4;
+    };
+    
+    struct ComputePipelineVKInitInfo
     {
         VkDevice Device;
         VkImageView DrawImageView;
         DeletionQueue* MainDeletionQueue;
     };
     
-    class PipelineVK : public Engine
+    class ComputePipelineVK : public Engine
     {
     public:
-        PipelineVK(PipelineVKInitInfo info);
+        ComputePipelineVK(ComputePipelineVKInitInfo info);
 
         VkPipeline GetPipeline() { return GradientPipeline; }
         VkPipelineLayout GetPipelineLayout() { return GradientPipelineLayout; }
@@ -32,7 +42,7 @@ namespace Engine
         VkDescriptorSet DrawImageDescriptors;
         VkDescriptorSetLayout DrawImageDescriptorLayout;
 
-        PipelineVKInitInfo initInfo;
+        ComputePipelineVKInitInfo initInfo;
 
         VkPipeline GradientPipeline;
         VkPipelineLayout GradientPipelineLayout;

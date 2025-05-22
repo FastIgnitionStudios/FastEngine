@@ -259,11 +259,11 @@ namespace Engine
 
         /*    Create Vulkan Compute Pipeline */
 
-        PipelineVKInitInfo vkPipelineInitInfo{};
+        ComputePipelineVKInitInfo vkPipelineInitInfo{};
         vkPipelineInitInfo.Device = Ref<DeviceVK>(Device)->GetVKBDevice();
         vkPipelineInitInfo.DrawImageView = Swapchain->GetDrawImage().imageView;
         vkPipelineInitInfo.MainDeletionQueue = &MainDeletionQueue;
-        GradientPipeline = Ref<PipelineVK>::Create(vkPipelineInitInfo);
+        GradientPipeline = Ref<ComputePipelineVK>::Create(vkPipelineInitInfo);
 
         /*    Initialize ImGUI    */
 
@@ -291,6 +291,12 @@ namespace Engine
         auto descriptors = GradientPipeline->GetDescriptorSet();
         vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_COMPUTE, GradientPipeline->GetPipelineLayout(), 0, 1, &descriptors, 0, nullptr);
 
+        ComputePushConstants pc;
+        pc.data1 = glm::vec4{1, 0, 0, 1};
+        pc.data2 = glm::vec4{0, 0, 1, 1};
+
+        vkCmdPushConstants(cmd, GradientPipeline->GetPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT, 0, sizeof(pc), &pc);
+        
         vkCmdDispatch(cmd, std::ceil(Swapchain->GetDrawExtent().width / 16.0), std::ceil(Swapchain->GetDrawExtent().height / 16.0), 1);
     }
     
