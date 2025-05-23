@@ -73,6 +73,8 @@ namespace Engine
         cmdAllocInfo.commandBufferCount = 1;
         cmdAllocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 
+        VK_CHECK(vkAllocateCommandBuffers(cmdQueueInfo.device, &cmdAllocInfo, &immCommandStruct.ImmCommandBuffer));
+
         VK_CHECK(vkCreateFence(cmdQueueInfo.device, &fenceCreateInfo, nullptr, &immCommandStruct.ImmFence));
 
         cmdQueueInfo.MainDeletionQueue->PushFunction([&]()

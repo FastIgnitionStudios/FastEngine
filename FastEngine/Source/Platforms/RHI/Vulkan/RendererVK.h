@@ -1,12 +1,10 @@
 #pragma once
 #include "CommandStructureVK.h"
-#include "ImageVK.h"
 #include "ComputePipelineVK.h"
 #include "SwapchainVK.h"
 #include "UtilsVK.h"
-#include "vk_mem_alloc.h"
+#include "BufferVK.h"
 #include "Rendering/Renderer.h"
-#include "vulkan/vulkan.h"
 
 
     
@@ -16,6 +14,9 @@ namespace Engine
 {
     class Device;
 
+    struct GPUMeshBuffers;
+    struct Vertex;
+    
     struct ComputeEffect
     {
         const char* name;
@@ -38,6 +39,8 @@ namespace Engine
     
         void ImmediateSubmit(std::function<void(VkCommandBuffer cmd)>&& function);
         void DrawImgui(VkCommandBuffer cmd, VkImageView targetView);
+        void DrawGeometry(VkCommandBuffer cmd);
+        GPUMeshBuffers UploadMeshes(std::span<uint32_t> indices, std::span<Vertex> vertices);
         
 
     private:
@@ -60,6 +63,14 @@ namespace Engine
         Ref<SwapchainVK> Swapchain;
         Ref<CommandStructureVK> CommandStructure;
         Ref<ComputePipelineVK> GradientPipeline;
+
+        VkPipeline graphicsPipeline;
+        VkPipelineLayout graphicsPipelineLayout;
+
+        VkPipeline meshPipeline;
+        VkPipelineLayout meshPipelineLayout;
+
+        GPUMeshBuffers Rectangle;
 
         DeletionQueue MainDeletionQueue;
         

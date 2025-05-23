@@ -1,8 +1,6 @@
 #include "EnginePCH.h"
 #include "DeviceVK.h"
-
 #include "EngineApp.h"
-
 
 namespace Engine
 {
@@ -26,7 +24,7 @@ namespace Engine
     void DeviceVK::CreateDevice()
     {
         glfwCreateWindowSurface(instance, window, NULL, &surface);
-
+        
         //vulkan 1.3 features
         VkPhysicalDeviceVulkan13Features features{ .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES };
         features.dynamicRendering = true;

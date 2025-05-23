@@ -1,6 +1,5 @@
 #pragma once
-#include <queue>
-#include <vulkan/vulkan.h>
+
 
 #include "Core.h"
 #include "UtilsVK.h"

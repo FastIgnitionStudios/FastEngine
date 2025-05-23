@@ -1,6 +1,5 @@
 #pragma once
 #include <deque>
-#include "vulkan/vulkan.h"
 namespace Engine
 {
 #define VK_CHECK(x) {VkResult err = x; if (err) {ENGINE_CORE_CRITICAL("Vulkan Check Failed: {0}", (int)err); }}

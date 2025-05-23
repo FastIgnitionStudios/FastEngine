@@ -143,7 +143,13 @@
     <ClInclude Include="Source\GUI\ImGUILayer.h">
       <Filter>Source\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\BufferVK.h">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.h">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\ComputePipelineVK.h">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Platforms\RHI\Vulkan\DescriptorSetsVK.h">
@@ -152,13 +158,13 @@
     <ClInclude Include="Source\Platforms\RHI\Vulkan\DeviceVK.h">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\GraphicsPipelineVK.h">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Platforms\RHI\Vulkan\ImGUIVK.h">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Platforms\RHI\Vulkan\ImageVK.h">
-      <Filter>Source\Platforms\RHI\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Platforms\RHI\Vulkan\PipelineVK.h">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Platforms\RHI\Vulkan\RendererVK.h">
@@ -1382,7 +1388,13 @@
     <ClCompile Include="Source\GUI\ImGUILayer.cpp">
       <Filter>Source\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\BufferVK.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\ComputePipelineVK.cpp">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platforms\RHI\Vulkan\DescriptorSetsVK.cpp">
@@ -1391,13 +1403,13 @@
     <ClCompile Include="Source\Platforms\RHI\Vulkan\DeviceVK.cpp">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\GraphicsPipelineVK.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Platforms\RHI\Vulkan\ImGUIVK.cpp">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platforms\RHI\Vulkan\ImageVK.cpp">
-      <Filter>Source\Platforms\RHI\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Platforms\RHI\Vulkan\PipelineVK.cpp">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platforms\RHI\Vulkan\RendererVK.cpp">
