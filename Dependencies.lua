@@ -3,9 +3,11 @@ VULKAN_SDK = os.getenv("VULKAN_SDK")
 IncludeDir = {}
 IncludeDir["GLFW"] = "%{wks.location}/FastEngine/ThirdParty/GLFW/include"
 IncludeDir["ImGui"] = "%{wks.location}/FastEngine/ThirdParty/ImGUI"
-IncludeDir["GLM"] = "%{wks.location}/FastEngine/ThirdParty/Glm/Glm"
+IncludeDir["GLM"] = "%{wks.location}/FastEngine/ThirdParty/Glm/"
 IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/include"
 IncludeDir["VMA"] = "%{wks.location}/FastEngine/ThirdParty/VMA/include"
+IncludeDir["FastGLTF"] = "%{wks.location}/FastEngine/ThirdParty/FastGLTF/include"
+IncludeDir["EnTT"] = "%{wks.location}/FastEngine/ThirdParty/EnTT/include"
 
 
 LibraryDir = {}

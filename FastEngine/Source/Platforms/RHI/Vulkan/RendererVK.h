@@ -34,7 +34,7 @@ namespace Engine
         RendererVK();
         virtual ~RendererVK();
 
-        virtual void DrawFrame() override;
+        void DrawFrame() override;
         
     
         void ImmediateSubmit(std::function<void(VkCommandBuffer cmd)>&& function);

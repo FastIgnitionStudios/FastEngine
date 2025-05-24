@@ -506,6 +506,8 @@ namespace Engine
 
         //delete the rectangle data on engine shutdown
         MainDeletionQueue.PushFunction([&](){
+            DestroyBuffer(Rectangle.vertexBuffer, Allocator);
+            DestroyBuffer(Rectangle.indexBuffer, Allocator);
         });
         
     }

@@ -14,3 +14,6 @@
 [submodule "FastEngine/ThirdParty/GLM"]
 	path = FastEngine/ThirdParty/GLM
 	url = https://github.com/g-truc/glm.git
+[submodule "FastEngine/ThirdParty/FastGLTF"]
+	path = FastEngine/ThirdParty/FastGLTF
+	url = https://github.com/FastIgnitionStudios/fastgltf.git

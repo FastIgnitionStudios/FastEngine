@@ -16,6 +16,9 @@
     <Filter Include="Source\Core\Rendering">
       <UniqueIdentifier>{3B809D38-A7EC-5833-70E0-F090DC0B7B9B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Scene">
+      <UniqueIdentifier>{0BDD6F77-77F3-6D0D-C06A-F92E2CC03E95}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core\Utils">
       <UniqueIdentifier>{4E719D77-BA87-9B0D-03FF-262F6F546C95}</UniqueIdentifier>
     </Filter>
@@ -36,6 +39,12 @@
     </Filter>
     <Filter Include="ThirdParty">
       <UniqueIdentifier>{107145F9-FC28-8746-6530-60A251072237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\EnTT">
+      <UniqueIdentifier>{FACF204C-665B-8E10-6F6C-1105DB76EA10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\EnTT\include">
+      <UniqueIdentifier>{6D5193C7-D988-DB5E-E292-3F824E490258}</UniqueIdentifier>
     </Filter>
     <Filter Include="ThirdParty\GLM">
       <UniqueIdentifier>{FF76D211-EB44-C617-D4D8-363EC045A27C}</UniqueIdentifier>
@@ -131,6 +140,21 @@
     <ClInclude Include="Source\Core\Rendering\Shader.h">
       <Filter>Source\Core\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Scene\Components.h">
+      <Filter>Source\Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Scene\Entity.h">
+      <Filter>Source\Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Scene\Mesh.h">
+      <Filter>Source\Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Scene\Scene.h">
+      <Filter>Source\Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\UUID.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Utils\Log.h">
       <Filter>Source\Core\Utils</Filter>
     </ClInclude>
@@ -167,6 +191,9 @@
     <ClInclude Include="Source\Platforms\RHI\Vulkan\ImageVK.h">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\MeshVK.h">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Platforms\RHI\Vulkan\RendererVK.h">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClInclude>
@@ -187,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="Source\Platforms\WindWindow.h">
       <Filter>Source\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\EnTT\include\entt.hpp">
+      <Filter>ThirdParty\EnTT\include</Filter>
     </ClInclude>
     <ClInclude Include="ThirdParty\GLM\GLM\common.hpp">
       <Filter>ThirdParty\GLM\GLM</Filter>
@@ -1376,6 +1406,15 @@
     <ClCompile Include="Source\Core\Rendering\Shader.cpp">
       <Filter>Source\Core\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Scene\Entity.cpp">
+      <Filter>Source\Core\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Scene\Scene.cpp">
+      <Filter>Source\Core\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\UUID.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\Utils\Log.cpp">
       <Filter>Source\Core\Utils</Filter>
     </ClCompile>
@@ -1410,6 +1449,9 @@
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platforms\RHI\Vulkan\ImageVK.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\MeshVK.cpp">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platforms\RHI\Vulkan\RendererVK.cpp">

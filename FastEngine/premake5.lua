@@ -17,7 +17,8 @@ project "FastEngine"
         "Engine.h",
         "EnginePCH.h",
         "EnginePCH.cpp",
-        "ThirdParty/GLM/GLM/**.hpp"
+        "ThirdParty/GLM/GLM/**.hpp",
+        "ThirdParty/EnTT/include/entt.hpp"
     }
     
     includedirs {
@@ -28,7 +29,10 @@ project "FastEngine"
         "%{IncludeDir.VulkanSDK}",
         "%{IncludeDir.VMA}",
         "%{IncludeDir.ImGui}",
-        "%{IncludeDir.GLM}"
+        "%{IncludeDir.GLM}",
+        "ThirdParty/GLM/GLM",
+        "%{IncludeDir.FastGLTF}",
+        "%{IncludeDir.EnTT}"
     }
 
     links {

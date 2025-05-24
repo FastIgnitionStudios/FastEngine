@@ -38,9 +38,4 @@ namespace Engine
         VkPipeline BuildPipeline(VkDevice device);
     };
     
-    class GraphicsPipelineVK : public Engine
-    {
-    public:
-        
-    };
 }

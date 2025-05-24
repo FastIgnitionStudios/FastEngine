@@ -10,7 +10,7 @@ namespace Engine
     AllocatedBuffer CreateBuffer(size_t allocSize, VmaAllocator VmaAllocator, VkBufferUsageFlags usage,
         VmaMemoryUsage memoryUsage)
     {
-        VkBufferCreateInfo bufferInfo = {};
+        VkBufferCreateInfo bufferInfo = {.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO};
         bufferInfo.pNext = nullptr;
         bufferInfo.size = allocSize;
 

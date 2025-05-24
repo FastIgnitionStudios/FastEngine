@@ -6,6 +6,7 @@
 
 namespace Engine
 {
+    
     Renderer::~Renderer()
     {
     }
@@ -18,8 +19,9 @@ namespace Engine
             return nullptr;
             break;
         case RHI::Vulkan:
-            return Ref<RendererVK>::Create();
-            break;
+            {
+                return Ref<RendererVK>::Create();
+            }
         case RHI::OpenGL:
             return nullptr;
             break;

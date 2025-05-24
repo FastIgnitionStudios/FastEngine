@@ -1,0 +1,49 @@
+#pragma once
+
+#include "Core.h"
+#include "Scene.h"
+#include "entt.hpp"
+
+namespace Engine
+{
+    class Entity
+    {
+    public:
+        Entity(entt::entity id, Scene* scene);
+
+        template<typename T, typename... Args>
+        T& AddComponent(Args&&... args)
+        {
+            ENGINE_CORE_ASSERT(!HasComponent<T>(), "Entity already has component!");
+            
+            return Scene->Registry.emplace<T>(EntityID, std::forward<Args>(args)...);
+        }
+
+        template<typename T>
+        T& GetComponent()
+        {
+            ENGINE_CORE_ASSERT(HasComponent<T>(), "Entity does not have component!");
+            
+            return Scene->Registry.get<T>(EntityID);
+        }
+
+        template<typename T>
+        bool HasComponent()
+        {
+            return Scene->Registry.any_of<T>(EntityID);
+        }
+
+        template<typename T>
+        void RemoveComponent()
+        {
+            ENGINE_CORE_ASSERT(HasComponent<T>(), "Entity does not have component!");
+            
+            Scene->Registry.remove<T>(EntityID);
+        }
+
+    private:
+        entt::entity EntityID;
+        Scene* Scene;
+    
+    };
+}
