@@ -3,9 +3,11 @@
 
 #include <filesystem>
 
+#define GLM_ENABLE_EXPERIMENTAL
 
 #include "vk_mem_alloc.h"
 
+#include "MeshVK.h"
 #include "Utils/Log.h"
 #include "DeviceVK.h"
 #include "EngineApp.h"
@@ -13,6 +15,7 @@
 #include "ImGUIVK.h"
 #include "ShaderVK.h"
 #include "backends/imgui_impl_vulkan.h"
+#include "gtx/transform.hpp"
 #include "vkbootstrap/VkBootstrap.h"
 
 
@@ -247,14 +250,27 @@ namespace Engine
 
         vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, meshPipeline);
 
+        glm::mat4 view = glm::translate(glm::vec3{0, 0, -5});
+
+        glm::mat4 projection = glm::perspective(glm::radians(70.f), (float)Swapchain->GetDrawImage().imageExtent.width / (float)Swapchain->GetDrawImage().imageExtent.height, 0.1f, 10000.f);
+
+        projection[1][1] *= -1;
+
         GPUDrawPushConstants pushConstants;
-        pushConstants.worldMatrix = glm::mat4(1);
+        pushConstants.worldMatrix = projection * view;
         pushConstants.vertexBuffer = Rectangle.vertexBufferAddress;
 
         vkCmdPushConstants(cmd, meshPipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(GPUDrawPushConstants), &pushConstants);
         vkCmdBindIndexBuffer(cmd, Rectangle.indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
 
         vkCmdDrawIndexed(cmd, 6, 1, 0, 0, 0);
+
+        pushConstants.vertexBuffer = testMeshes[2]->buffers.vertexBufferAddress;
+
+        vkCmdPushConstants(cmd, meshPipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(GPUDrawPushConstants), &pushConstants);
+        vkCmdBindIndexBuffer(cmd, testMeshes[2]->buffers.indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
+
+        vkCmdDrawIndexed(cmd, testMeshes[2]->geometries[0].indexCount, 1, testMeshes[2]->geometries[0].startIndex, 0, 0);
 
         vkCmdEndRendering(cmd);
     }
@@ -509,6 +525,11 @@ namespace Engine
             DestroyBuffer(Rectangle.vertexBuffer, Allocator);
             DestroyBuffer(Rectangle.indexBuffer, Allocator);
         });
+
+        MeshComponent meshComp;
+        meshComp.id = UUID();
+        meshComp.filePath = "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb";
+        testMeshes = MeshVK::CreateMeshAsset(meshComp, this);
         
     }
 

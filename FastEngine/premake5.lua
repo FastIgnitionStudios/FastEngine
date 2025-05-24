@@ -32,14 +32,16 @@ project "FastEngine"
         "%{IncludeDir.GLM}",
         "ThirdParty/GLM/GLM",
         "%{IncludeDir.FastGLTF}",
-        "%{IncludeDir.EnTT}"
+        "%{IncludeDir.EnTT}",
+        
     }
 
     links {
         "GLFW",
         "%{Library.Vulkan}",
         "VulkanMemoryAllocator",
-        "ImGUI"
+        "ImGUI",
+        "FastGLTF"
     }
     
     buildoptions {"/utf-8"}

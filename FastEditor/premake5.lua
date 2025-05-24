@@ -10,7 +10,7 @@ project "FastEditor"
     files {
         "Source/**.cpp",
         "Source/**.h",
-        "../FastEngine/ThirdParty/EnTT/include/entt.hpp"
+        "../FastEngine/ThirdParty/EnTT/include/entt.hpp",
     }
     
     includedirs {
@@ -20,10 +20,11 @@ project "FastEditor"
         "../FastEngine/ThirdParty/SPDLog/Include/",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.GLM}",
-        "%{IncludeDir.EnTT}"
+        "%{IncludeDir.EnTT}",
+        "%{IncludeDir.FastGLTF}",
     }
     
-    links {"FastEngine", "ImGUI"}
+    links {"FastEngine", "ImGUI", "FastGLTF"}
     
     buildoptions {"/utf-8"}
     
@@ -40,8 +41,7 @@ project "FastEditor"
     filter "configurations:Release"
         defines { "EDITOR_RELEASE" }
         optimize "on"
-    
-    
+
     
     filter "configurations:Dev"
         defines { "EDITOR_DEV", "EDITOR_ENABLE_ASSERTS" }

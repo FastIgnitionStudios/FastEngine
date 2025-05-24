@@ -625,6 +625,9 @@
     <ProjectReference Include="ThirdParty\ImGUI\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
+    <ProjectReference Include="ThirdParty\FastGLTF\FastGLTF.vcxproj">
+      <Project>{C01C2155-ACE9-7B60-D502-6A08C12EB1EE}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

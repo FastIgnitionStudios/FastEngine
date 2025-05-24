@@ -1,12 +1,13 @@
 #pragma once
 #include "BufferVK.h"
 #include "Core.h"
-#include "RendererVK.h"
 #include "Scene/Mesh.h"
 
 namespace Engine
 {
 
+    class RendererVK;
+    
     struct GeometryVK
     {
         uint32_t startIndex;
@@ -27,7 +28,7 @@ namespace Engine
         MeshVK();
         MeshVK(MeshComponent component, RendererVK* renderer);
 
-        std::vector<std::shared_ptr<MeshAssetVK>> CreateMeshAsset(MeshComponent component, RendererVK* renderer);
+        static std::vector<std::shared_ptr<MeshAssetVK>> CreateMeshAsset(MeshComponent component, RendererVK* renderer);
         
     private:
 

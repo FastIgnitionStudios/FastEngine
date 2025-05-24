@@ -26,6 +26,8 @@ namespace Engine
 
         ComputePushConstants data;
     };
+
+    struct MeshAssetVK;
     
     class RendererVK : public Renderer
     {
@@ -79,6 +81,8 @@ namespace Engine
 
         std::vector<ComputeEffect> backgroundEffects;
         int currentBackgroundEffect{0};
+
+        std::vector<std::shared_ptr<MeshAssetVK>> testMeshes;
         
     };
     
