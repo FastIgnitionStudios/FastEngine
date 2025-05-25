@@ -162,8 +162,8 @@ void Engine::ImageVK::CopyImageToImage(VkCommandBuffer cmd, VkImage source, VkIm
     vkCmdBlitImage2(cmd, &blitInfo);
 }
 
-Engine::ImageVK::AllocatedImage Engine::ImageVK::CreateImage(VkDevice device, VkExtent3D size, VkFormat format, VkImageUsageFlags usage,
-    bool mipmapped, VmaAllocator allocator)
+Engine::ImageVK::AllocatedImage Engine::ImageVK::CreateImage(VkDevice device, VkExtent3D size, VkFormat format, VkImageUsageFlags usage, VmaAllocator allocator,
+    bool mipmapped)
 {
     AllocatedImage newImage;
     newImage.imageFormat = format;
@@ -196,14 +196,14 @@ Engine::ImageVK::AllocatedImage Engine::ImageVK::CreateImage(VkDevice device, Vk
 }
 
 Engine::ImageVK::AllocatedImage Engine::ImageVK::CreateImage(VkDevice device, RendererVK* renderer, void* data, VkExtent3D size, VkFormat format,
-    VkImageUsageFlags usage, bool mipmapped, VmaAllocator allocator)
+    VkImageUsageFlags usage, VmaAllocator allocator, bool mipmapped)
 {
     size_t dataSize = size.depth * size.width * size.height * 4;
     AllocatedBuffer uploadBuffer = CreateBuffer(dataSize, allocator, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
 
     memcpy(uploadBuffer.allocationInfo.pMappedData, data, dataSize);
 
-    AllocatedImage newImage = CreateImage(device, size, format, usage | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT, mipmapped, allocator);
+    AllocatedImage newImage = CreateImage(device, size, format, usage | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT, allocator, mipmapped);
 
     renderer->ImmediateSubmit([&](VkCommandBuffer cmd)
     {

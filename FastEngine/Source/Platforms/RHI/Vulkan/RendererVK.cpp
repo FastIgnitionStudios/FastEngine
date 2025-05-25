@@ -304,6 +304,15 @@ namespace Engine
         
         vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, meshPipeline);
 
+        VkDescriptorSet imageSet = CommandStructure->GetCurrentFrame().FrameDescriptors.Allocate(Ref<DeviceVK>(Device)->GetDevice(), SingleImageLayout);
+        DescriptorWriter imageWriter;
+        imageWriter.WriteImage(0, errorCheckerboardImage.imageView, defaultSamplerNearest, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
+        imageWriter.UpdateSet(Ref<DeviceVK>(Device)->GetDevice(), imageSet);
+
+        vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, meshPipelineLayout, 0, 1, &imageSet, 0, nullptr);
+
+        
+
         VkViewport viewport = {};
         viewport.x = 0.0f;
         viewport.y = 0.0f;
@@ -452,6 +461,9 @@ namespace Engine
 
         ENGINE_CORE_INFO("Vulkan Command Buffer Created");
 
+        DescriptorLayoutBuilder layoutBuilder;
+        layoutBuilder.AddBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
+        SingleImageLayout = layoutBuilder.Build(Ref<DeviceVK>(Device)->GetDevice(), VK_SHADER_STAGE_FRAGMENT_BIT);
 
 
         /*    Create Vulkan Compute Pipeline */
@@ -480,7 +492,7 @@ namespace Engine
         Ref<ShaderVK> meshShader = Shader::Create(
     (std::filesystem::current_path() / "../FastEngine/Source/Assets/Shaders/colored_triangle_mesh.vert").
     generic_string(),
-    (std::filesystem::current_path() / "../FastEngine/Source/Assets/Shaders/colored_triangle.frag").
+    (std::filesystem::current_path() / "../FastEngine/Source/Assets/Shaders/tex_image.frag").
     generic_string());
         meshShader->CreateShaderModule(Ref<DeviceVK>(Device)->GetDevice());
 
@@ -492,6 +504,8 @@ namespace Engine
         VkPipelineLayoutCreateInfo meshPipelineLayoutInfo {.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO};
         meshPipelineLayoutInfo.pushConstantRangeCount = 1;
         meshPipelineLayoutInfo.pPushConstantRanges = &bufferRange;
+        meshPipelineLayoutInfo.pSetLayouts = &SingleImageLayout;
+        meshPipelineLayoutInfo.setLayoutCount = 1;
 
         VK_CHECK(vkCreatePipelineLayout(Ref<DeviceVK>(Device)->GetDevice(), &meshPipelineLayoutInfo, nullptr, &meshPipelineLayout));
 
@@ -505,7 +519,7 @@ namespace Engine
         meshPipelineBuilder.SetPolygonMode(VK_POLYGON_MODE_FILL);
         meshPipelineBuilder.SetCullMode(VK_CULL_MODE_NONE, VK_FRONT_FACE_CLOCKWISE);
         meshPipelineBuilder.SetMultisamplingNone();
-        meshPipelineBuilder.EnableBlendingAdditive();
+        meshPipelineBuilder.DisableBlending();
         meshPipelineBuilder.EnableDepthTest(true, VK_COMPARE_OP_GREATER_OR_EQUAL);
 
         meshPipelineBuilder.SetColorAttachmentFormat(Swapchain->GetDrawImage().imageFormat);
@@ -530,6 +544,51 @@ namespace Engine
         meshComp.id = UUID();
         meshComp.filePath = "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb";
         testMeshes = MeshVK::CreateMeshAsset(meshComp, this);
+
+        uint32_t white = glm::packUnorm4x8(glm::vec4(1, 1, 1, 1));
+        whiteImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)&white, VkExtent3D{1, 1, 1}, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
+
+        uint32_t grey = glm::packUnorm4x8(glm::vec4(0.5, 0.5, 0.5, 1));
+        greyImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)&grey, VkExtent3D{1, 1, 1}, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
+
+        uint32_t black = glm::packUnorm4x8(glm::vec4(0, 0, 0, 1));
+        blackImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)&black, VkExtent3D{1, 1, 1}, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
+
+        uint32_t checkerboard = glm::packUnorm4x8(glm::vec4(1, 0, 1, 1));
+        std::array<uint32_t, 16 *16> pixels;
+        for (int x = 0; x < 16; x++)
+        {
+            for (int y = 0; y < 16; y++)
+            {
+                pixels[y*16 + x] = ((x % 2) ^ (y % 2)) ? checkerboard : black;
+            }
+        }
+
+        errorCheckerboardImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)pixels.data(), VkExtent3D{16, 16, 1}, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
+
+        VkSamplerCreateInfo sampler1 {.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO};
+
+        sampler1.magFilter = VK_FILTER_NEAREST;
+        sampler1.minFilter = VK_FILTER_NEAREST;
+
+        vkCreateSampler(Ref<DeviceVK>(Device)->GetDevice(), &sampler1, nullptr, &defaultSamplerNearest);
+
+        sampler1.magFilter = VK_FILTER_LINEAR;
+        sampler1.minFilter = VK_FILTER_LINEAR;
+
+        vkCreateSampler(Ref<DeviceVK>(Device)->GetDevice(), &sampler1, nullptr, &defaultSamplerLinear);
+        
+
+        MainDeletionQueue.PushFunction([&]()
+        {
+            vkDestroySampler(Ref<DeviceVK>(Device)->GetDevice(), defaultSamplerNearest, nullptr);
+            vkDestroySampler(Ref<DeviceVK>(Device)->GetDevice(), defaultSamplerLinear, nullptr);
+
+            ImageVK::DestroyImage(Ref<DeviceVK>(Device)->GetDevice(), Allocator, whiteImage);
+            ImageVK::DestroyImage(Ref<DeviceVK>(Device)->GetDevice(), Allocator, greyImage);
+            ImageVK::DestroyImage(Ref<DeviceVK>(Device)->GetDevice(), Allocator, blackImage);
+            ImageVK::DestroyImage(Ref<DeviceVK>(Device)->GetDevice(), Allocator, errorCheckerboardImage);
+        });
         
     }
 

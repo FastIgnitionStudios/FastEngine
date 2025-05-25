@@ -96,6 +96,17 @@ namespace Engine
         GPUSceneData sceneData;
 
         VkDescriptorSetLayout SceneDataLayout;
+
+        ImageVK::AllocatedImage whiteImage;
+        ImageVK::AllocatedImage blackImage;
+        ImageVK::AllocatedImage greyImage;
+        ImageVK::AllocatedImage errorCheckerboardImage;
+
+        VkSampler defaultSamplerLinear;
+        VkSampler defaultSamplerNearest;
+
+        VkDescriptorSetLayout SingleImageLayout;
+        
         
     };
     

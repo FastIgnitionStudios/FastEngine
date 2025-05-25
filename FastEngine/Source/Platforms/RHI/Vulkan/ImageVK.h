@@ -28,8 +28,8 @@ namespace Engine
 
         void CopyImageToImage(VkCommandBuffer cmd, VkImage source, VkImage destination, VkExtent2D srcSize, VkExtent2D dstSize);
 
-        AllocatedImage CreateImage(VkDevice device, VkExtent3D size, VkFormat format, VkImageUsageFlags usage, bool mipmapped = false, VmaAllocator allocator = nullptr);
-        AllocatedImage CreateImage(VkDevice device, RendererVK* renderer, void* data, VkExtent3D size, VkFormat format, VkImageUsageFlags usage, bool mipmapped = false, VmaAllocator allocator = nullptr);
+        AllocatedImage CreateImage(VkDevice device, VkExtent3D size, VkFormat format, VkImageUsageFlags usage, VmaAllocator allocator, bool mipmapped = false);
+        AllocatedImage CreateImage(VkDevice device, RendererVK* renderer, void* data, VkExtent3D size, VkFormat format, VkImageUsageFlags usage, VmaAllocator allocator, bool mipmapped = false);
         void DestroyImage(VkDevice device, VmaAllocator allocator, const AllocatedImage& image);
     }
 }
