@@ -23,6 +23,7 @@ namespace Engine
             vkDestroySemaphore(cmdQueueInfo.device, frames[i].renderSemaphore, nullptr);
             vkDestroySemaphore(cmdQueueInfo.device, frames[i].swapchainSemaphore, nullptr);
 
+            frames[i].FrameDescriptors.DestroyPools(cmdQueueInfo.device);
             frames[i].DeletionQueue.Flush();
         }
 
@@ -97,11 +98,7 @@ namespace Engine
 
             frames[i].FrameDescriptors = DescriptorAllocatorDynamic{};
             frames[i].FrameDescriptors.Init(cmdQueueInfo.device, 1000, frameSizes);
-
-            cmdQueueInfo.MainDeletionQueue->PushFunction([&, i]()
-            {
-                frames[i].FrameDescriptors.DestroyPools(cmdQueueInfo.device);
-            });
+            
         }
     }
 

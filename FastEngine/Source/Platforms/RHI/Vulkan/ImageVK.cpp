@@ -1,6 +1,16 @@
 #include "EnginePCH.h"
 #include "ImageVK.h"
 
+#include "BufferVK.h"
+#include "RendererVK.h"
+#include "UtilsVK.h"
+#include "Rendering/Device.h"
+#include "Utils/Log.h"
+
+#ifdef max
+#undef max
+#endif
+
 void Engine::ImageVK::TransitionImage(VkCommandBuffer cmd, VkImage image, VkImageLayout currentLayout,
     VkImageLayout newLayout)
 {
@@ -150,4 +160,80 @@ void Engine::ImageVK::CopyImageToImage(VkCommandBuffer cmd, VkImage source, VkIm
     blitInfo.pRegions = &blitRegion;
 
     vkCmdBlitImage2(cmd, &blitInfo);
+}
+
+Engine::ImageVK::AllocatedImage Engine::ImageVK::CreateImage(VkDevice device, VkExtent3D size, VkFormat format, VkImageUsageFlags usage,
+    bool mipmapped, VmaAllocator allocator)
+{
+    AllocatedImage newImage;
+    newImage.imageFormat = format;
+    newImage.imageExtent = size;
+    VkImageCreateInfo imageInfo = CreateImageInfo(format, usage, size);
+    if (mipmapped)
+    {
+        imageInfo.mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(size.width, size.height)))) + 1;
+    }
+
+    VmaAllocationCreateInfo allocInfo = {};
+    allocInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+    allocInfo.requiredFlags = VkMemoryPropertyFlags(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+    VK_CHECK(vmaCreateImage(allocator, &imageInfo, &allocInfo, &newImage.image, &newImage.allocation, nullptr));
+
+    VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT;
+    if (format == VK_FORMAT_D32_SFLOAT)
+    {
+        aspectFlags = VK_IMAGE_ASPECT_DEPTH_BIT;
+    }
+
+    VkImageViewCreateInfo viewInfo = CreateImageViewInfo(format, newImage.image, aspectFlags);
+    viewInfo.subresourceRange.levelCount = imageInfo.mipLevels;
+
+    VK_CHECK(vkCreateImageView(device, &viewInfo, nullptr, &newImage.imageView));
+
+    return newImage;
+    
+}
+
+Engine::ImageVK::AllocatedImage Engine::ImageVK::CreateImage(VkDevice device, RendererVK* renderer, void* data, VkExtent3D size, VkFormat format,
+    VkImageUsageFlags usage, bool mipmapped, VmaAllocator allocator)
+{
+    size_t dataSize = size.depth * size.width * size.height * 4;
+    AllocatedBuffer uploadBuffer = CreateBuffer(dataSize, allocator, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
+
+    memcpy(uploadBuffer.allocationInfo.pMappedData, data, dataSize);
+
+    AllocatedImage newImage = CreateImage(device, size, format, usage | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT, mipmapped, allocator);
+
+    renderer->ImmediateSubmit([&](VkCommandBuffer cmd)
+    {
+        TransitionImage(cmd, newImage.image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+        VkBufferImageCopy copyRegion {};
+        copyRegion.bufferOffset = 0;
+        copyRegion.bufferRowLength = 0;
+        copyRegion.bufferImageHeight = 0;
+
+        copyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        copyRegion.imageSubresource.mipLevel = 0;
+        copyRegion.imageSubresource.baseArrayLayer = 0;
+        copyRegion.imageSubresource.layerCount = 1;
+        copyRegion.imageExtent = size;
+
+        vkCmdCopyBufferToImage(cmd, uploadBuffer.buffer, newImage.image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &copyRegion);
+
+        TransitionImage(cmd, newImage.image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        
+    });
+
+    DestroyBuffer(uploadBuffer, allocator);
+
+    return newImage;
+    
+}
+
+void Engine::ImageVK::DestroyImage(VkDevice device, VmaAllocator allocator, const AllocatedImage& image)
+{
+    vkDestroyImageView(device, image.imageView, nullptr);
+    vmaDestroyImage(allocator, image.image, image.allocation);
 }
