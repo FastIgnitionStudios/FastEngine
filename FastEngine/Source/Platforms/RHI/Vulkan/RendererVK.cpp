@@ -13,6 +13,7 @@
 #include "EngineApp.h"
 #include "GraphicsPipelineVK.h"
 #include "ImGUIVK.h"
+#include "backends/imgui_impl_vulkan.h"
 #include "ShaderVK.h"
 #include "backends/imgui_impl_vulkan.h"
 #include "vkbootstrap/VkBootstrap.h"
@@ -77,6 +78,111 @@ namespace Engine
 
     void RendererVK::DrawFrame()
     {
+        Ref<DeviceVK> deviceRef = Ref<DeviceVK>(Device);
+
+        ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_UNDEFINED,
+                                 VK_IMAGE_LAYOUT_GENERAL);
+
+        DrawBackground(currentCommandBuffer);
+
+        ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_GENERAL,
+                                 VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+        ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetDepthImage().image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL);
+
+        DrawGeometry(currentCommandBuffer);
+
+        ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                                 VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+        ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetSwapchainImage(CurrentSwapchainImageIndex), VK_IMAGE_LAYOUT_UNDEFINED,
+                                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+        ImageVK::CopyImageToImage(currentCommandBuffer, Swapchain->GetDrawImage().image,
+                                  Swapchain->GetSwapchainImage(CurrentSwapchainImageIndex), Swapchain->GetDrawExtent(),
+                                  Swapchain->GetSwapchainExtent());
+
+        ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetSwapchainImage(CurrentSwapchainImageIndex),
+                                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+
+        DrawImgui(currentCommandBuffer, Swapchain->GetSwapchainImageView(CurrentSwapchainImageIndex));
+
+        ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetSwapchainImage(CurrentSwapchainImageIndex),
+                                 VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+
+        VK_CHECK(vkEndCommandBuffer(currentCommandBuffer));
+
+        // Work on this frame is complete, prepare to submit frame to present queue
+
+        VkCommandBufferSubmitInfo cmdinfo = CommandStructure->CreateCommandBufferSubmitInfo(currentCommandBuffer);
+
+        VkSemaphoreSubmitInfo waitInfo = CommandStructure->CreateSemaphoreSubmitInfo(
+            VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT, CommandStructure->GetCurrentFrame().swapchainSemaphore);
+        VkSemaphoreSubmitInfo signalInfo = CommandStructure->CreateSemaphoreSubmitInfo(
+            VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT, CommandStructure->GetCurrentFrame().renderSemaphore);
+
+        VkSubmitInfo2 submit = CreateSubmitInfo(&cmdinfo, &signalInfo, &waitInfo);
+
+
+        VK_CHECK(
+            vkQueueSubmit2(CommandStructure->GetGraphicsQueue(), 1, &submit, CommandStructure->GetCurrentFrame().
+                renderFence));
+
+        // Prepare to present queue to screen
+
+        VkSwapchainKHR swapchain = Swapchain->GetSwapchain();
+
+        VkPresentInfoKHR presentInfo = {};
+        presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+        presentInfo.pNext = nullptr;
+        presentInfo.pSwapchains = &swapchain;
+        presentInfo.swapchainCount = 1;
+
+        presentInfo.pWaitSemaphores = &CommandStructure->GetCurrentFrame().renderSemaphore;
+        presentInfo.waitSemaphoreCount = 1;
+
+        presentInfo.pImageIndices = &CurrentSwapchainImageIndex;
+
+        // Present queue
+
+        VkResult presentResult = vkQueuePresentKHR(CommandStructure->GetGraphicsQueue(), &presentInfo);
+        if (presentResult == VK_ERROR_OUT_OF_DATE_KHR)
+            resizeRequested = true;
+
+        CommandStructure->NewFrame();
+    }
+
+    void RendererVK::PreFrame()
+    {
+        if (resizeRequested)
+        {
+            SwapchainInitInfo vkSwapchainInitInfo{};
+            vkSwapchainInitInfo.device = Ref<DeviceVK>(Device)->GetDevice();
+            vkSwapchainInitInfo.physicalDevice = Ref<DeviceVK>(Device)->GetPhysicalDevice();
+            vkSwapchainInitInfo.surface = Ref<DeviceVK>(Device)->GetSurface();
+            uint32_t windowWidth, windowHeight;
+            windowWidth = EngineApp::GetEngineApp()->GetWindow()->GetWidth();
+            windowHeight = EngineApp::GetEngineApp()->GetWindow()->GetHeight();
+            vkSwapchainInitInfo.width = windowWidth;
+            vkSwapchainInitInfo.height = windowHeight;
+            vkSwapchainInitInfo.allocator = Allocator;
+            vkSwapchainInitInfo.MainDeletionQueue = &MainDeletionQueue;
+            vkSwapchainInitInfo.OnSwapchainResized = [&]()
+            {
+                ComputePipelineVKInitInfo vkPipelineInitInfo{};
+                vkPipelineInitInfo.Device = Ref<DeviceVK>(Device)->GetVKBDevice();
+                vkPipelineInitInfo.DrawImageView = Swapchain->GetDrawImage().imageView;
+                vkPipelineInitInfo.MainDeletionQueue = &MainDeletionQueue;
+                GradientPipeline = Ref<ComputePipelineVK>::Create(vkPipelineInitInfo);
+
+                resizeRequested = false;
+            
+                ENGINE_CORE_INFO("Window Resize Complete");
+            };
+
+            Swapchain->ResizeSwapchain(vkSwapchainInitInfo);
+        
+
+        }
+
         // Get DeviceVK
 
         Ref<DeviceVK> deviceRef = Ref<DeviceVK>(Device);
@@ -125,108 +231,33 @@ namespace Engine
 
         VK_CHECK(vkBeginCommandBuffer(cmd, &beginInfo));
 
-        ImageVK::TransitionImage(cmd, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_UNDEFINED,
-                                 VK_IMAGE_LAYOUT_GENERAL);
-
-        DrawBackground(cmd);
-
-        ImageVK::TransitionImage(cmd, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_GENERAL,
-                                 VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
-        ImageVK::TransitionImage(cmd, Swapchain->GetDepthImage().image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL);
-
-        DrawGeometry(cmd);
-
-        ImageVK::TransitionImage(cmd, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-                                 VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-        ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(swapchainImageIndex), VK_IMAGE_LAYOUT_UNDEFINED,
-                                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-
-        ImageVK::CopyImageToImage(cmd, Swapchain->GetDrawImage().image,
-                                  Swapchain->GetSwapchainImage(swapchainImageIndex), Swapchain->GetDrawExtent(),
-                                  Swapchain->GetSwapchainExtent());
-
-        ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(swapchainImageIndex),
-                                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
-
-        DrawImgui(cmd, Swapchain->GetSwapchainImageView(swapchainImageIndex));
-
-        ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(swapchainImageIndex),
-                                 VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
-
-        VK_CHECK(vkEndCommandBuffer(cmd));
-
-        // Work on this frame is complete, prepare to submit frame to present queue
-
-        VkCommandBufferSubmitInfo cmdinfo = CommandStructure->CreateCommandBufferSubmitInfo(cmd);
-
-        VkSemaphoreSubmitInfo waitInfo = CommandStructure->CreateSemaphoreSubmitInfo(
-            VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT, CommandStructure->GetCurrentFrame().swapchainSemaphore);
-        VkSemaphoreSubmitInfo signalInfo = CommandStructure->CreateSemaphoreSubmitInfo(
-            VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT, CommandStructure->GetCurrentFrame().renderSemaphore);
-
-        VkSubmitInfo2 submit = CreateSubmitInfo(&cmdinfo, &signalInfo, &waitInfo);
-
-
-        VK_CHECK(
-            vkQueueSubmit2(CommandStructure->GetGraphicsQueue(), 1, &submit, CommandStructure->GetCurrentFrame().
-                renderFence));
-
-        // Prepare to present queue to screen
-
-        VkSwapchainKHR swapchain = Swapchain->GetSwapchain();
-
-        VkPresentInfoKHR presentInfo = {};
-        presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-        presentInfo.pNext = nullptr;
-        presentInfo.pSwapchains = &swapchain;
-        presentInfo.swapchainCount = 1;
-
-        presentInfo.pWaitSemaphores = &CommandStructure->GetCurrentFrame().renderSemaphore;
-        presentInfo.waitSemaphoreCount = 1;
-
-        presentInfo.pImageIndices = &swapchainImageIndex;
-
-        // Present queue
-
-        VkResult presentResult = vkQueuePresentKHR(CommandStructure->GetGraphicsQueue(), &presentInfo);
-        if (presentResult == VK_ERROR_OUT_OF_DATE_KHR)
-            resizeRequested = true;
-
-        CommandStructure->NewFrame();
+        currentCommandBuffer = cmd;
+        CurrentSwapchainImageIndex = swapchainImageIndex;
     }
 
-    void RendererVK::PreFrame()
+    void RendererVK::DrawViewport()
     {
-        if (resizeRequested)
+        if (!isReady) return;
+        ImmediateSubmit([&](VkCommandBuffer cmd)
         {
-            SwapchainInitInfo vkSwapchainInitInfo{};
-            vkSwapchainInitInfo.device = Ref<DeviceVK>(Device)->GetDevice();
-            vkSwapchainInitInfo.physicalDevice = Ref<DeviceVK>(Device)->GetPhysicalDevice();
-            vkSwapchainInitInfo.surface = Ref<DeviceVK>(Device)->GetSurface();
-            uint32_t windowWidth, windowHeight;
-            windowWidth = EngineApp::GetEngineApp()->GetWindow()->GetWidth();
-            windowHeight = EngineApp::GetEngineApp()->GetWindow()->GetHeight();
-            vkSwapchainInitInfo.width = windowWidth;
-            vkSwapchainInitInfo.height = windowHeight;
-            vkSwapchainInitInfo.allocator = Allocator;
-            vkSwapchainInitInfo.MainDeletionQueue = &MainDeletionQueue;
-            vkSwapchainInitInfo.OnSwapchainResized = [&]()
-            {
-                ComputePipelineVKInitInfo vkPipelineInitInfo{};
-                vkPipelineInitInfo.Device = Ref<DeviceVK>(Device)->GetVKBDevice();
-                vkPipelineInitInfo.DrawImageView = Swapchain->GetDrawImage().imageView;
-                vkPipelineInitInfo.MainDeletionQueue = &MainDeletionQueue;
-                GradientPipeline = Ref<ComputePipelineVK>::Create(vkPipelineInitInfo);
+            ImageVK::TransitionImage(cmd, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
-                resizeRequested = false;
+            CommandStructure->GetCurrentFrame().FrameDescriptors.Allocate(Ref<DeviceVK>(Device)->GetDevice(), SingleImageLayout);
             
-                ENGINE_CORE_INFO("Window Resize Complete");
-            };
+            DescriptorLayoutBuilder layoutBuilder;
+            layoutBuilder.Clear();
+            layoutBuilder.AddBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
+            SingleImageLayout = layoutBuilder.Build(Ref<DeviceVK>(Device)->GetDevice(), VK_SHADER_STAGE_FRAGMENT_BIT);
+            
+            VkDescriptorSet imageSet = CommandStructure->GetCurrentFrame().FrameDescriptors.Allocate(Ref<DeviceVK>(Device)->GetDevice(), SingleImageLayout);
 
-            Swapchain->ResizeSwapchain(vkSwapchainInitInfo);
+            DescriptorWriter writer;
+            writer.WriteImage(0, Swapchain->GetDrawImage().imageView, defaultSamplerNearest, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
+            writer.UpdateSet(Ref<DeviceVK>(Device)->GetDevice(), imageSet);
 
-
-        }
+            ImGui::Image((ImTextureID)imageSet, {(float)Swapchain->GetSwapchainExtent().width, (float)Swapchain->GetSwapchainExtent().height});
+            //ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(CurrentSwapchainImageIndex), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+        });
     }
 
     void RendererVK::ImmediateSubmit(std::function<void(VkCommandBuffer cmd)>&& function)
@@ -262,6 +293,9 @@ namespace Engine
 
         vkCmdBeginRendering(cmd, &renderInfo);
 
+        ImGui::EndFrame();
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
         ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd);
 
         vkCmdEndRendering(cmd);
@@ -310,8 +344,6 @@ namespace Engine
         imageWriter.UpdateSet(Ref<DeviceVK>(Device)->GetDevice(), imageSet);
 
         vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, meshPipelineLayout, 0, 1, &imageSet, 0, nullptr);
-
-        
 
         VkViewport viewport = {};
         viewport.x = 0.0f;
@@ -565,7 +597,7 @@ namespace Engine
         }
 
         errorCheckerboardImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)pixels.data(), VkExtent3D{16, 16, 1}, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
-
+        
         VkSamplerCreateInfo sampler1 {.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO};
 
         sampler1.magFilter = VK_FILTER_NEAREST;
@@ -589,6 +621,8 @@ namespace Engine
             ImageVK::DestroyImage(Ref<DeviceVK>(Device)->GetDevice(), Allocator, blackImage);
             ImageVK::DestroyImage(Ref<DeviceVK>(Device)->GetDevice(), Allocator, errorCheckerboardImage);
         });
+
+        isReady = true;
         
     }
 

@@ -2,6 +2,7 @@
 #include "SwapchainVK.h"
 
 #include "EngineApp.h"
+#include "imgui.h"
 #include "vkbootstrap/VkBootstrap.h"
 
 namespace Engine
@@ -43,7 +44,7 @@ namespace Engine
             .set_desired_format(VkSurfaceFormatKHR{ .format = SwapchainImageFormat, .colorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR })
             .set_desired_present_mode(VK_PRESENT_MODE_FIFO_KHR)
             .set_desired_extent(width, height)
-            .add_image_usage_flags(VK_IMAGE_USAGE_TRANSFER_DST_BIT)
+            .add_image_usage_flags(VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT)
             .build()
             .value();
 
@@ -70,6 +71,7 @@ namespace Engine
         drawImageUsages |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
         drawImageUsages |= VK_IMAGE_USAGE_STORAGE_BIT;
         drawImageUsages |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+        drawImageUsages |= VK_IMAGE_USAGE_SAMPLED_BIT;
 
         VkImageCreateInfo drawImageInfo = ImageVK::CreateImageInfo(DrawImage.imageFormat, drawImageUsages, drawImageExtent);
         VkImageCreateInfo depthImageInfo = ImageVK::CreateImageInfo(DepthImage.imageFormat, depthImageUsages, drawImageExtent);

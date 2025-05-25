@@ -48,6 +48,7 @@ namespace Engine
 
         void DrawFrame() override;
         void PreFrame() override;
+        void DrawViewport() override;
         
     
         void ImmediateSubmit(std::function<void(VkCommandBuffer cmd)>&& function);
@@ -101,13 +102,19 @@ namespace Engine
         ImageVK::AllocatedImage blackImage;
         ImageVK::AllocatedImage greyImage;
         ImageVK::AllocatedImage errorCheckerboardImage;
+        
 
         VkSampler defaultSamplerLinear;
         VkSampler defaultSamplerNearest;
 
         VkDescriptorSetLayout SingleImageLayout;
-        
-        
+
+        VkCommandBuffer currentCommandBuffer;
+        uint32_t CurrentSwapchainImageIndex;
+
+        bool isReady = false;
+
+
     };
     
 }

@@ -42,8 +42,15 @@ namespace Engine
                     GUILayer->BeginGUIFrame();
 
                 layer->OnRender();
-                ImGui::ShowDemoWindow();
 
+
+            }
+
+            renderer->DrawViewport();
+
+            for (const auto& layer : LayerStack)
+            {
+                ImGUILayer* GUILayer = static_cast<ImGUILayer*>(layer);
                 if (GUILayer)
                     GUILayer->EndGUIFrame();
             }

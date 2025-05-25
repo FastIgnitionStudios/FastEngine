@@ -10,7 +10,8 @@
 	url = https://github.com/FastIgnitionStudios/VulkanMemoryAllocator.git
 [submodule "FastEngine/ThirdParty/ImGUI"]
 	path = FastEngine/ThirdParty/ImGUI
-	url = https://github.com/FastIgnitionStudios/imgui.git
+	url = https://github.com/FastIgnitionStudios/imgui/
+	branch = docking
 [submodule "FastEngine/ThirdParty/GLM"]
 	path = FastEngine/ThirdParty/GLM
 	url = https://github.com/g-truc/glm.git

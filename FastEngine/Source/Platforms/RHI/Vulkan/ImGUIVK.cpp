@@ -30,7 +30,13 @@ void Engine::ImGUIVK::InitImGUI(ImGUIVKInfo info)
     VkDescriptorPool imguiPool;
     VK_CHECK(vkCreateDescriptorPool(info.Device, &pool_info, nullptr, &imguiPool));
 
+    
+
     ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
     ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)EngineApp::GetEngineApp()->GetWindow()->GetNativeWindow(), true);
     ImGui_ImplVulkan_InitInfo init_info = {};
