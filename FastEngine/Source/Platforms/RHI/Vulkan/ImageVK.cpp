@@ -102,6 +102,21 @@ VkRenderingAttachmentInfo Engine::ImageVK::CreateAttachmentInfo(VkImageView view
     return info;
 }
 
+VkRenderingAttachmentInfo Engine::ImageVK::CreateDepthAttachmentInfo(VkImageView view, VkImageLayout layout)
+{
+    VkRenderingAttachmentInfo depthAttachment {};
+    depthAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+    depthAttachment.pNext = NULL;
+
+    depthAttachment.imageView = view;
+    depthAttachment.imageLayout = layout;
+    depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    depthAttachment.clearValue.depthStencil.depth = 0.f;
+
+    return depthAttachment;
+}
+
 void Engine::ImageVK::CopyImageToImage(VkCommandBuffer cmd, VkImage source, VkImage destination, VkExtent2D srcSize,
                                        VkExtent2D dstSize)
 {

@@ -65,14 +65,11 @@ namespace Engine
         Ref<SwapchainVK> Swapchain;
         Ref<CommandStructureVK> CommandStructure;
         Ref<ComputePipelineVK> GradientPipeline;
-
-        VkPipeline graphicsPipeline;
-        VkPipelineLayout graphicsPipelineLayout;
+        
 
         VkPipeline meshPipeline;
         VkPipelineLayout meshPipelineLayout;
-
-        GPUMeshBuffers Rectangle;
+        
 
         DeletionQueue MainDeletionQueue;
         

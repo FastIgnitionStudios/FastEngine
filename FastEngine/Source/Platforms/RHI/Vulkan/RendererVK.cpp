@@ -15,9 +15,10 @@
 #include "ImGUIVK.h"
 #include "ShaderVK.h"
 #include "backends/imgui_impl_vulkan.h"
-#include "gtx/transform.hpp"
 #include "vkbootstrap/VkBootstrap.h"
 
+#include <gtx/transform.hpp>
+#include <glm/glm.hpp>
 
 #ifndef ENGINE_RELEASE
 constexpr bool bUseValidationLayers = true;
@@ -62,6 +63,11 @@ namespace Engine
     RendererVK::~RendererVK()
     {
         vkDeviceWaitIdle(Ref<DeviceVK>(Device)->GetDevice());
+        for (auto& mesh : testMeshes)
+        {
+            DestroyBuffer(mesh->buffers.vertexBuffer, Allocator);
+            DestroyBuffer(mesh->buffers.indexBuffer, Allocator);
+        }
         MainDeletionQueue.Flush();
         CommandStructure = nullptr;
         GradientPipeline = nullptr;
@@ -120,6 +126,7 @@ namespace Engine
 
         ImageVK::TransitionImage(cmd, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_GENERAL,
                                  VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+        ImageVK::TransitionImage(cmd, Swapchain->GetDepthImage().image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL);
 
         DrawGeometry(cmd);
 
@@ -222,11 +229,12 @@ namespace Engine
     {
         VkRenderingAttachmentInfo colorAttachment = ImageVK::CreateAttachmentInfo(
             Swapchain->GetDrawImage().imageView, nullptr, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+        VkRenderingAttachmentInfo depthAttachment = ImageVK::CreateDepthAttachmentInfo(Swapchain->GetDepthImage().imageView, VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL);
 
-        VkRenderingInfo renderInfo = CreateRenderingInfo(Swapchain->GetSwapchainExtent(), &colorAttachment, nullptr);
+        VkRenderingInfo renderInfo = CreateRenderingInfo(Swapchain->GetSwapchainExtent(), &colorAttachment, &depthAttachment);
         vkCmdBeginRendering(cmd, &renderInfo);
 
-        vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+        vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, meshPipeline);
 
         VkViewport viewport = {};
         viewport.x = 0.0f;
@@ -246,25 +254,15 @@ namespace Engine
 
         vkCmdSetScissor(cmd, 0, 1, &scissor);
 
-        vkCmdDraw(cmd, 3, 1, 0, 0);
+        glm::mat4 view = {1.f};
+        view = glm::translate(view, glm::vec3(0.f, 0.f, -5.f));
 
-        vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, meshPipeline);
-
-        glm::mat4 view = glm::translate(glm::vec3{0, 0, -5});
-
-        glm::mat4 projection = glm::perspective(glm::radians(70.f), (float)Swapchain->GetDrawImage().imageExtent.width / (float)Swapchain->GetDrawImage().imageExtent.height, 0.1f, 10000.f);
+        glm::mat4 projection = glm::perspective(glm::radians(70.f), 16/9.f, 0.1f, 10000.f);
 
         projection[1][1] *= -1;
-
+        
         GPUDrawPushConstants pushConstants;
         pushConstants.worldMatrix = projection * view;
-        pushConstants.vertexBuffer = Rectangle.vertexBufferAddress;
-
-        vkCmdPushConstants(cmd, meshPipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(GPUDrawPushConstants), &pushConstants);
-        vkCmdBindIndexBuffer(cmd, Rectangle.indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
-
-        vkCmdDrawIndexed(cmd, 6, 1, 0, 0, 0);
-
         pushConstants.vertexBuffer = testMeshes[2]->buffers.vertexBufferAddress;
 
         vkCmdPushConstants(cmd, meshPipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(GPUDrawPushConstants), &pushConstants);
@@ -401,48 +399,7 @@ namespace Engine
         guiInfo.ImageFormat = Swapchain->GetSwapchainImageFormat();
         guiInfo.PhysicalDevice = Ref<DeviceVK>(Device)->GetPhysicalDevice();
         ImGui->InitImGUI(guiInfo);
-
-        /*    Initialize Graphics Pipeline    */
-
-        Ref<ShaderVK> shader = Shader::Create(
-            (std::filesystem::current_path() / "../FastEngine/Source/Assets/Shaders/colored_triangle.vert").
-            generic_string(),
-            (std::filesystem::current_path() / "../FastEngine/Source/Assets/Shaders/colored_triangle.frag").
-            generic_string());
-        shader->CreateShaderModule(Ref<DeviceVK>(Device)->GetDevice());
-
-        VkPipelineLayoutCreateInfo pipelineLayoutInfo{.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO};
-        VK_CHECK(
-            vkCreatePipelineLayout(Ref<DeviceVK>(Device)->GetDevice(), &pipelineLayoutInfo, nullptr, &
-                graphicsPipelineLayout));
-
-        PipelineBuilder pipelineBuilder;
-
-        pipelineBuilder.pipelineLayout = graphicsPipelineLayout;
-
-        pipelineBuilder.SetShaders(shader->GetShaderModule(ShaderType::VERTEX),
-                                   shader->GetShaderModule(ShaderType::FRAGMENT));
-        pipelineBuilder.SetInputTopology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
-        pipelineBuilder.SetPolygonMode(VK_POLYGON_MODE_FILL);
-        pipelineBuilder.SetCullMode(VK_CULL_MODE_NONE, VK_FRONT_FACE_CLOCKWISE);
-        pipelineBuilder.SetMultisamplingNone();
-        pipelineBuilder.DisableBlending();
-        pipelineBuilder.DisableDepthTest();
-
-        pipelineBuilder.SetColorAttachmentFormat(Swapchain->GetDrawImage().imageFormat);
-        pipelineBuilder.SetDepthFormat(VK_FORMAT_UNDEFINED);
-
-        graphicsPipeline = pipelineBuilder.BuildPipeline(Ref<DeviceVK>(Device)->GetDevice());
-
-        vkDestroyShaderModule(Ref<DeviceVK>(Device)->GetDevice(), shader->GetShaderModule(ShaderType::FRAGMENT),
-                              nullptr);
-        vkDestroyShaderModule(Ref<DeviceVK>(Device)->GetDevice(), shader->GetShaderModule(ShaderType::VERTEX), nullptr);
-
-        MainDeletionQueue.PushFunction([&]()
-        {
-            vkDestroyPipelineLayout(Ref<DeviceVK>(Device)->GetDevice(), graphicsPipelineLayout, nullptr);
-            vkDestroyPipeline(Ref<DeviceVK>(Device)->GetDevice(), graphicsPipeline, nullptr);
-        });
+        
 
         /*    Initiate Mesh Pipeline      */
 
@@ -475,10 +432,10 @@ namespace Engine
         meshPipelineBuilder.SetCullMode(VK_CULL_MODE_NONE, VK_FRONT_FACE_CLOCKWISE);
         meshPipelineBuilder.SetMultisamplingNone();
         meshPipelineBuilder.DisableBlending();
-        meshPipelineBuilder.DisableDepthTest();
+        meshPipelineBuilder.EnableDepthTest(true, VK_COMPARE_OP_GREATER_OR_EQUAL);
 
         meshPipelineBuilder.SetColorAttachmentFormat(Swapchain->GetDrawImage().imageFormat);
-        meshPipelineBuilder.SetDepthFormat(VK_FORMAT_UNDEFINED);
+        meshPipelineBuilder.SetDepthFormat(Swapchain->GetDepthImage().imageFormat);
 
         meshPipeline = meshPipelineBuilder.BuildPipeline(Ref<DeviceVK>(Device)->GetDevice());
 
@@ -494,38 +451,7 @@ namespace Engine
 
 
         /*    Init default mesh data      */
-
-        std::array<Vertex, 4> rectVertices;
-
         
-        rectVertices[0].position = {0.5,-0.5, 0};
-        rectVertices[1].position = {0.5,0.5, 0};
-        rectVertices[2].position = {-0.5,-0.5, 0};
-        rectVertices[3].position = {-0.5,0.5, 0};
-            
-        rectVertices[0].color = {0,0, 0,1};
-        rectVertices[1].color = { 0.5,0.5,0.5 ,1};
-        rectVertices[2].color = { 1,0, 0,1 };
-        rectVertices[3].color = { 0,1, 0,1 };
-
-        std::array<uint32_t,6> rectIndices;
-
-        rectIndices[0] = 0;
-        rectIndices[1] = 1;
-        rectIndices[2] = 2;
-
-        rectIndices[3] = 2;
-        rectIndices[4] = 1;
-        rectIndices[5] = 3;
-
-        Rectangle = UploadMeshes(rectIndices, rectVertices);
-
-        //delete the rectangle data on engine shutdown
-        MainDeletionQueue.PushFunction([&](){
-            DestroyBuffer(Rectangle.vertexBuffer, Allocator);
-            DestroyBuffer(Rectangle.indexBuffer, Allocator);
-        });
-
         MeshComponent meshComp;
         meshComp.id = UUID();
         meshComp.filePath = "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb";

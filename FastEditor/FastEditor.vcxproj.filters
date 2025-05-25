@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="FastEngine">
+      <UniqueIdentifier>{494BA31F-3503-E56C-9E0A-BEC88AE17F5D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FastEngine\ThirdParty">
+      <UniqueIdentifier>{63E420B5-CF50-DCAF-9844-740D0470FE17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FastEngine\ThirdParty\EnTT">
+      <UniqueIdentifier>{2D4FB8AB-195F-647C-8218-C99A6E475315}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FastEngine\ThirdParty\EnTT\include">
+      <UniqueIdentifier>{A05304BF-8C8F-0729-F5A1-1F20E1FCAF43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{56EB95D1-428D-C0A7-2B48-D4FB178947F8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\FastEngine\ThirdParty\EnTT\include\entt.hpp">
+      <Filter>FastEngine\ThirdParty\EnTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EditorApp.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\EditorApp.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

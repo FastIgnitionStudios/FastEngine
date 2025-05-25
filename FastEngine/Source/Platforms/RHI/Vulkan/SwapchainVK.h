@@ -31,6 +31,7 @@ namespace Engine
         VkFormat GetSwapchainImageFormat() { return SwapchainImageFormat; }
 
         ImageVK::AllocatedImage GetDrawImage() { return DrawImage; }
+        ImageVK::AllocatedImage GetDepthImage() { return DepthImage; }
 
         void SetDrawExtent(uint32_t width, uint32_t height) { DrawExtent = { width, height }; }
         VkExtent2D GetDrawExtent() { return DrawExtent; }
@@ -46,6 +47,7 @@ namespace Engine
         VkFormat SwapchainImageFormat;
 
         ImageVK::AllocatedImage DrawImage;
+        ImageVK::AllocatedImage DepthImage;
         VkExtent2D DrawExtent;
 
         std::vector<VkImage> SwapchainImages;

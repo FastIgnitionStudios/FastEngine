@@ -106,6 +106,19 @@ namespace Engine
         depthStencil.maxDepthBounds = 1.f;
     }
 
+    void PipelineBuilder::EnableDepthTest(bool depthWriteEnable, VkCompareOp depthCompareOp)
+    {
+        depthStencil.depthTestEnable = VK_TRUE;
+        depthStencil.depthWriteEnable = depthWriteEnable;
+        depthStencil.depthCompareOp = depthCompareOp;
+        depthStencil.depthBoundsTestEnable = VK_FALSE;
+        depthStencil.stencilTestEnable = VK_FALSE;
+        depthStencil.front = {};
+        depthStencil.back = {};
+        depthStencil.minDepthBounds = 0.f;
+        depthStencil.maxDepthBounds = 1.f;
+    }
+
     VkPipeline PipelineBuilder::BuildPipeline(VkDevice device)
     {
         VkPipelineViewportStateCreateInfo viewportState = {};

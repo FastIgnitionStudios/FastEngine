@@ -42,7 +42,12 @@ namespace Engine
         width, height, 1};
 
         DrawImage.imageFormat = VK_FORMAT_R16G16B16A16_SFLOAT;
+        DepthImage.imageFormat = VK_FORMAT_D32_SFLOAT;
         DrawImage.imageExtent = drawImageExtent;
+        DepthImage.imageExtent = drawImageExtent;
+
+        VkImageUsageFlags depthImageUsages{};
+        depthImageUsages |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 
         VkImageUsageFlags drawImageUsages{};
         drawImageUsages |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
@@ -51,6 +56,7 @@ namespace Engine
         drawImageUsages |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
         VkImageCreateInfo drawImageInfo = ImageVK::CreateImageInfo(DrawImage.imageFormat, drawImageUsages, drawImageExtent);
+        VkImageCreateInfo depthImageInfo = ImageVK::CreateImageInfo(DepthImage.imageFormat, depthImageUsages, drawImageExtent);
 
         VmaAllocationCreateInfo drawImageAllocInfo {};
         drawImageAllocInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
@@ -58,14 +64,22 @@ namespace Engine
 
         vmaCreateImage(SwapchainInfo.allocator, &drawImageInfo, &drawImageAllocInfo, &DrawImage.image, &DrawImage.allocation, nullptr);
 
+        vmaCreateImage(SwapchainInfo.allocator, &depthImageInfo, &drawImageAllocInfo, &DepthImage.image, &DepthImage.allocation, nullptr);
+        
+
         VkImageViewCreateInfo drawImageViewInfo = ImageVK::CreateImageViewInfo(DrawImage.imageFormat, DrawImage.image, VK_IMAGE_ASPECT_COLOR_BIT);
+        VkImageViewCreateInfo depthImageViewInfo = ImageVK::CreateImageViewInfo(DepthImage.imageFormat, DepthImage.image, VK_IMAGE_ASPECT_DEPTH_BIT);
 
         VK_CHECK(vkCreateImageView(SwapchainInfo.device, &drawImageViewInfo, nullptr, &DrawImage.imageView));
+        VK_CHECK(vkCreateImageView(SwapchainInfo.device, &depthImageViewInfo, nullptr, &DepthImage.imageView));
 
         SwapchainInfo.MainDeletionQueue->PushFunction([&]()
         {
             vkDestroyImageView(SwapchainInfo.device, DrawImage.imageView, nullptr);
             vmaDestroyImage(SwapchainInfo.allocator, DrawImage.image, DrawImage.allocation);
+
+            vkDestroyImageView(SwapchainInfo.device, DepthImage.imageView, nullptr);
+            vmaDestroyImage(SwapchainInfo.allocator, DepthImage.image, DepthImage.allocation);
         });
         
     }
