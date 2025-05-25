@@ -2,6 +2,7 @@
 
 
 #include "Core.h"
+#include "DescriptorSetsVK.h"
 #include "UtilsVK.h"
 #include "vkbootstrap/VkBootstrap.h"
 
@@ -18,6 +19,7 @@ namespace Engine
         VkFence renderFence;
 
         DeletionQueue DeletionQueue;
+        DescriptorAllocatorDynamic FrameDescriptors;
     };
 
     struct CommandQueueInfo
@@ -55,12 +57,15 @@ namespace Engine
         VkCommandBufferBeginInfo CreateCommandBufferBeginInfo(VkCommandBufferUsageFlags flags = 0);
         VkSemaphoreSubmitInfo CreateSemaphoreSubmitInfo(VkPipelineStageFlags2 stageMask, VkSemaphore semaphore);
         VkCommandBufferSubmitInfo CreateCommandBufferSubmitInfo(VkCommandBuffer commandBuffer);
+
+        void FlushAllDeletors();
         
 
     private:
 
         void CreateGraphicsQueues();
         void CreateCommandStructures();
+        void CreateDescriptors();
 
         VkFenceCreateInfo CreateFenceInfo(VkFenceCreateFlags flags = 0);
         VkSemaphoreCreateInfo CreateSemaphoreInfo(VkSemaphoreCreateFlags flags = 0);

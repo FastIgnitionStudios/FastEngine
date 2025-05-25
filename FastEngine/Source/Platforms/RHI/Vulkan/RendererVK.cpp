@@ -68,8 +68,9 @@ namespace Engine
             DestroyBuffer(mesh->buffers.vertexBuffer, Allocator);
             DestroyBuffer(mesh->buffers.indexBuffer, Allocator);
         }
-        MainDeletionQueue.Flush();
+        Swapchain = nullptr;
         CommandStructure = nullptr;
+        MainDeletionQueue.Flush();
         GradientPipeline = nullptr;
         Device = nullptr;
     }
@@ -87,6 +88,7 @@ namespace Engine
                 1000000000));
 
         CommandStructure->GetCurrentFrame().DeletionQueue.Flush();
+        CommandStructure->GetCurrentFrame().FrameDescriptors.ClearPools(deviceRef->GetDevice());
 
         VK_CHECK(
             vkResetFences(deviceRef->GetDevice(), 1, &CommandStructure->GetCurrentFrame().renderFence));
@@ -94,9 +96,13 @@ namespace Engine
         // Get the next image index from the swapchain
 
         uint32_t swapchainImageIndex;
-        VK_CHECK(
-            vkAcquireNextImageKHR(deviceRef->GetDevice(), Swapchain->GetSwapchain(), 1000000000, CommandStructure->
-                GetCurrentFrame().swapchainSemaphore, nullptr, &swapchainImageIndex));
+        VkResult e = vkAcquireNextImageKHR(deviceRef->GetDevice(), Swapchain->GetSwapchain(), 1000000000, CommandStructure->
+                GetCurrentFrame().swapchainSemaphore, nullptr, &swapchainImageIndex);
+        if (e == VK_ERROR_OUT_OF_DATE_KHR)
+        {
+            resizeRequested = true;
+            return;
+        }
 
         // Get the current frames command buffer
 
@@ -182,9 +188,45 @@ namespace Engine
 
         // Present queue
 
-        VK_CHECK(vkQueuePresentKHR(CommandStructure->GetGraphicsQueue(), &presentInfo));
+        VkResult presentResult = vkQueuePresentKHR(CommandStructure->GetGraphicsQueue(), &presentInfo);
+        if (presentResult == VK_ERROR_OUT_OF_DATE_KHR)
+            resizeRequested = true;
 
         CommandStructure->NewFrame();
+    }
+
+    void RendererVK::PreFrame()
+    {
+        if (resizeRequested)
+        {
+            SwapchainInitInfo vkSwapchainInitInfo{};
+            vkSwapchainInitInfo.device = Ref<DeviceVK>(Device)->GetDevice();
+            vkSwapchainInitInfo.physicalDevice = Ref<DeviceVK>(Device)->GetPhysicalDevice();
+            vkSwapchainInitInfo.surface = Ref<DeviceVK>(Device)->GetSurface();
+            uint32_t windowWidth, windowHeight;
+            windowWidth = EngineApp::GetEngineApp()->GetWindow()->GetWidth();
+            windowHeight = EngineApp::GetEngineApp()->GetWindow()->GetHeight();
+            vkSwapchainInitInfo.width = windowWidth;
+            vkSwapchainInitInfo.height = windowHeight;
+            vkSwapchainInitInfo.allocator = Allocator;
+            vkSwapchainInitInfo.MainDeletionQueue = &MainDeletionQueue;
+            vkSwapchainInitInfo.OnSwapchainResized = [&]()
+            {
+                ComputePipelineVKInitInfo vkPipelineInitInfo{};
+                vkPipelineInitInfo.Device = Ref<DeviceVK>(Device)->GetVKBDevice();
+                vkPipelineInitInfo.DrawImageView = Swapchain->GetDrawImage().imageView;
+                vkPipelineInitInfo.MainDeletionQueue = &MainDeletionQueue;
+                GradientPipeline = Ref<ComputePipelineVK>::Create(vkPipelineInitInfo);
+
+                resizeRequested = false;
+            
+                ENGINE_CORE_INFO("Window Resize Complete");
+            };
+
+            Swapchain->ResizeSwapchain(vkSwapchainInitInfo);
+
+
+        }
     }
 
     void RendererVK::ImmediateSubmit(std::function<void(VkCommandBuffer cmd)>&& function)
@@ -227,6 +269,30 @@ namespace Engine
 
     void RendererVK::DrawGeometry(VkCommandBuffer cmd)
     {
+
+        /*    Create Scene Descriptor Layout      */
+
+        DescriptorLayoutBuilder layoutBuilder;
+        layoutBuilder.AddBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+        SceneDataLayout = layoutBuilder.Build(Ref<DeviceVK>(Device)->GetDevice(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT);
+
+        AllocatedBuffer SceneDataBuffer = CreateBuffer(sizeof(GPUSceneData), Allocator, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
+        vmaSetAllocationName(Allocator, SceneDataBuffer.allocation, "SceneDataBuffer");
+        
+        CommandStructure->GetCurrentFrame().DeletionQueue.PushFunction([=, this]
+        {
+            DestroyBuffer(SceneDataBuffer, Allocator);
+        });
+
+        GPUSceneData* sceneUniformData = (GPUSceneData*)SceneDataBuffer.allocationInfo.pMappedData;
+        *sceneUniformData = sceneData;
+
+        VkDescriptorSet globalDescriptor = CommandStructure->GetCurrentFrame().FrameDescriptors.Allocate(Ref<DeviceVK>(Device)->GetDevice(), SceneDataLayout);
+        
+        DescriptorWriter writer;
+        writer.WriteBuffer(0, SceneDataBuffer.buffer, sizeof(GPUSceneData), 0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+        writer.UpdateSet(Ref<DeviceVK>(Device)->GetDevice(), globalDescriptor);
+        
         VkRenderingAttachmentInfo colorAttachment = ImageVK::CreateAttachmentInfo(
             Swapchain->GetDrawImage().imageView, nullptr, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
         VkRenderingAttachmentInfo depthAttachment = ImageVK::CreateDepthAttachmentInfo(Swapchain->GetDepthImage().imageView, VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL);
@@ -234,6 +300,8 @@ namespace Engine
         VkRenderingInfo renderInfo = CreateRenderingInfo(Swapchain->GetSwapchainExtent(), &colorAttachment, &depthAttachment);
         vkCmdBeginRendering(cmd, &renderInfo);
 
+
+        
         vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, meshPipeline);
 
         VkViewport viewport = {};
@@ -367,6 +435,10 @@ namespace Engine
         vkSwapchainInitInfo.height = windowHeight;
         vkSwapchainInitInfo.allocator = Allocator;
         vkSwapchainInitInfo.MainDeletionQueue = &MainDeletionQueue;
+        vkSwapchainInitInfo.OnSwapchainResized = [&]()
+        {
+            resizeRequested = false;
+        };
 
         Swapchain = Ref<SwapchainVK>::Create(vkSwapchainInitInfo);
 
@@ -379,6 +451,8 @@ namespace Engine
         CommandStructure = Ref<CommandStructureVK>::Create(vkCommandQueueInfo);
 
         ENGINE_CORE_INFO("Vulkan Command Buffer Created");
+
+
 
         /*    Create Vulkan Compute Pipeline */
 
@@ -431,7 +505,7 @@ namespace Engine
         meshPipelineBuilder.SetPolygonMode(VK_POLYGON_MODE_FILL);
         meshPipelineBuilder.SetCullMode(VK_CULL_MODE_NONE, VK_FRONT_FACE_CLOCKWISE);
         meshPipelineBuilder.SetMultisamplingNone();
-        meshPipelineBuilder.DisableBlending();
+        meshPipelineBuilder.EnableBlendingAdditive();
         meshPipelineBuilder.EnableDepthTest(true, VK_COMPARE_OP_GREATER_OR_EQUAL);
 
         meshPipelineBuilder.SetColorAttachmentFormat(Swapchain->GetDrawImage().imageFormat);

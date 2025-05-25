@@ -17,6 +17,22 @@ namespace Engine
         DestroySwapchain();
     }
 
+    void SwapchainVK::ResizeSwapchain(const SwapchainInitInfo& initInfo)
+    {
+        SwapchainInfo = initInfo;
+        vkDeviceWaitIdle(SwapchainInfo.device);
+
+        DestroySwapchain();
+
+        CreateSwapchain(initInfo.width, initInfo.height);
+
+        ENGINE_CORE_INFO("Vulkan Swapchain resized");
+
+        initInfo.OnSwapchainResized();
+        
+        
+    }
+
     void SwapchainVK::CreateSwapchain(uint32_t width, uint32_t height)
     {
         vkb::SwapchainBuilder swapchainBuilder{SwapchainInfo.physicalDevice, SwapchainInfo.device, SwapchainInfo.surface};
@@ -72,15 +88,8 @@ namespace Engine
 
         VK_CHECK(vkCreateImageView(SwapchainInfo.device, &drawImageViewInfo, nullptr, &DrawImage.imageView));
         VK_CHECK(vkCreateImageView(SwapchainInfo.device, &depthImageViewInfo, nullptr, &DepthImage.imageView));
-
-        SwapchainInfo.MainDeletionQueue->PushFunction([&]()
-        {
-            vkDestroyImageView(SwapchainInfo.device, DrawImage.imageView, nullptr);
-            vmaDestroyImage(SwapchainInfo.allocator, DrawImage.image, DrawImage.allocation);
-
-            vkDestroyImageView(SwapchainInfo.device, DepthImage.imageView, nullptr);
-            vmaDestroyImage(SwapchainInfo.allocator, DepthImage.image, DepthImage.allocation);
-        });
+        
+        
         
     }
 
@@ -92,6 +101,12 @@ namespace Engine
         {
             vkDestroyImageView(SwapchainInfo.device, SwapchainImageViews[i], nullptr);
         }
+
+        vkDestroyImageView(SwapchainInfo.device, DrawImage.imageView, nullptr);
+        vmaDestroyImage(SwapchainInfo.allocator, DrawImage.image, DrawImage.allocation);
+
+        vkDestroyImageView(SwapchainInfo.device, DepthImage.imageView, nullptr);
+        vmaDestroyImage(SwapchainInfo.allocator, DepthImage.image, DepthImage.allocation);
 
         
     }

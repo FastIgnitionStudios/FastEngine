@@ -16,6 +16,16 @@ namespace Engine
 
     struct GPUMeshBuffers;
     struct Vertex;
+
+    struct GPUSceneData
+    {
+        glm::mat4 view;
+        glm::mat4 projection;
+        glm::mat4 viewproj;
+        glm::vec4 ambientColor;
+        glm::vec4 sunlightDirection;
+        glm::vec4 sunlightColor;
+    };
     
     struct ComputeEffect
     {
@@ -37,6 +47,7 @@ namespace Engine
         virtual ~RendererVK();
 
         void DrawFrame() override;
+        void PreFrame() override;
         
     
         void ImmediateSubmit(std::function<void(VkCommandBuffer cmd)>&& function);
@@ -65,7 +76,8 @@ namespace Engine
         Ref<SwapchainVK> Swapchain;
         Ref<CommandStructureVK> CommandStructure;
         Ref<ComputePipelineVK> GradientPipeline;
-        
+
+        bool resizeRequested = false;
 
         VkPipeline meshPipeline;
         VkPipelineLayout meshPipelineLayout;
@@ -80,6 +92,10 @@ namespace Engine
         int currentBackgroundEffect{0};
 
         std::vector<std::shared_ptr<MeshAssetVK>> testMeshes;
+
+        GPUSceneData sceneData;
+
+        VkDescriptorSetLayout SceneDataLayout;
         
     };
     

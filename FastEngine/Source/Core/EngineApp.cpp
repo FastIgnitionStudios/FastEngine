@@ -30,6 +30,7 @@ namespace Engine
         auto renderer = Renderer::CreateRenderer();
         while (isRunning)
         {
+            renderer->PreFrame();
             window->OnUpdate();
 
             for (const auto& layer : LayerStack)

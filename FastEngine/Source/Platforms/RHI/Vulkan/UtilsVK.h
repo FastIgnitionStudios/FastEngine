@@ -21,6 +21,8 @@ namespace Engine
             {
                 (*it)();
             }
+
+            deletors.clear();
         }
     };
 }

@@ -62,6 +62,7 @@ namespace Engine
             GLFWInitialized = true;
         }
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         window = glfwCreateWindow(params.Width, params.Height, params.Title.c_str(), NULL, NULL);
         glfwSetWindowUserPointer(window, &Data);
         SetVSync(true);

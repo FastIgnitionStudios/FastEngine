@@ -8,6 +8,7 @@ namespace Engine
     {
         CreateGraphicsQueues();
         CreateCommandStructures();
+        CreateDescriptors();
     }
 
     CommandStructureVK::~CommandStructureVK()
@@ -24,6 +25,9 @@ namespace Engine
 
             frames[i].DeletionQueue.Flush();
         }
+
+        vkDestroyCommandPool(cmdQueueInfo.device, immCommandStruct.ImmCommandPool, nullptr);
+        vkDestroyFence(cmdQueueInfo.device, immCommandStruct.ImmFence, nullptr);
     }
 
     void CommandStructureVK::CreateGraphicsQueues()
@@ -77,11 +81,28 @@ namespace Engine
 
         VK_CHECK(vkCreateFence(cmdQueueInfo.device, &fenceCreateInfo, nullptr, &immCommandStruct.ImmFence));
 
-        cmdQueueInfo.MainDeletionQueue->PushFunction([&]()
+
+    }
+
+    void CommandStructureVK::CreateDescriptors()
+    {
+        for (int i = 0; i < FRAME_OVERLAP; i++)
         {
-            vkDestroyCommandPool(cmdQueueInfo.device, immCommandStruct.ImmCommandPool, nullptr);
-            vkDestroyFence(cmdQueueInfo.device, immCommandStruct.ImmFence, nullptr);
-        });
+            std::vector<DescriptorAllocatorDynamic::PoolSizeRatio> frameSizes = {
+                {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 3},
+                {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 3},
+                {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 3},
+                {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 4},
+            };
+
+            frames[i].FrameDescriptors = DescriptorAllocatorDynamic{};
+            frames[i].FrameDescriptors.Init(cmdQueueInfo.device, 1000, frameSizes);
+
+            cmdQueueInfo.MainDeletionQueue->PushFunction([&, i]()
+            {
+                frames[i].FrameDescriptors.DestroyPools(cmdQueueInfo.device);
+            });
+        }
     }
 
     VkFenceCreateInfo CommandStructureVK::CreateFenceInfo(VkFenceCreateFlags flags)
@@ -136,5 +157,13 @@ namespace Engine
         submitInfo.commandBuffer = commandBuffer;
         submitInfo.deviceMask = 0;
         return submitInfo;
+    }
+
+    void CommandStructureVK::FlushAllDeletors()
+    {
+        for (auto frame : frames)
+        {
+            frame.DeletionQueue.Flush();
+        }
     }
 }

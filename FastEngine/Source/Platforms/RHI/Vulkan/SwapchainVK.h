@@ -16,6 +16,7 @@ namespace Engine
         VkSurfaceKHR surface;
         VmaAllocator allocator;
         DeletionQueue* MainDeletionQueue;
+        std::function<void()> OnSwapchainResized;
     };
     
     class SwapchainVK : public Engine
@@ -35,6 +36,8 @@ namespace Engine
 
         void SetDrawExtent(uint32_t width, uint32_t height) { DrawExtent = { width, height }; }
         VkExtent2D GetDrawExtent() { return DrawExtent; }
+
+        void ResizeSwapchain(const SwapchainInitInfo& initInfo);
 
     private:
 

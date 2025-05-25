@@ -26,6 +26,7 @@ namespace Engine
     {
     public:
         ComputePipelineVK(ComputePipelineVKInitInfo info);
+        ~ComputePipelineVK();
 
         VkPipeline GetPipeline() { return GradientPipeline; }
         VkPipelineLayout GetPipelineLayout() { return GradientPipelineLayout; }

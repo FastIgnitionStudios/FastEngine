@@ -30,6 +30,8 @@ namespace Engine
         void SetCullMode(VkCullModeFlags mode, VkFrontFace frontFace);
         void SetMultisamplingNone();
         void DisableBlending();
+        void EnableBlendingAdditive();
+        void EnableBlendingAlpha();
         void SetColorAttachmentFormat(VkFormat format);
         void SetDepthFormat(VkFormat format);
         void DisableDepthTest();
