@@ -4,6 +4,8 @@
 #include "SwapchainVK.h"
 #include "UtilsVK.h"
 #include "BufferVK.h"
+#include "DeviceVK.h"
+#include "MaterialVK.h"
 #include "Rendering/Renderer.h"
 
 
@@ -55,6 +57,12 @@ namespace Engine
         void DrawImgui(VkCommandBuffer cmd, VkImageView targetView);
         void DrawGeometry(VkCommandBuffer cmd);
         GPUMeshBuffers UploadMeshes(std::span<uint32_t> indices, std::span<Vertex> vertices);
+
+        VkDevice GetDevice() { return Ref<DeviceVK>(Device)->GetDevice(); }
+        GPUSceneData GetSceneData() { return sceneData; }
+        VkDescriptorSetLayout GetSceneDataLayout() { return SceneDataLayout; }
+        ImageVK::AllocatedImage GetDrawImage() { return Swapchain->GetDrawImage(); }
+        ImageVK::AllocatedImage GetDepthImage() { return Swapchain->GetDepthImage(); }
         
 
     private:
@@ -96,6 +104,9 @@ namespace Engine
 
         GPUSceneData sceneData;
 
+        MaterialInstanceVK defaultData;
+        PBRMaterialVK metalRoughnessMaterial;
+
         VkDescriptorSetLayout SceneDataLayout;
 
         ImageVK::AllocatedImage whiteImage;
@@ -114,7 +125,7 @@ namespace Engine
 
         bool isReady = false;
 
-
+        
     };
     
 }

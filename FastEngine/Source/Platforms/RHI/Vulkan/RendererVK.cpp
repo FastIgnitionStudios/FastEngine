@@ -237,27 +237,27 @@ namespace Engine
 
     void RendererVK::DrawViewport()
     {
-        if (!isReady) return;
-        ImmediateSubmit([&](VkCommandBuffer cmd)
-        {
-            ImageVK::TransitionImage(cmd, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
-            CommandStructure->GetCurrentFrame().FrameDescriptors.Allocate(Ref<DeviceVK>(Device)->GetDevice(), SingleImageLayout);
-            
-            DescriptorLayoutBuilder layoutBuilder;
-            layoutBuilder.Clear();
-            layoutBuilder.AddBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
-            SingleImageLayout = layoutBuilder.Build(Ref<DeviceVK>(Device)->GetDevice(), VK_SHADER_STAGE_FRAGMENT_BIT);
-            
-            VkDescriptorSet imageSet = CommandStructure->GetCurrentFrame().FrameDescriptors.Allocate(Ref<DeviceVK>(Device)->GetDevice(), SingleImageLayout);
-
-            DescriptorWriter writer;
-            writer.WriteImage(0, Swapchain->GetDrawImage().imageView, defaultSamplerNearest, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
-            writer.UpdateSet(Ref<DeviceVK>(Device)->GetDevice(), imageSet);
-
-            ImGui::Image((ImTextureID)imageSet, {(float)Swapchain->GetSwapchainExtent().width, (float)Swapchain->GetSwapchainExtent().height});
-            //ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(CurrentSwapchainImageIndex), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
-        });
+        // if (!isReady) return;
+        // ImmediateSubmit([&](VkCommandBuffer cmd)
+        // {
+        //     ImageVK::TransitionImage(cmd, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        //     
+        //     CommandStructure->GetCurrentFrame().FrameDescriptors.Allocate(Ref<DeviceVK>(Device)->GetDevice(), SingleImageLayout);
+        //     
+        //     DescriptorLayoutBuilder layoutBuilder;
+        //     layoutBuilder.Clear();
+        //     layoutBuilder.AddBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
+        //     SingleImageLayout = layoutBuilder.Build(Ref<DeviceVK>(Device)->GetDevice(), VK_SHADER_STAGE_FRAGMENT_BIT);
+        //     
+        //     VkDescriptorSet imageSet = CommandStructure->GetCurrentFrame().FrameDescriptors.Allocate(Ref<DeviceVK>(Device)->GetDevice(), SingleImageLayout);
+        //     
+        //     DescriptorWriter writer;
+        //     writer.WriteImage(0, Swapchain->GetDrawImage().imageView, defaultSamplerNearest, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
+        //     writer.UpdateSet(Ref<DeviceVK>(Device)->GetDevice(), imageSet);
+        //     
+        //     ImGui::Image((ImTextureID)imageSet, {(float)Swapchain->GetSwapchainExtent().width, (float)Swapchain->GetSwapchainExtent().height});
+        //     ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(CurrentSwapchainImageIndex), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+        // });
     }
 
     void RendererVK::ImmediateSubmit(std::function<void(VkCommandBuffer cmd)>&& function)
@@ -306,9 +306,7 @@ namespace Engine
 
         /*    Create Scene Descriptor Layout      */
 
-        DescriptorLayoutBuilder layoutBuilder;
-        layoutBuilder.AddBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
-        SceneDataLayout = layoutBuilder.Build(Ref<DeviceVK>(Device)->GetDevice(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT);
+
 
         AllocatedBuffer SceneDataBuffer = CreateBuffer(sizeof(GPUSceneData), Allocator, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
         vmaSetAllocationName(Allocator, SceneDataBuffer.allocation, "SceneDataBuffer");
@@ -493,9 +491,11 @@ namespace Engine
 
         ENGINE_CORE_INFO("Vulkan Command Buffer Created");
 
-        DescriptorLayoutBuilder layoutBuilder;
-        layoutBuilder.AddBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
-        SingleImageLayout = layoutBuilder.Build(Ref<DeviceVK>(Device)->GetDevice(), VK_SHADER_STAGE_FRAGMENT_BIT);
+        {
+            DescriptorLayoutBuilder layoutBuilder;
+            layoutBuilder.AddBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
+            SingleImageLayout = layoutBuilder.Build(Ref<DeviceVK>(Device)->GetDevice(), VK_SHADER_STAGE_FRAGMENT_BIT);
+        }
 
 
         /*    Create Vulkan Compute Pipeline */
@@ -569,6 +569,14 @@ namespace Engine
             vkDestroyPipeline(Ref<DeviceVK>(Device)->GetDevice(), meshPipeline, nullptr);
         });
 
+        {
+            DescriptorLayoutBuilder layoutBuilder;
+            layoutBuilder.AddBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+            SceneDataLayout = layoutBuilder.Build(Ref<DeviceVK>(Device)->GetDevice(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT);
+        }
+
+        metalRoughnessMaterial.BuildPipelines(this);
+
 
         /*    Init default mesh data      */
         
@@ -623,6 +631,28 @@ namespace Engine
         });
 
         isReady = true;
+
+        PBRMaterialVK::MaterialResources materialResources;
+        materialResources.colorImage = whiteImage;
+        materialResources.colorSampler = defaultSamplerLinear;
+        materialResources.metallicRoughnessImage = whiteImage;
+        materialResources.metalRoughnessSampler = defaultSamplerLinear;
+
+        AllocatedBuffer materialConstants = CreateBuffer(sizeof(PBRMaterialVK::MaterialConstants), Allocator, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
+
+        PBRMaterialVK::MaterialConstants* sceneUniformData = (PBRMaterialVK::MaterialConstants*)materialConstants.allocationInfo.pMappedData;
+        sceneUniformData->colorFactors = glm::vec4(1, 1, 1, 1);
+        sceneUniformData->metallicRoughnessFactors = glm::vec4(1, 0.5, 0, 0);
+
+        MainDeletionQueue.PushFunction([=, this]
+        {
+            DestroyBuffer(materialConstants, Allocator);
+        });
+
+        materialResources.dataBuffer = materialConstants.buffer;
+        materialResources.dataBufferOffset = 0;
+
+        defaultData = metalRoughnessMaterial.WriteMaterial(GetDevice(), MaterialPass::MainColor, materialResources, CommandStructure->GetCurrentFrame().FrameDescriptors);
         
     }
 

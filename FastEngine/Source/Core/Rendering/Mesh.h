@@ -4,7 +4,7 @@ namespace Engine
 {
     struct MeshComponent
     {
-        UUID id;
+        UUID id {UUID()};
         std::string filePath;
     };
 

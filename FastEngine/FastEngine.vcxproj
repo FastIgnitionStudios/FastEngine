@@ -162,12 +162,13 @@
     <ClInclude Include="Source\Core\Layers\Layer.h" />
     <ClInclude Include="Source\Core\Layers\LayerStack.h" />
     <ClInclude Include="Source\Core\Rendering\Device.h" />
+    <ClInclude Include="Source\Core\Rendering\Material.h" />
+    <ClInclude Include="Source\Core\Rendering\Mesh.h" />
     <ClInclude Include="Source\Core\Rendering\Renderer.h" />
     <ClInclude Include="Source\Core\Rendering\RendererAPI.h" />
     <ClInclude Include="Source\Core\Rendering\Shader.h" />
     <ClInclude Include="Source\Core\Scene\Components.h" />
     <ClInclude Include="Source\Core\Scene\Entity.h" />
-    <ClInclude Include="Source\Core\Scene\Mesh.h" />
     <ClInclude Include="Source\Core\Scene\Scene.h" />
     <ClInclude Include="Source\Core\UUID.h" />
     <ClInclude Include="Source\Core\Utils\Log.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="Source\Platforms\RHI\Vulkan\GraphicsPipelineVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\ImGUIVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\ImageVK.h" />
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\MaterialVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\MeshVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\RendererVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\ShaderVK.h" />
@@ -606,6 +608,7 @@
     <ClCompile Include="Source\Platforms\RHI\Vulkan\GraphicsPipelineVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\ImGUIVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\ImageVK.cpp" />
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\MaterialVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\MeshVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\RendererVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\ShaderVK.cpp" />

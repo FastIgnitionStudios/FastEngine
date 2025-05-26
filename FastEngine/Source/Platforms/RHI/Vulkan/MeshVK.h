@@ -1,7 +1,7 @@
 #pragma once
 #include "BufferVK.h"
 #include "Core.h"
-#include "Scene/Mesh.h"
+#include "Rendering/Mesh.h"
 
 namespace Engine
 {

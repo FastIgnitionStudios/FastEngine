@@ -1,6 +1,7 @@
 #include "EnginePCH.h"
 #include "EngineApp.h"
 
+#include "Filesystem.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_vulkan.h"
 #include "Utils/Log.h"
@@ -17,7 +18,7 @@ namespace Engine
         AppInstance = this;
         window = Ref<Window>(Window::Create());
         window->SetEventCallback(ENGINE_BIND_EVENT_FN(OnEvent));
-
+        Filesystem::InitFilesystem();
         PushOverlay(new ImGUILayer());
     }
 
