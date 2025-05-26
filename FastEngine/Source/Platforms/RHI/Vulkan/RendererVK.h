@@ -51,6 +51,7 @@ namespace Engine
         void DrawFrame() override;
         void PreFrame() override;
         void DrawViewport() override;
+        RenderObject CreateRenderObject() override;
         
     
         void ImmediateSubmit(std::function<void(VkCommandBuffer cmd)>&& function);

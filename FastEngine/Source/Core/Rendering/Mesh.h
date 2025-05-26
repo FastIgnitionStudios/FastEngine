@@ -1,11 +1,12 @@
 #pragma once
+#include "Assets/AssetTypes/MeshAsset.h"
 
 namespace Engine
 {
     struct MeshComponent
     {
         UUID id {UUID()};
-        std::string filePath;
+        Ref<MeshAsset> mesh;
     };
 
     

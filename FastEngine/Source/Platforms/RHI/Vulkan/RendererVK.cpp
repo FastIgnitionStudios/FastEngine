@@ -21,6 +21,8 @@
 #include <gtx/transform.hpp>
 #include <glm/glm.hpp>
 
+#include "fastgltf/types.hpp"
+
 #ifndef ENGINE_RELEASE
 constexpr bool bUseValidationLayers = true;
 #else
@@ -259,6 +261,12 @@ namespace Engine
         //     ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(CurrentSwapchainImageIndex), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
         // });
     }
+
+    RenderObject RendererVK::CreateRenderObject()
+    {
+        return RenderObject();
+    }
+
 
     void RendererVK::ImmediateSubmit(std::function<void(VkCommandBuffer cmd)>&& function)
     {
@@ -582,8 +590,8 @@ namespace Engine
         
         MeshComponent meshComp;
         meshComp.id = UUID();
-        meshComp.filePath = "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb";
-        testMeshes = MeshVK::CreateMeshAsset(meshComp, this);
+        meshComp.mesh = MeshAsset::LoadMeshFromFile("..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb");
+        testMeshes = MeshVK::CreateMeshAsset(meshComp.mesh, this);
 
         uint32_t white = glm::packUnorm4x8(glm::vec4(1, 1, 1, 1));
         whiteImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)&white, VkExtent3D{1, 1, 1}, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
