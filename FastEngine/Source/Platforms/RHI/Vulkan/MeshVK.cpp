@@ -17,26 +17,26 @@ namespace Engine
     {
     }
 
-    MeshVK::MeshVK(Ref<MeshAsset> mesh, RendererVK* renderer)
+    MeshVK::MeshVK(MeshComponent mesh, RendererVK* renderer)
     {
         CreateMeshAsset(mesh, renderer);
     }
 
-    std::vector<std::shared_ptr<MeshAssetVK>> MeshVK::CreateMeshAsset(Ref<MeshAsset> mesh, RendererVK* renderer)
+    std::vector<std::shared_ptr<MeshAssetVK>> MeshVK::CreateMeshAsset(MeshComponent mesh, RendererVK* renderer)
     {
 
         fastgltf::Parser parser;
 
-        auto data = fastgltf::GltfDataBuffer::FromPath(mesh->GetAssetPath());
+        auto data = fastgltf::GltfDataBuffer::FromPath(mesh.filePath);
         if (data.error() != fastgltf::Error::None)
         {
-            ENGINE_CORE_ERROR("File couldn't be loaded: {0}", mesh->GetAssetPath().generic_string());
+            ENGINE_CORE_ERROR("File couldn't be loaded: {0}", mesh.filePath);
         }
 
-        auto asset = parser.loadGltf(data.get(), std::filesystem::path(mesh->GetAssetPath()).parent_path(), fastgltf::Options::LoadExternalBuffers);
+        auto asset = parser.loadGltf(data.get(), std::filesystem::path(mesh.filePath).parent_path(), fastgltf::Options::LoadExternalBuffers);
         if (auto error = asset.error(); error != fastgltf::Error::None)
         {
-            ENGINE_CORE_ERROR("File couldn't be loaded: {0}", mesh->GetAssetPath().generic_string());
+            ENGINE_CORE_ERROR("File couldn't be loaded: {0}", mesh.filePath);
         }
 
         

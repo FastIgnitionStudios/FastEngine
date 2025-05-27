@@ -2,7 +2,8 @@
 #include <vulkan/vulkan.h>
 
 #include "UtilsVK.h"
-#include "GUI/ImGUI.h"
+#include "Core.h"
+
 
 namespace Engine
 {
@@ -16,7 +17,7 @@ namespace Engine
         DeletionQueue* DeletionQueue;
     };
     
-    class ImGUIVK : public ImGUI
+    class ImGUIVK : public Engine
     {
     public:
         ImGUIVK() = default;

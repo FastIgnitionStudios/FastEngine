@@ -16,6 +16,9 @@
     <Filter Include="Source">
       <UniqueIdentifier>{56EB95D1-428D-C0A7-2B48-D4FB178947F8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Panels">
+      <UniqueIdentifier>{E83E2448-54FF-9F7E-1D3A-E9FB89B9E45A}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\FastEngine\ThirdParty\EnTT\include\entt.hpp">
@@ -24,10 +27,22 @@
     <ClInclude Include="Source\EditorApp.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\EditorLayer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Panels\SceneHierachyPanel.h">
+      <Filter>Source\Panels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\EditorApp.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EditorLayer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Panels\SceneHierachyPanel.cpp">
+      <Filter>Source\Panels</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -58,9 +58,12 @@ namespace Engine
         void RemoveDeadReference(void* instance);
         bool isAlive(void* instance);
     }
+    
+}
 
-    //-- Reference counting templates --//
+//-- Reference counting templates --//
 
+    
     template <typename T>
     class Ref
     {
@@ -75,7 +78,7 @@ namespace Engine
 
         Ref(T* instance) : instance(instance)
         {
-            static_assert(std::is_base_of<Engine, T>::value, "Class is not derived from Engine");
+            static_assert(std::is_base_of<Engine::Engine, T>::value, "Class is not derived from Engine");
 
             IncRef();
         }
@@ -196,7 +199,7 @@ namespace Engine
             if (instance)
             {
                 instance->addRef();
-                Utils::AddLivingReference((void*)instance);
+                Engine::Utils::AddLivingReference((void*)instance);
             }
         }
 
@@ -209,7 +212,7 @@ namespace Engine
                 if (instance->getRefCount() == 0)
                 {
                     delete instance;
-                    Utils::RemoveDeadReference(instance);
+                    Engine::Utils::RemoveDeadReference(instance);
                     instance = nullptr;
                 }
             }
@@ -219,6 +222,5 @@ namespace Engine
         friend class Ref;
         mutable T* instance;
     };
-}
 
 #include "Utils/Log.h"

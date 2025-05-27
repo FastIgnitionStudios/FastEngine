@@ -6,7 +6,7 @@
 #include "backends/imgui_impl_vulkan.h"
 #include "Utils/Log.h"
 #include "Events/ApplicationEvent.h"
-#include "GUI/ImGUILayer.h"
+#include "GUI/EngineGUI.h"
 #include "Rendering/Renderer.h"
 
 namespace Engine
@@ -19,7 +19,6 @@ namespace Engine
         window = Ref<Window>(Window::Create());
         window->SetEventCallback(ENGINE_BIND_EVENT_FN(OnEvent));
         Filesystem::InitFilesystem();
-        PushOverlay(new ImGUILayer());
     }
 
     EngineApp::~EngineApp()
@@ -38,23 +37,14 @@ namespace Engine
             {
                 layer->OnUpdate();
 
-                ImGUILayer* GUILayer = static_cast<ImGUILayer*>(layer);
-                if (GUILayer)
-                    GUILayer->BeginGUIFrame();
+                EngineGUI::BeginFrame();
 
                 layer->OnRender();
 
-
+                EngineGUI::EndFrame();
             }
 
             renderer->DrawViewport();
-
-            for (const auto& layer : LayerStack)
-            {
-                ImGUILayer* GUILayer = static_cast<ImGUILayer*>(layer);
-                if (GUILayer)
-                    GUILayer->EndGUIFrame();
-            }
             
             
             
@@ -80,11 +70,13 @@ namespace Engine
     void EngineApp::PushLayer(Layer* layer)
     {
         LayerStack.PushLayer(layer);
+        layer->OnAttach();
     }
 
     void EngineApp::PushOverlay(Layer* overlay)
     {
         LayerStack.PushOverlay(overlay);
+        overlay->OnAttach();
     }
 
     bool EngineApp::OnWindowClose(WindowCloseEvent& event)

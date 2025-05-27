@@ -26,14 +26,14 @@ namespace Engine
     {
     public:
         MeshVK();
-        MeshVK(Ref<MeshAsset> mesh, RendererVK* renderer);
+        MeshVK(MeshComponent mesh, RendererVK* renderer);
 
-        static std::vector<std::shared_ptr<MeshAssetVK>> CreateMeshAsset(Ref<MeshAsset> mesh, RendererVK* renderer);
+        static std::vector<std::shared_ptr<MeshAssetVK>> CreateMeshAsset(MeshComponent mesh, RendererVK* renderer);
         
     private:
 
         
-        Ref<MeshAsset> mesh;
+        MeshComponent mesh;
         MeshAssetVK asset;
         
     };

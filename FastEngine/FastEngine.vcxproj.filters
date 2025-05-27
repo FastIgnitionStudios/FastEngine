@@ -164,10 +164,7 @@
     <ClInclude Include="Source\Core\Window.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GUI\ImGUI.h">
-      <Filter>Source\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GUI\ImGUILayer.h">
+    <ClInclude Include="Source\GUI\EngineGUI.h">
       <Filter>Source\GUI</Filter>
     </ClInclude>
     <ClInclude Include="Source\Platforms\RHI\Vulkan\BufferVK.h">
@@ -1427,10 +1424,7 @@
     <ClCompile Include="Source\Core\Utils\Utils.cpp">
       <Filter>Source\Core\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GUI\ImGUI.cpp">
-      <Filter>Source\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GUI\ImGUILayer.cpp">
+    <ClCompile Include="Source\GUI\EngineGUI.cpp">
       <Filter>Source\GUI</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platforms\RHI\Vulkan\BufferVK.cpp">

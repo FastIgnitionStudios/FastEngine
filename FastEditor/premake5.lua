@@ -17,9 +17,11 @@ project "FastEditor"
         "Source",
         "../FastEngine/",
         "../FastEngine/Source",
+        "../FastEngine/Source/Core/",
         "../FastEngine/ThirdParty/SPDLog/Include/",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.GLM}",
+        "../FastEngine/ThirdParty/GLM/GLM",
         "%{IncludeDir.EnTT}",
         "%{IncludeDir.FastGLTF}",
     }
@@ -27,6 +29,11 @@ project "FastEditor"
     links {"FastEngine", "ImGUI", "FastGLTF"}
     
     buildoptions {"/utf-8"}
+
+    flags
+    {
+        "MultiProcessorCompile"
+    }
     
     defines {"EDITOR"}
     

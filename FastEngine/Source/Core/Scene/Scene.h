@@ -23,6 +23,7 @@ namespace Engine
         entt::registry Registry;
         
         friend class Entity;
+        friend class SceneHierarchyPanel;
     };
 
  

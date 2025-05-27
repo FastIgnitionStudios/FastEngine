@@ -5,6 +5,11 @@
 
 #include "Core/Core.h"
 #include "Core/Utils/Log.h"
+#include "Core/Events/Event.h"
+#include "Core/Layers/Layer.h"
+#include "Core/Utils/Log.h"
+#include "Core/Filesystem.h"
+#include "Core/UUID.h"
 
 /** Application **/
 
@@ -12,4 +17,8 @@
 
 /** Entry Point **/
 
-#include "Source/Core/EntryPoint.h"
+/**  Scene  **/
+#include "Core/Scene/Scene.h"
+#include "Core/Scene/Entity.h"
+#include "Core/Scene/Components.h"
+

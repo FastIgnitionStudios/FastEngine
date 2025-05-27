@@ -7,7 +7,7 @@ namespace Engine
 {
     Scene::Scene()
     {
-        
+        CreateEntity("Test");
     }
 
     Scene::~Scene()

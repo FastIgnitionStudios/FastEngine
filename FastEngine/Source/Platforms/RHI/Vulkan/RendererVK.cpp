@@ -13,9 +13,10 @@
 #include "EngineApp.h"
 #include "GraphicsPipelineVK.h"
 #include "ImGUIVK.h"
+#include "imgui.h"
+#include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_vulkan.h"
 #include "ShaderVK.h"
-#include "backends/imgui_impl_vulkan.h"
 #include "vkbootstrap/VkBootstrap.h"
 
 #include <gtx/transform.hpp>
@@ -514,7 +515,7 @@ namespace Engine
         vkPipelineInitInfo.MainDeletionQueue = &MainDeletionQueue;
         GradientPipeline = Ref<ComputePipelineVK>::Create(vkPipelineInitInfo);
 
-        /*    Initialize ImGUI    */
+        /*    Initialize EngineGUI    */
 
         Ref<ImGUIVK> ImGui = Ref<ImGUIVK>::Create();
         ImGUIVKInfo guiInfo{};
@@ -590,8 +591,8 @@ namespace Engine
         
         MeshComponent meshComp;
         meshComp.id = UUID();
-        meshComp.mesh = MeshAsset::LoadMeshFromFile("..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb");
-        testMeshes = MeshVK::CreateMeshAsset(meshComp.mesh, this);
+        meshComp.filePath = "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb";
+        testMeshes = MeshVK::CreateMeshAsset(meshComp, this);
 
         uint32_t white = glm::packUnorm4x8(glm::vec4(1, 1, 1, 1));
         whiteImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)&white, VkExtent3D{1, 1, 1}, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);

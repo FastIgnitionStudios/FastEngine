@@ -151,9 +151,6 @@
   <ItemGroup>
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EnginePCH.h" />
-    <ClInclude Include="Source\Core\Assets\Asset.h" />
-    <ClInclude Include="Source\Core\Assets\AssetCache.h" />
-    <ClInclude Include="Source\Core\Assets\AssetTypes\MeshAsset.h" />
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Source\Core\EngineApp.h" />
     <ClInclude Include="Source\Core\EntryPoint.h" />
@@ -176,8 +173,7 @@
     <ClInclude Include="Source\Core\UUID.h" />
     <ClInclude Include="Source\Core\Utils\Log.h" />
     <ClInclude Include="Source\Core\Window.h" />
-    <ClInclude Include="Source\GUI\ImGUI.h" />
-    <ClInclude Include="Source\GUI\ImGUILayer.h" />
+    <ClInclude Include="Source\GUI\EngineGUI.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\BufferVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\ComputePipelineVK.h" />
@@ -588,9 +584,6 @@
     <ClCompile Include="EnginePCH.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Source\Core\Assets\Asset.cpp" />
-    <ClCompile Include="Source\Core\Assets\AssetCache.cpp" />
-    <ClCompile Include="Source\Core\Assets\AssetTypes\MeshAsset.cpp" />
     <ClCompile Include="Source\Core\EngineApp.cpp" />
     <ClCompile Include="Source\Core\Filesystem.cpp" />
     <ClCompile Include="Source\Core\Layers\Layer.cpp" />
@@ -604,8 +597,7 @@
     <ClCompile Include="Source\Core\UUID.cpp" />
     <ClCompile Include="Source\Core\Utils\Log.cpp" />
     <ClCompile Include="Source\Core\Utils\Utils.cpp" />
-    <ClCompile Include="Source\GUI\ImGUI.cpp" />
-    <ClCompile Include="Source\GUI\ImGUILayer.cpp" />
+    <ClCompile Include="Source\GUI\EngineGUI.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\BufferVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\CommandStructureVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\ComputePipelineVK.cpp" />

@@ -78,10 +78,12 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>EDITOR;PLATFORM_WINDOWS;EDITOR_DEBUG;EDITOR_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;..\FastEngine;..\FastEngine\Source;..\FastEngine\ThirdParty\SPDLog\Include;..\FastEngine\ThirdParty\ImGUI;..\FastEngine\ThirdParty\Glm;..\FastEngine\ThirdParty\EnTT\include;..\FastEngine\ThirdParty\FastGLTF\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;..\FastEngine;..\FastEngine\Source;..\FastEngine\Source\Core;..\FastEngine\ThirdParty\SPDLog\Include;..\FastEngine\ThirdParty\ImGUI;..\FastEngine\ThirdParty\Glm;..\FastEngine\ThirdParty\GLM\GLM;..\FastEngine\ThirdParty\EnTT\include;..\FastEngine\ThirdParty\FastGLTF\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
+      <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
@@ -96,13 +98,14 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>EDITOR;PLATFORM_WINDOWS;EDITOR_DEV;EDITOR_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;..\FastEngine;..\FastEngine\Source;..\FastEngine\ThirdParty\SPDLog\Include;..\FastEngine\ThirdParty\ImGUI;..\FastEngine\ThirdParty\Glm;..\FastEngine\ThirdParty\EnTT\include;..\FastEngine\ThirdParty\FastGLTF\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;..\FastEngine;..\FastEngine\Source;..\FastEngine\Source\Core;..\FastEngine\ThirdParty\SPDLog\Include;..\FastEngine\ThirdParty\ImGUI;..\FastEngine\ThirdParty\Glm;..\FastEngine\ThirdParty\GLM\GLM;..\FastEngine\ThirdParty\EnTT\include;..\FastEngine\ThirdParty\FastGLTF\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
@@ -118,13 +121,14 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>EDITOR;PLATFORM_WINDOWS;EDITOR_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;..\FastEngine;..\FastEngine\Source;..\FastEngine\ThirdParty\SPDLog\Include;..\FastEngine\ThirdParty\ImGUI;..\FastEngine\ThirdParty\Glm;..\FastEngine\ThirdParty\EnTT\include;..\FastEngine\ThirdParty\FastGLTF\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;..\FastEngine;..\FastEngine\Source;..\FastEngine\Source\Core;..\FastEngine\ThirdParty\SPDLog\Include;..\FastEngine\ThirdParty\ImGUI;..\FastEngine\ThirdParty\Glm;..\FastEngine\ThirdParty\GLM\GLM;..\FastEngine\ThirdParty\EnTT\include;..\FastEngine\ThirdParty\FastGLTF\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
@@ -138,9 +142,13 @@
   <ItemGroup>
     <ClInclude Include="..\FastEngine\ThirdParty\EnTT\include\entt.hpp" />
     <ClInclude Include="Source\EditorApp.h" />
+    <ClInclude Include="Source\EditorLayer.h" />
+    <ClInclude Include="Source\Panels\SceneHierachyPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\EditorApp.cpp" />
+    <ClCompile Include="Source\EditorLayer.cpp" />
+    <ClCompile Include="Source\Panels\SceneHierachyPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FastEngine\FastEngine.vcxproj">
