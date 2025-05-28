@@ -51,7 +51,6 @@ namespace Engine
         void DrawFrame() override;
         void PreFrame() override;
         void DrawViewport() override;
-        RenderObject CreateRenderObject() override;
         
     
         void ImmediateSubmit(std::function<void(VkCommandBuffer cmd)>&& function);
@@ -64,7 +63,6 @@ namespace Engine
         VkDescriptorSetLayout GetSceneDataLayout() { return SceneDataLayout; }
         ImageVK::AllocatedImage GetDrawImage() { return Swapchain->GetDrawImage(); }
         ImageVK::AllocatedImage GetDepthImage() { return Swapchain->GetDepthImage(); }
-        
 
     private:
 

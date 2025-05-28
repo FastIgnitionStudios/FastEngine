@@ -38,7 +38,6 @@ namespace Engine
         virtual void DrawFrame() = 0;
         virtual void PreFrame() = 0;
         virtual void DrawViewport() = 0;
-        virtual RenderObject CreateRenderObject() = 0;
 
         
         

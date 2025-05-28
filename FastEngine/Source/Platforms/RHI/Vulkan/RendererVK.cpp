@@ -262,11 +262,7 @@ namespace Engine
         //     ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(CurrentSwapchainImageIndex), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
         // });
     }
-
-    RenderObject RendererVK::CreateRenderObject()
-    {
-        return RenderObject();
-    }
+    
 
 
     void RendererVK::ImmediateSubmit(std::function<void(VkCommandBuffer cmd)>&& function)
