@@ -23,6 +23,9 @@
 #include <glm/glm.hpp>
 
 #include "fastgltf/types.hpp"
+#include "Rendering/Camera.h"
+#include "Scene/Components.h"
+#include "Scene/Scene.h"
 
 #ifndef ENGINE_RELEASE
 constexpr bool bUseValidationLayers = true;
@@ -160,8 +163,8 @@ namespace Engine
             vkSwapchainInitInfo.physicalDevice = Ref<DeviceVK>(Device)->GetPhysicalDevice();
             vkSwapchainInitInfo.surface = Ref<DeviceVK>(Device)->GetSurface();
             uint32_t windowWidth, windowHeight;
-            windowWidth = EngineApp::GetEngineApp()->GetWindow()->GetWidth();
-            windowHeight = EngineApp::GetEngineApp()->GetWindow()->GetHeight();
+            windowWidth = EngineApp::Get()->GetWindow()->GetWidth();
+            windowHeight = EngineApp::Get()->GetWindow()->GetHeight();
             vkSwapchainInitInfo.width = windowWidth;
             vkSwapchainInitInfo.height = windowHeight;
             vkSwapchainInitInfo.allocator = Allocator;
@@ -401,13 +404,32 @@ namespace Engine
 
     void RendererVK::UpdateScene()
     {
+        
+        auto view = EngineApp::Get()->GetActiveScene()->GetRegistry().view<TransformComponent, CameraComponent>();
+        for (auto entity : view)
+        {
+            auto [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
+            camera.camera->Update(.01);
+            glm::mat4 viewMatrix = camera.camera->GetViewMatrix();
+
+            glm::mat4 projection = glm::perspective(glm::radians(70.f), 16/9.f, 0.1f, 10000.f);
+
+            projection[1][1] *= -1;
+
+            sceneData.view = viewMatrix;
+            sceneData.projection = projection;
+            sceneData.viewproj = projection * viewMatrix;
+            
+            
+            
+        }
         mainDrawContext.OpaqueSurfaces.clear();
         loadedMeshes["Suzanne"]->Draw(glm::mat4(1.f), mainDrawContext);
 
-        sceneData.view =  glm::translate(glm::vec3(0.f, 0.f, -5.f));
-        sceneData.projection = glm::perspective(glm::radians(70.f), 16/9.f,0.1f, 10000.f);
-        sceneData.projection[1][1] *= -1;
-        sceneData.viewproj = sceneData.projection * sceneData.view;
+        // sceneData.view =  glm::translate(glm::vec3(0.f, 0.f, -5.f));
+        // sceneData.projection = glm::perspective(glm::radians(70.f), 16/9.f,0.1f, 10000.f);
+        // sceneData.projection[1][1] *= -1;
+        // sceneData.viewproj = sceneData.projection * sceneData.view;
 
         sceneData.ambientColor = glm::vec4(0.1f, 0.1f, 0.1f, 1.f);
         sceneData.sunlightColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
@@ -515,8 +537,8 @@ namespace Engine
         vkSwapchainInitInfo.physicalDevice = Ref<DeviceVK>(Device)->GetPhysicalDevice();
         vkSwapchainInitInfo.surface = Ref<DeviceVK>(Device)->GetSurface();
         uint32_t windowWidth, windowHeight;
-        windowWidth = EngineApp::GetEngineApp()->GetWindow()->GetWidth();
-        windowHeight = EngineApp::GetEngineApp()->GetWindow()->GetHeight();
+        windowWidth = EngineApp::Get()->GetWindow()->GetWidth();
+        windowHeight = EngineApp::Get()->GetWindow()->GetHeight();
         vkSwapchainInitInfo.width = windowWidth;
         vkSwapchainInitInfo.height = windowHeight;
         vkSwapchainInitInfo.allocator = Allocator;
@@ -630,7 +652,7 @@ namespace Engine
         /*    Init default mesh data      */
         
         MeshComponent meshComp;
-        meshComp.id = UUID();
+        meshComp.id = ::UUID();
         meshComp.filePath = "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb";
         testMesh = Ref<MeshVK>::Create(meshComp, this);
         testMeshes = testMesh->meshes;

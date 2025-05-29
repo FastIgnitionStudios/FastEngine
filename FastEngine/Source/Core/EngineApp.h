@@ -13,6 +13,8 @@ namespace Engine
 
 namespace Engine
 {
+
+    class Scene;
     
 
     class ENGINE_API EngineApp : public Engine
@@ -30,14 +32,18 @@ namespace Engine
 
         Ref<Window> GetWindow() { return window; }
 
-        static Ref<EngineApp> GetEngineApp() { return AppInstance; }
+        virtual Ref<Scene> GetActiveScene() = 0;
+
+        static Ref<EngineApp> Get() { return AppInstance; }
+    protected:
+        LayerStack LayerStack;
 
     private:
 
         bool OnWindowClose(WindowCloseEvent& event);
 
         bool isRunning = true;
-        LayerStack LayerStack;
+        
 
         Ref<Window> window;
 

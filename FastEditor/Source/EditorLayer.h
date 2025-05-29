@@ -15,6 +15,10 @@ namespace Engine
         void OnRender() override;
         void OnEvent(Event& e) override;
 
+        Ref<Scene> GetActiveScene() { return ActiveScene; }
+
+    
+
     private:
 
         Ref<Scene> ActiveScene;

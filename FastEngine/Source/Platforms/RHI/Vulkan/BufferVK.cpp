@@ -23,7 +23,7 @@ namespace Engine
         
         
         VK_CHECK(vmaCreateBuffer(VmaAllocator, &bufferInfo, &allocInfo, &newBuffer.buffer, &newBuffer.allocation, &newBuffer.allocationInfo));
-        ENGINE_CORE_ERROR("Creating buffer: {}, allocation: {}", (void*)newBuffer.buffer, (void*)newBuffer.allocation);
+        // ENGINE_CORE_ERROR("Creating buffer: {}, allocation: {}", (void*)newBuffer.buffer, (void*)newBuffer.allocation);
 
         return newBuffer;
         
@@ -31,7 +31,7 @@ namespace Engine
 
     void DestroyBuffer(const AllocatedBuffer& buffer, VmaAllocator allocator)
     {
-        ENGINE_CORE_ERROR("Destroying buffer: {}, allocation: {}", (void*)buffer.buffer, (void*)buffer.allocation);
+        // ENGINE_CORE_ERROR("Destroying buffer: {}, allocation: {}", (void*)buffer.buffer, (void*)buffer.allocation);
         vmaDestroyBuffer(allocator, buffer.buffer, buffer.allocation);
     }
     

@@ -16,6 +16,7 @@ namespace Engine
         ~Scene();
 
         Entity CreateEntity(const std::string& name = std::string());
+        entt::registry& GetRegistry() { return Registry; }
 
         void OnUpdate(float DeltaTime);
 

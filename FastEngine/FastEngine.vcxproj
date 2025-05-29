@@ -159,8 +159,11 @@
     <ClInclude Include="Source\Core\Events\KeyEvent.h" />
     <ClInclude Include="Source\Core\Events\MouseEvent.h" />
     <ClInclude Include="Source\Core\Filesystem.h" />
+    <ClInclude Include="Source\Core\Input\Input.h" />
+    <ClInclude Include="Source\Core\Input\Keycodes.h" />
     <ClInclude Include="Source\Core\Layers\Layer.h" />
     <ClInclude Include="Source\Core\Layers\LayerStack.h" />
+    <ClInclude Include="Source\Core\Rendering\Camera.h" />
     <ClInclude Include="Source\Core\Rendering\Device.h" />
     <ClInclude Include="Source\Core\Rendering\Material.h" />
     <ClInclude Include="Source\Core\Rendering\Mesh.h" />
@@ -190,6 +193,7 @@
     <ClInclude Include="Source\Platforms\RHI\Vulkan\UtilsVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrap.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrapDispatch.h" />
+    <ClInclude Include="Source\Platforms\WindInput.h" />
     <ClInclude Include="Source\Platforms\WindWindow.h" />
     <ClInclude Include="ThirdParty\EnTT\include\entt.hpp" />
     <ClInclude Include="ThirdParty\GLM\GLM\common.hpp" />
@@ -588,6 +592,7 @@
     <ClCompile Include="Source\Core\Filesystem.cpp" />
     <ClCompile Include="Source\Core\Layers\Layer.cpp" />
     <ClCompile Include="Source\Core\Layers\LayerStack.cpp" />
+    <ClCompile Include="Source\Core\Rendering\Camera.cpp" />
     <ClCompile Include="Source\Core\Rendering\Device.cpp" />
     <ClCompile Include="Source\Core\Rendering\Mesh.cpp" />
     <ClCompile Include="Source\Core\Rendering\Renderer.cpp" />
@@ -615,6 +620,7 @@
     <ClCompile Include="Source\Platforms\RHI\Vulkan\UtilsVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrap.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\vmaimpl.cpp" />
+    <ClCompile Include="Source\Platforms\WindInput.cpp" />
     <ClCompile Include="Source\Platforms\WindWindow.cpp" />
   </ItemGroup>
   <ItemGroup>

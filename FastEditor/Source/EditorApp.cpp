@@ -3,13 +3,22 @@
 #include "EditorLayer.h"
 #include "imgui.h"
 
-EditorApp::EditorApp()
+namespace Engine
 {
-    PushOverlay(new ::Engine::EditorLayer());
-}
+    EditorApp::EditorApp()
+    {
+        editorLayer = new EditorLayer();
+        PushLayer(editorLayer);
+    }
 
-EditorApp::~EditorApp()
-{
+    EditorApp::~EditorApp()
+    {
+    }
+
+    Ref<Scene> EditorApp::GetActiveScene()
+    {
+        return editorLayer->GetActiveScene();
+    }
 }
 
 Engine::EngineApp* Engine::CreateApplication()

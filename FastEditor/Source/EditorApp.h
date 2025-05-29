@@ -1,13 +1,23 @@
 #pragma once
 #include "Engine.h"
 
-class ENGINE_API EditorApp : public Engine::EngineApp
+namespace Engine
 {
-public:
-    EditorApp();
-    ~EditorApp();
+    class EditorLayer;
+}
 
-    
-    
-};
+namespace Engine
+{
+    class EditorApp : public EngineApp
+    {
+    public:
+        EditorApp();
+        ~EditorApp();
+
+        virtual Ref<Scene> GetActiveScene() override;
+
+    private:
+        EditorLayer* editorLayer;
+    };
+}
 

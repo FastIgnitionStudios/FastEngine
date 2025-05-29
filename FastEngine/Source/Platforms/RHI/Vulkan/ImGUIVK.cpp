@@ -38,7 +38,7 @@ void Engine::ImGUIVK::InitImGUI(ImGUIVKInfo info)
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-    ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)EngineApp::GetEngineApp()->GetWindow()->GetNativeWindow(), true);
+    ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)EngineApp::Get()->GetWindow()->GetNativeWindow(), true);
     ImGui_ImplVulkan_InitInfo init_info = {};
     init_info.Instance = info.Instance;
     init_info.PhysicalDevice = info.PhysicalDevice;

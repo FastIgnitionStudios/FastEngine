@@ -16,7 +16,7 @@ namespace Engine
     {
         auto device = Ref<DeviceVK>::Create();
         device->instance = initInfo.instance;
-        device->window = (GLFWwindow*)EngineApp::GetEngineApp()->GetWindow()->GetNativeWindow();
+        device->window = (GLFWwindow*)EngineApp::Get()->GetWindow()->GetNativeWindow();
         device->CreateDevice();
         return device;
     }
