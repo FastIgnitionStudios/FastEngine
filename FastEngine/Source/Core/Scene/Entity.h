@@ -10,6 +10,7 @@ namespace Engine
     {
     public:
         Entity(entt::entity id, Scene* scene);
+        Entity() = default;
 
         template<typename T, typename... Args>
         T& AddComponent(Args&&... args)
@@ -41,9 +42,20 @@ namespace Engine
             Scene->Registry.remove<T>(EntityID);
         }
 
+        operator uint32_t() const { return (uint32_t)EntityID; }
+        operator bool() const { return EntityID != entt::null; }
+        bool operator==(const Entity& other) const
+        {
+            return EntityID == other.EntityID && Scene == other.Scene;
+        }
+        bool operator!=(const Entity& other) const
+        {
+            return !(*this == other);
+        }
+
     private:
-        entt::entity EntityID;
-        Scene* Scene;
+        entt::entity EntityID = entt::null;
+        Scene* Scene = nullptr;
     
     };
 }

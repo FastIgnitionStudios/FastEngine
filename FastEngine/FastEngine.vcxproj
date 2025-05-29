@@ -589,6 +589,7 @@
     <ClCompile Include="Source\Core\Layers\Layer.cpp" />
     <ClCompile Include="Source\Core\Layers\LayerStack.cpp" />
     <ClCompile Include="Source\Core\Rendering\Device.cpp" />
+    <ClCompile Include="Source\Core\Rendering\Mesh.cpp" />
     <ClCompile Include="Source\Core\Rendering\Renderer.cpp" />
     <ClCompile Include="Source\Core\Rendering\RendererAPI.cpp" />
     <ClCompile Include="Source\Core\Rendering\Shader.cpp" />
