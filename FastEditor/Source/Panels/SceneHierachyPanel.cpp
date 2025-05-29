@@ -1,5 +1,6 @@
 #include "SceneHierachyPanel.h"
 #include "imgui.h"
+#include "gtc/type_ptr.hpp"
 
 namespace Engine
 {
@@ -61,6 +62,28 @@ namespace Engine
             strcpy_s(buffer, sizeof(buffer), name.c_str());
             if (ImGui::InputText("Name##2", buffer, sizeof(buffer)))
                 name = buffer;
+        });
+
+        DrawComponent<TransformComponent>("Transform", entity, [](TransformComponent& comp)
+        {
+            auto& translation = comp.Translation;
+            auto& rotation = comp.Rotation;
+            auto& scale = comp.Scale;
+
+            if (ImGui::Button("X##1"))
+                translation = glm::vec3(0.0f);
+            ImGui::SameLine();
+            ImGui::DragFloat3("Translation", glm::value_ptr(translation), 0.1f);
+
+            if (ImGui::Button("X##2"))
+                rotation = glm::vec3(0.0f);
+            ImGui::SameLine();
+            ImGui::DragFloat3("Rotation", value_ptr(rotation), 0.1f);
+
+            if (ImGui::Button("X##3"))
+                scale = glm::vec3(1.0f);
+            ImGui::SameLine();
+            ImGui::DragFloat3("Scale", value_ptr(scale), 0.1f);
         });
     }
 }
