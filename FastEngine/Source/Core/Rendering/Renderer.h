@@ -22,7 +22,8 @@ namespace Engine
 
     class IRenderable
     {
-        virtual void Draw(const glm::mat4& topMatrix, DrawContext& context) = 0;
+        virtual void Draw(const glm::mat4& worldMatrix, DrawContext& context) = 0;
+        
     };
 
     

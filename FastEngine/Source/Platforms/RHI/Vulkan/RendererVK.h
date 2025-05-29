@@ -9,8 +9,15 @@
 #include "Rendering/Renderer.h"
 
 
-    
+namespace Engine
+{
+    class MeshVK;
+}
 
+namespace Engine
+{
+    struct MeshComponent;
+}
 
 namespace Engine
 {
@@ -70,7 +77,7 @@ namespace Engine
 
         // TODO: Replace with function to call queue of lambdas
         void DrawBackground(VkCommandBuffer cmd);
-
+        void UpdateScene();
         
 
         VkSubmitInfo2 CreateSubmitInfo(VkCommandBufferSubmitInfo* cmd, VkSemaphoreSubmitInfo* signalSemaphoreInfo, VkSemaphoreSubmitInfo* waitSemaphoreInfo);
@@ -89,16 +96,21 @@ namespace Engine
 
         VkPipeline meshPipeline;
         VkPipelineLayout meshPipelineLayout;
+
+        DrawContext mainDrawContext;
+        std::unordered_map<std::string, std::shared_ptr<MeshVK>> loadedMeshes;
         
 
         DeletionQueue MainDeletionQueue;
         
         
         VmaAllocator Allocator;
+        DescriptorAllocatorDynamic globalDescriptorAllocator;
 
         std::vector<ComputeEffect> backgroundEffects;
         int currentBackgroundEffect{0};
 
+        Ref<MeshVK> testMesh;
         std::vector<std::shared_ptr<MeshAssetVK>> testMeshes;
 
         GPUSceneData sceneData;
@@ -123,6 +135,8 @@ namespace Engine
         uint32_t CurrentSwapchainImageIndex;
 
         bool isReady = false;
+
+        friend class MeshVK;
 
         
     };

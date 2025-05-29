@@ -67,14 +67,12 @@ namespace Engine
     RendererVK::~RendererVK()
     {
         vkDeviceWaitIdle(Ref<DeviceVK>(Device)->GetDevice());
-        for (auto& mesh : testMeshes)
-        {
-            DestroyBuffer(mesh->buffers.vertexBuffer, Allocator);
-            DestroyBuffer(mesh->buffers.indexBuffer, Allocator);
-        }
+        loadedMeshes.clear();
+        testMeshes.clear();
         Swapchain = nullptr;
         CommandStructure = nullptr;
         MainDeletionQueue.Flush();
+        globalDescriptorAllocator.DestroyPools(Device.As<DeviceVK>()->GetDevice());
         GradientPipeline = nullptr;
         Device = nullptr;
     }
@@ -190,6 +188,8 @@ namespace Engine
 
         Ref<DeviceVK> deviceRef = Ref<DeviceVK>(Device);
 
+        UpdateScene();
+        
         // Wait for previous frame to complete
 
         VK_CHECK(
@@ -366,12 +366,9 @@ namespace Engine
 
         vkCmdSetScissor(cmd, 0, 1, &scissor);
 
-        glm::mat4 view = {1.f};
-        view = glm::translate(view, glm::vec3(0.f, 0.f, -5.f));
 
-        glm::mat4 projection = glm::perspective(glm::radians(70.f), 16/9.f, 0.1f, 10000.f);
 
-        projection[1][1] *= -1;
+#if 0
         
         GPUDrawPushConstants pushConstants;
         pushConstants.worldMatrix = projection * view;
@@ -381,8 +378,49 @@ namespace Engine
         vkCmdBindIndexBuffer(cmd, testMeshes[2]->buffers.indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
 
         vkCmdDrawIndexed(cmd, testMeshes[2]->geometries[0].indexCount, 1, testMeshes[2]->geometries[0].startIndex, 0, 0);
+#endif
+
+        for (const RenderObject& draw : mainDrawContext.OpaqueSurfaces)
+        {
+            auto material = static_cast<MaterialInstanceVK*>(draw.material);
+            vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, material->pipeline->pipeline);
+            vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, material->pipeline->pipelineLayout, 0, 1, &globalDescriptor, 0, nullptr);
+            vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, material->pipeline->pipelineLayout, 1, 1, &material->materialSet, 0, nullptr);
+            vkCmdBindIndexBuffer(cmd, *(VkBuffer*)draw.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
+            GPUDrawPushConstants pushConstants;
+            pushConstants.vertexBuffer = draw.vertexBufferAddress;
+            pushConstants.worldMatrix = draw.transform;
+            vkCmdPushConstants(cmd, meshPipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(GPUDrawPushConstants), &pushConstants);
+
+            vkCmdDrawIndexed(cmd, draw.indexCount, 1, draw.firstIndex, 0, 0);
+        }
 
         vkCmdEndRendering(cmd);
+    }
+
+    void RendererVK::UpdateScene()
+    {
+        mainDrawContext.OpaqueSurfaces.clear();
+        loadedMeshes["Suzanne"]->Draw(glm::mat4(1.f), mainDrawContext);
+
+        sceneData.view =  glm::translate(glm::vec3(0.f, 0.f, -5.f));
+        sceneData.projection = glm::perspective(glm::radians(70.f), 16/9.f,0.1f, 10000.f);
+        sceneData.projection[1][1] *= -1;
+        sceneData.viewproj = sceneData.projection * sceneData.view;
+
+        sceneData.ambientColor = glm::vec4(0.1f, 0.1f, 0.1f, 1.f);
+        sceneData.sunlightColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
+        sceneData.sunlightDirection = glm::vec4(0.f, -1.f, 0.f, 1.f);
+
+        for (int x = -3; x < 3; x++) {
+
+            glm::mat4 scale = glm::scale(glm::vec3{0.2});
+            glm::mat4 translation =  glm::translate(glm::vec3{x, 1, 0});
+
+            loadedMeshes["Cube"]->Draw(translation * scale, mainDrawContext);
+        }
+        
     }
 
     GPUMeshBuffers RendererVK::UploadMeshes(std::span<uint32_t> indices, std::span<Vertex> vertices)
@@ -424,6 +462,9 @@ namespace Engine
 
             vkCmdCopyBuffer(cmd, staging.buffer, newSurface.indexBuffer.buffer, 1, &indexCopy);
         });
+        
+
+ 
 
         DestroyBuffer(staging, Allocator);
 
@@ -463,6 +504,7 @@ namespace Engine
 
         MainDeletionQueue.PushFunction([&]()
         {
+            
             vmaDestroyAllocator(Allocator);
         });
 
@@ -501,6 +543,8 @@ namespace Engine
             layoutBuilder.AddBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
             SingleImageLayout = layoutBuilder.Build(Ref<DeviceVK>(Device)->GetDevice(), VK_SHADER_STAGE_FRAGMENT_BIT);
         }
+        std::vector<DescriptorAllocatorDynamic::PoolSizeRatio> sizes = {{VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1}};
+        globalDescriptorAllocator.Init(Device.As<DeviceVK>()->GetDevice(), 100, sizes);
 
 
         /*    Create Vulkan Compute Pipeline */
@@ -588,7 +632,8 @@ namespace Engine
         MeshComponent meshComp;
         meshComp.id = UUID();
         meshComp.filePath = "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb";
-        testMeshes = MeshVK::CreateMeshAsset(meshComp, this);
+        testMesh = Ref<MeshVK>::Create(meshComp, this);
+        testMeshes = testMesh->meshes;
 
         uint32_t white = glm::packUnorm4x8(glm::vec4(1, 1, 1, 1));
         whiteImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)&white, VkExtent3D{1, 1, 1}, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
@@ -649,7 +694,7 @@ namespace Engine
         sceneUniformData->colorFactors = glm::vec4(1, 1, 1, 1);
         sceneUniformData->metallicRoughnessFactors = glm::vec4(1, 0.5, 0, 0);
 
-        MainDeletionQueue.PushFunction([=, this]
+        MainDeletionQueue.PushFunction([=, this]()
         {
             DestroyBuffer(materialConstants, Allocator);
         });
@@ -657,8 +702,21 @@ namespace Engine
         materialResources.dataBuffer = materialConstants.buffer;
         materialResources.dataBufferOffset = 0;
 
-        defaultData = metalRoughnessMaterial.WriteMaterial(GetDevice(), MaterialPass::MainColor, materialResources, CommandStructure->GetCurrentFrame().FrameDescriptors);
-        
+        defaultData = metalRoughnessMaterial.WriteMaterial(GetDevice(), MaterialPass::MainColor, materialResources, globalDescriptorAllocator);
+
+        for (auto& m : testMeshes)
+        {
+            std::shared_ptr<MeshVK> newMesh = std::make_shared<MeshVK>(meshComp, this);
+            newMesh->meshes = {m};
+
+            for (auto& s : newMesh->meshes[0]->geometries) // Temporary
+            {
+                GLTFMaterial mat = {.data = defaultData};
+                s.material = mat;
+            }
+
+            loadedMeshes[m->name] = std::move(newMesh);
+        }
     }
 
     void RendererVK::DrawBackground(VkCommandBuffer cmd)

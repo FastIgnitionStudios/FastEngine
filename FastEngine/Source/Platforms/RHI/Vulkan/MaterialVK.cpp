@@ -75,8 +75,14 @@ namespace Engine
         
     }
 
-    void PBRMaterialVK::ClearResources(VkDevice device)
+    void PBRMaterialVK::ClearResources(VkDevice device, VmaAllocator allocator, const MaterialResources& resources)
     {
+        vkDestroyDescriptorSetLayout(device,materialLayout,nullptr);
+        vkDestroyPipelineLayout(device,transparentPipeline.pipelineLayout,nullptr);
+
+        vkDestroyPipeline(device, transparentPipeline.pipeline, nullptr);
+        vkDestroyPipeline(device, opaquePipeline.pipeline, nullptr);
+        
     }
 
     MaterialInstanceVK PBRMaterialVK::WriteMaterial(VkDevice device, MaterialPass pass,
@@ -94,13 +100,13 @@ namespace Engine
         }
 
         matData.materialSet = descriptorAllocator.Allocate(device, materialLayout);
-
         writer.Clear();
         writer.WriteBuffer(0, resources.dataBuffer, sizeof(MaterialConstants), resources.dataBufferOffset, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER );
         writer.WriteImage(1, resources.colorImage.imageView, resources.colorSampler, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
         writer.WriteImage(2, resources.metallicRoughnessImage.imageView, resources.metalRoughnessSampler, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
-
+        
         writer.UpdateSet(device, matData.materialSet);
+        
 
         return matData;
     }

@@ -4,6 +4,8 @@
 #include "RendererVK.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
+#include <ranges>
+
 #include "glm/gtx/quaternion.hpp"
 
 #include "fastgltf/glm_element_traits.hpp"
@@ -19,24 +21,29 @@ namespace Engine
 
     MeshVK::MeshVK(MeshComponent mesh, RendererVK* renderer)
     {
-        CreateMeshAsset(mesh, renderer);
+        meshes = CreateMeshAsset(mesh, renderer);
     }
 
-    std::vector<std::shared_ptr<MeshAssetVK>> MeshVK::CreateMeshAsset(MeshComponent mesh, RendererVK* renderer)
+    MeshVK::~MeshVK()
+    {
+
+    }
+
+    std::vector<std::shared_ptr<MeshAssetVK>> MeshVK::CreateMeshAsset(MeshComponent meshComp, RendererVK* renderer)
     {
 
         fastgltf::Parser parser;
 
-        auto data = fastgltf::GltfDataBuffer::FromPath(mesh.filePath);
+        auto data = fastgltf::GltfDataBuffer::FromPath(meshComp.filePath);
         if (data.error() != fastgltf::Error::None)
         {
-            ENGINE_CORE_ERROR("File couldn't be loaded: {0}", mesh.filePath);
+            ENGINE_CORE_ERROR("File couldn't be loaded: {0}", meshComp.filePath);
         }
 
-        auto asset = parser.loadGltf(data.get(), std::filesystem::path(mesh.filePath).parent_path(), fastgltf::Options::LoadExternalBuffers);
+        auto asset = parser.loadGltf(data.get(), std::filesystem::path(meshComp.filePath).parent_path(), fastgltf::Options::LoadExternalBuffers);
         if (auto error = asset.error(); error != fastgltf::Error::None)
         {
-            ENGINE_CORE_ERROR("File couldn't be loaded: {0}", mesh.filePath);
+            ENGINE_CORE_ERROR("File couldn't be loaded: {0}", meshComp.filePath);
         }
 
         
@@ -137,13 +144,40 @@ namespace Engine
             }
 
             newMesh.buffers = renderer->UploadMeshes(indices, vertices);
+            renderer->MainDeletionQueue.PushFunction([=, this]()
+            {
+                DestroyBuffer(newMesh.buffers.vertexBuffer, renderer->Allocator);
+                DestroyBuffer(newMesh.buffers.indexBuffer, renderer->Allocator);
+            });
             
 
             meshes.emplace_back(std::make_shared<MeshAssetVK>(std::move(newMesh)));
-
+        
             
         }
 
         return meshes;
+    }
+
+    void MeshVK::Draw(const glm::mat4& worldTransform, DrawContext& context)
+    {
+        glm::mat4 transform = worldTransform;
+
+        for (auto& meshAsset : meshes)
+        {
+            for (auto& mesh : meshAsset.get()->geometries)
+            {
+                RenderObject def;
+                def.indexCount = mesh.indexCount;
+                def.firstIndex = mesh.startIndex;
+                def.indexBuffer = &meshAsset.get()->buffers.indexBuffer;
+                def.material = &mesh.material.data;
+
+                def.transform = transform;
+                def.vertexBufferAddress = meshAsset.get()->buffers.vertexBufferAddress;
+
+                context.OpaqueSurfaces.push_back(def);
+            }
+        }
     }
 }

@@ -119,12 +119,12 @@ namespace Engine
 
     void DescriptorAllocatorDynamic::DestroyPools(VkDevice device)
     {
-        for (auto pool : readyPools)
+        for (auto& pool : readyPools)
         {
             vkDestroyDescriptorPool(device, pool, nullptr);
         }
         readyPools.clear();
-        for (auto pool : fullPools)
+        for (auto& pool : fullPools)
         {
             vkDestroyDescriptorPool(device, pool, nullptr);
         }
@@ -151,7 +151,9 @@ namespace Engine
             poolToUse = GetPool(device);
             allocInfo.descriptorPool = poolToUse;
 
-            vkAllocateDescriptorSets(device, &allocInfo, &ds);
+            VkResult retry = vkAllocateDescriptorSets(device, &allocInfo, &ds);
+            ENGINE_CORE_ASSERT(retry == VK_SUCCESS, "Failed to allocate descriptor set");
+            
         }
 
         readyPools.push_back(poolToUse);

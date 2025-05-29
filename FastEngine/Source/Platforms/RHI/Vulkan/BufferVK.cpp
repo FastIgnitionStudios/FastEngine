@@ -21,14 +21,17 @@ namespace Engine
         allocInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
         AllocatedBuffer newBuffer;
         
+        
         VK_CHECK(vmaCreateBuffer(VmaAllocator, &bufferInfo, &allocInfo, &newBuffer.buffer, &newBuffer.allocation, &newBuffer.allocationInfo));
-        vmaSetAllocationName(VmaAllocator, newBuffer.allocation, "Buffer");
+        ENGINE_CORE_ERROR("Creating buffer: {}, allocation: {}", (void*)newBuffer.buffer, (void*)newBuffer.allocation);
+
         return newBuffer;
         
     }
 
     void DestroyBuffer(const AllocatedBuffer& buffer, VmaAllocator allocator)
     {
+        ENGINE_CORE_ERROR("Destroying buffer: {}, allocation: {}", (void*)buffer.buffer, (void*)buffer.allocation);
         vmaDestroyBuffer(allocator, buffer.buffer, buffer.allocation);
     }
     

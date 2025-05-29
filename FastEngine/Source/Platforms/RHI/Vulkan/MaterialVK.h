@@ -8,6 +8,8 @@
 
 namespace Engine
 {
+
+
     
     struct MaterialPipelineVK
     {
@@ -51,7 +53,7 @@ namespace Engine
         DescriptorWriter writer;
 
         void BuildPipelines(RendererVK* engine);
-        void ClearResources(VkDevice device);
+        void ClearResources(VkDevice device, VmaAllocator allocator, const MaterialResources& resources);
 
         MaterialInstanceVK WriteMaterial(VkDevice device, MaterialPass pass, const MaterialResources& resources, DescriptorAllocatorDynamic& descriptorAllocator);
 

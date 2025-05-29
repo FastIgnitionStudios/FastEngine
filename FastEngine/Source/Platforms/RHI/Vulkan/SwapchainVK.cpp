@@ -84,6 +84,7 @@ namespace Engine
 
         vmaCreateImage(SwapchainInfo.allocator, &depthImageInfo, &drawImageAllocInfo, &DepthImage.image, &DepthImage.allocation, nullptr);
         
+        
 
         VkImageViewCreateInfo drawImageViewInfo = ImageVK::CreateImageViewInfo(DrawImage.imageFormat, DrawImage.image, VK_IMAGE_ASPECT_COLOR_BIT);
         VkImageViewCreateInfo depthImageViewInfo = ImageVK::CreateImageViewInfo(DepthImage.imageFormat, DepthImage.image, VK_IMAGE_ASPECT_DEPTH_BIT);
@@ -109,7 +110,6 @@ namespace Engine
 
         vkDestroyImageView(SwapchainInfo.device, DepthImage.imageView, nullptr);
         vmaDestroyImage(SwapchainInfo.allocator, DepthImage.image, DepthImage.allocation);
-
         
     }
 }
