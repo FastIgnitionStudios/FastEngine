@@ -2,6 +2,7 @@
 #include "SwapchainVK.h"
 
 #include "EngineApp.h"
+#include "Rendering/Renderer.h"
 #include "imgui.h"
 #include "vkbootstrap/VkBootstrap.h"
 

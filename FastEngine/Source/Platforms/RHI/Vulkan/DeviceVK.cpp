@@ -1,6 +1,7 @@
 #include "EnginePCH.h"
 #include "DeviceVK.h"
 #include "EngineApp.h"
+#include "Rendering/Renderer.h"
 
 namespace Engine
 {

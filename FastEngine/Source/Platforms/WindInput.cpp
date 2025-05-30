@@ -2,6 +2,7 @@
 #include "WindInput.h"
 
 #include "EngineApp.h"
+#include "Rendering/Renderer.h"
 #include "GLFW/glfw3.h"
 
 namespace Engine

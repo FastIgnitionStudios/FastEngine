@@ -15,6 +15,7 @@ namespace Engine
 {
 
     class Scene;
+    class Renderer;
     
 
     class ENGINE_API EngineApp : public Engine
@@ -31,6 +32,7 @@ namespace Engine
         void PushOverlay(Layer* overlay);
 
         Ref<Window> GetWindow() { return window; }
+        Ref<Renderer> GetRenderer() { return renderer; }
 
         virtual Ref<Scene> GetActiveScene() = 0;
 
@@ -46,6 +48,8 @@ namespace Engine
         
 
         Ref<Window> window;
+
+        Ref<Renderer> renderer;
 
         static Ref<EngineApp> AppInstance;
     

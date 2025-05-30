@@ -44,6 +44,7 @@ namespace Engine
         
         MeshComponent meshComp;
         std::vector<std::shared_ptr<MeshAssetVK>> meshes;
+        std::shared_ptr<MeshAssetVK> StaticMesh;
         friend class RendererVK;
         
     };

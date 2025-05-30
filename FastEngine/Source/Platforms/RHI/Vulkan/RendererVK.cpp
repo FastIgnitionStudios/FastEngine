@@ -675,9 +675,6 @@ namespace Engine
             auto comp = entity.GetComponent<MeshComponent>();
             SceneMeshes.push_back(comp);
         }
-        MeshComponent meshComp;
-        meshComp.id = UUID();
-        meshComp.filePath = "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb";
 
         std::vector<Ref<MeshVK>> meshes;
         for (const MeshComponent& mesh : SceneMeshes)
@@ -766,7 +763,7 @@ namespace Engine
 
         for (auto& m : testMeshes)
         {
-            std::shared_ptr<MeshVK> newMesh = std::make_shared<MeshVK>(meshComp, this);
+            std::shared_ptr<MeshVK> newMesh = std::make_shared<MeshVK>(SceneMeshes[0], this);
             newMesh->meshes = {m};
 
             for (auto& s : newMesh->meshes[0]->geometries) // Temporary

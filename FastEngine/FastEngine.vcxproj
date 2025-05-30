@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EnginePCH.h" />
+    <ClInclude Include="Source\Core\Asset\GLTFImporter.h" />
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Source\Core\EngineApp.h" />
     <ClInclude Include="Source\Core\EntryPoint.h" />
@@ -589,6 +590,7 @@
     <ClCompile Include="EnginePCH.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Core\Asset\GLTFImporter.cpp" />
     <ClCompile Include="Source\Core\EngineApp.cpp" />
     <ClCompile Include="Source\Core\Filesystem.cpp" />
     <ClCompile Include="Source\Core\Layers\Layer.cpp" />

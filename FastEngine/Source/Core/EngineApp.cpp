@@ -27,7 +27,7 @@ namespace Engine
 
     void EngineApp::Run()
     {
-        auto renderer = Renderer::CreateRenderer();
+        renderer = Renderer::CreateRenderer();
         while (isRunning)
         {
             renderer->PreFrame();
