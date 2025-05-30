@@ -54,7 +54,8 @@ project "FastEngine"
     filter "system:windows"
     defines {
         "PLATFORM_WINDOWS",
-        "ENGINE_BUILD_DLL"
+        "ENGINE_BUILD_DLL",
+        "GLM_FORCE_DEPTH_ZERO_TO_ONE"
     }
 
     filter "configurations:Debug"

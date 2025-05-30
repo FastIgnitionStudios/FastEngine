@@ -5,6 +5,7 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 
+
 #include "vk_mem_alloc.h"
 
 #include "MeshVK.h"
@@ -412,7 +413,7 @@ namespace Engine
             camera.camera->Update(.01);
             glm::mat4 viewMatrix = camera.camera->GetViewMatrix();
 
-            glm::mat4 projection = glm::perspective(glm::radians(70.f), 16/9.f, 0.1f, 10000.f);
+            glm::mat4 projection = glm::perspective(glm::radians(70.f), 16/9.f, 10000.f, 0.1f);
 
             projection[1][1] *= -1;
 

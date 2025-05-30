@@ -122,7 +122,7 @@ VkRenderingAttachmentInfo Engine::ImageVK::CreateDepthAttachmentInfo(VkImageView
     depthAttachment.imageLayout = layout;
     depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-    depthAttachment.clearValue.depthStencil.depth = 0.f;
+    depthAttachment.clearValue.depthStencil = { 0.0f, 0 };
 
     return depthAttachment;
 }

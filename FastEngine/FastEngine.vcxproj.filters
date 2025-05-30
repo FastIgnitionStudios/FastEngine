@@ -10,6 +10,9 @@
     <Filter Include="Source\Core\Events">
       <UniqueIdentifier>{92191B46-7EFD-DB9B-E75D-D6EED360C61D}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Input">
+      <UniqueIdentifier>{ED1FC176-5936-BF0C-A2AD-4A2E0E039094}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core\Layers">
       <UniqueIdentifier>{6D04FE54-59E8-BEAA-C248-B9FDAE4BA92C}</UniqueIdentifier>
     </Filter>
@@ -122,11 +125,20 @@
     <ClInclude Include="Source\Core\Filesystem.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Input\Input.h">
+      <Filter>Source\Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Input\Keycodes.h">
+      <Filter>Source\Core\Input</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Layers\Layer.h">
       <Filter>Source\Core\Layers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Layers\LayerStack.h">
       <Filter>Source\Core\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Rendering\Camera.h">
+      <Filter>Source\Core\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Rendering\Device.h">
       <Filter>Source\Core\Rendering</Filter>
@@ -214,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="Source\Platforms\RHI\Vulkan\vkbootstrap\VkBootstrapDispatch.h">
       <Filter>Source\Platforms\RHI\Vulkan\vkbootstrap</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platforms\WindInput.h">
+      <Filter>Source\Platforms</Filter>
     </ClInclude>
     <ClInclude Include="Source\Platforms\WindWindow.h">
       <Filter>Source\Platforms</Filter>
@@ -1397,7 +1412,13 @@
     <ClCompile Include="Source\Core\Layers\LayerStack.cpp">
       <Filter>Source\Core\Layers</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Rendering\Camera.cpp">
+      <Filter>Source\Core\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\Rendering\Device.cpp">
+      <Filter>Source\Core\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Rendering\Mesh.cpp">
       <Filter>Source\Core\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Rendering\Renderer.cpp">
@@ -1474,6 +1495,9 @@
     </ClCompile>
     <ClCompile Include="Source\Platforms\RHI\Vulkan\vmaimpl.cpp">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\WindInput.cpp">
+      <Filter>Source\Platforms</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platforms\WindWindow.cpp">
       <Filter>Source\Platforms</Filter>

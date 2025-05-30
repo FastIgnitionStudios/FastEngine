@@ -40,7 +40,7 @@ namespace Engine
             ENGINE_CORE_ERROR("File couldn't be loaded: {0}", meshComp.filePath);
         }
 
-        auto asset = parser.loadGltf(data.get(), std::filesystem::path(meshComp.filePath).parent_path(), fastgltf::Options::LoadExternalBuffers);
+        auto asset = parser.loadGltf(data.get(), std::filesystem::path(meshComp.filePath).parent_path(), fastgltf::Options::LoadExternalBuffers | fastgltf::Options::LoadGLBBuffers);
         if (auto error = asset.error(); error != fastgltf::Error::None)
         {
             ENGINE_CORE_ERROR("File couldn't be loaded: {0}", meshComp.filePath);
@@ -128,7 +128,7 @@ namespace Engine
                                                                   });
                 }
 
-                newMesh.geometries.push_back(newSurface);
+                newMesh.geometries.emplace_back(newSurface);
 
 
 
