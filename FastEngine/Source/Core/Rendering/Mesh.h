@@ -1,12 +1,12 @@
 #pragma once
 #include "Core.h"
 #include "Renderer.h"
-
+#include "Core/UUID.h"
 namespace Engine
 {
     struct MeshComponent
     {
-        ::UUID id {UUID()};
+        UUID id {UUID()};
         std::string filePath;
     };
 

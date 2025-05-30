@@ -74,11 +74,13 @@ namespace Engine
                 translation = glm::vec3(0.0f);
             ImGui::SameLine();
             ImGui::DragFloat3("Translation", glm::value_ptr(translation), 0.1f);
-
+            glm::vec3 tempRot = glm::degrees(rotation);
             if (ImGui::Button("X##2"))
-                rotation = glm::vec3(0.0f);
+                tempRot = glm::vec3(0.0f);
             ImGui::SameLine();
-            ImGui::DragFloat3("Rotation", value_ptr(rotation), 0.1f);
+            
+            ImGui::DragFloat3("Rotation", value_ptr(tempRot), 0.1f);
+            rotation = glm::radians(tempRot);
 
             if (ImGui::Button("X##3"))
                 scale = glm::vec3(1.0f);

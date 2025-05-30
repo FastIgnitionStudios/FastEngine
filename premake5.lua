@@ -10,7 +10,9 @@ group "dependencies"
     include "FastEngine/ThirdParty/VMA"
     include "FastEngine/ThirdParty/ImGUI"
     include "FastEngine/ThirdParty/FastGLTF"
+    include "FastEngine/ThirdParty/YamlCPP"
 group ""
+
 
 include "Dependencies.lua"
 

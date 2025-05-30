@@ -18,3 +18,6 @@
 [submodule "FastEngine/ThirdParty/FastGLTF"]
 	path = FastEngine/ThirdParty/FastGLTF
 	url = https://github.com/FastIgnitionStudios/fastgltf.git
+[submodule "FastEngine/ThirdParty/YamlCPP"]
+	path = FastEngine/ThirdParty/YamlCPP
+	url = https://github.com/FastIgnitionStudios/yaml-cpp.git

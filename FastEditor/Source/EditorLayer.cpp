@@ -2,6 +2,7 @@
 
 #include "imgui.h"
 #include "Panels/SceneHierachyPanel.h"
+#include "Core/Scene/SceneSerializer.h"
 
 namespace Engine
 {
@@ -14,6 +15,9 @@ namespace Engine
         ActiveScene = Ref<Scene>::Create();
         SceneHierarchy = Ref<SceneHierarchyPanel>::Create();
         SceneHierarchy->SetContext(ActiveScene);
+
+        SceneSerializer serializer(ActiveScene);
+        serializer.Serialize("TestScene.fescene");
     }
 
     void EditorLayer::OnDetach()

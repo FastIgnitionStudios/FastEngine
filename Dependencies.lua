@@ -8,6 +8,7 @@ IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/include"
 IncludeDir["VMA"] = "%{wks.location}/FastEngine/ThirdParty/VMA/include"
 IncludeDir["FastGLTF"] = "%{wks.location}/FastEngine/ThirdParty/FastGLTF/include"
 IncludeDir["EnTT"] = "%{wks.location}/FastEngine/ThirdParty/EnTT/include"
+IncludeDir["YamlCPP"] = "%{wks.location}/FastEngine/ThirdParty/YamlCPP/include"
 
 
 LibraryDir = {}

@@ -167,6 +167,9 @@
     <ClInclude Include="Source\Core\Scene\Scene.h">
       <Filter>Source\Core\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Scene\SceneSerializer.h">
+      <Filter>Source\Core\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\UUID.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -1434,6 +1437,9 @@
       <Filter>Source\Core\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Scene\Scene.cpp">
+      <Filter>Source\Core\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Scene\SceneSerializer.cpp">
       <Filter>Source\Core\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\UUID.cpp">

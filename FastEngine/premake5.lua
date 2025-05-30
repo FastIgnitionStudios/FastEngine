@@ -33,6 +33,7 @@ project "FastEngine"
         "ThirdParty/GLM/GLM",
         "%{IncludeDir.FastGLTF}",
         "%{IncludeDir.EnTT}",
+        "%{IncludeDir.YamlCPP}"
         
     }
 
@@ -41,7 +42,8 @@ project "FastEngine"
         "%{Library.Vulkan}",
         "VulkanMemoryAllocator",
         "ImGUI",
-        "FastGLTF"
+        "FastGLTF",
+        "yaml-cpp"
     }
     
     buildoptions {"/utf-8"}

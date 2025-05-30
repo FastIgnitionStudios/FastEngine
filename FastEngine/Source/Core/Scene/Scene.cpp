@@ -4,6 +4,7 @@
 #include "Components.h"
 #include "Input/Input.h"
 #include "Rendering/Camera.h"
+#include "Rendering/Mesh.h"
 
 namespace Engine
 {
@@ -17,6 +18,11 @@ namespace Engine
         cameraComp.camera->SetPitch(0);
         cameraComp.camera->SetYaw(0);
         cameraComp.camera->SetMousePosition(Input::GetMouseX(), Input::GetMouseY());
+
+        auto meshes = CreateEntity("Meshes");
+        auto& meshComp = meshes.AddComponent<MeshComponent>();
+        meshComp.filePath = "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb";
+        meshComp.id = meshes.GetComponent<IDComponent>().ID;
     }
 
     Scene::~Scene()

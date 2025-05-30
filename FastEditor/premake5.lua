@@ -35,7 +35,7 @@ project "FastEditor"
         "MultiProcessorCompile"
     }
     
-    defines {"EDITOR"}
+    defines {"EDITOR", "YAML_CPP_STATIC_DEFINE"}
     
     filter "system:windows"
         defines {"PLATFORM_WINDOWS"}

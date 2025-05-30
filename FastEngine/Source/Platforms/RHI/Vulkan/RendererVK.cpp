@@ -27,6 +27,7 @@
 #include "Rendering/Camera.h"
 #include "Scene/Components.h"
 #include "Scene/Scene.h"
+#include "Scene/Entity.h"
 
 #ifndef ENGINE_RELEASE
 constexpr bool bUseValidationLayers = true;
@@ -420,12 +421,27 @@ namespace Engine
             sceneData.view = viewMatrix;
             sceneData.projection = projection;
             sceneData.viewproj = projection * viewMatrix;
-            
-            
-            
         }
+
+        auto meshView = EngineApp::Get()->GetActiveScene()->GetRegistry().view<MeshComponent>();
+        glm::vec3 translation;
+        glm::vec3 rotation;
+        glm::vec3 scale;
+        
+        for (auto entityID : meshView)
+        {
+            Entity entity {entityID, EngineApp::Get()->GetActiveScene().Raw() };
+            auto& comp = entity.GetComponent<TransformComponent>();
+            translation = comp.Translation;
+            rotation = comp.Rotation;
+            scale = comp.Scale;
+        }
+        glm::mat4 rot = glm::rotate(glm::mat4(1), rotation.x, glm::vec3(1, 0, 0))
+            * glm::rotate(glm::mat4(1), rotation.y, glm::vec3(0, 1, 0))
+            * glm::rotate(glm::mat4(1), rotation.z, glm::vec3(0, 0, 1));
+        glm::mat4 transform =  glm::translate(glm::mat4(1), translation) * rot * glm::scale(scale);
         mainDrawContext.OpaqueSurfaces.clear();
-        loadedMeshes["Suzanne"]->Draw(glm::mat4(1.f), mainDrawContext);
+        loadedMeshes["Suzanne"]->Draw(transform, mainDrawContext);
 
         // sceneData.view =  glm::translate(glm::vec3(0.f, 0.f, -5.f));
         // sceneData.projection = glm::perspective(glm::radians(70.f), 16/9.f,0.1f, 10000.f);
@@ -437,11 +453,8 @@ namespace Engine
         sceneData.sunlightDirection = glm::vec4(0.f, -1.f, 0.f, 1.f);
 
         for (int x = -3; x < 3; x++) {
-
-            glm::mat4 scale = glm::scale(glm::vec3{0.2});
-            glm::mat4 translation =  glm::translate(glm::vec3{x, 1, 0});
-
-            loadedMeshes["Cube"]->Draw(translation * scale, mainDrawContext);
+            
+            loadedMeshes["Cube"]->Draw(glm::translate(glm::mat4(1), glm::vec3{x*3, 0, -5}), mainDrawContext);
         }
         
     }
@@ -651,12 +664,36 @@ namespace Engine
 
 
         /*    Init default mesh data      */
+
         
+        auto view = EngineApp::Get()->GetActiveScene()->GetRegistry().view<MeshComponent>();
+        std::vector<MeshComponent> SceneMeshes;
+        for (auto entityID : view)
+        {
+            Ref<Scene> scene = EngineApp::Get()->GetActiveScene();
+            Entity entity = {entityID, scene.Raw()};
+            auto comp = entity.GetComponent<MeshComponent>();
+            SceneMeshes.push_back(comp);
+        }
         MeshComponent meshComp;
-        meshComp.id = ::UUID();
+        meshComp.id = UUID();
         meshComp.filePath = "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb";
-        testMesh = Ref<MeshVK>::Create(meshComp, this);
-        testMeshes = testMesh->meshes;
+
+        std::vector<Ref<MeshVK>> meshes;
+        for (const MeshComponent& mesh : SceneMeshes)
+        {
+            Ref<MeshVK> newMesh = Ref<MeshVK>::Create(mesh, this);
+            meshes.push_back(newMesh);
+        }
+        // testMesh = Ref<MeshVK>::Create(meshComp, this);
+
+        for (Ref<MeshVK>& mesh : meshes)
+        {
+            for (auto& m : mesh->meshes)
+                testMeshes.push_back(m);
+        }
+        
+        // testMeshes = testMesh->meshes;
 
         uint32_t white = glm::packUnorm4x8(glm::vec4(1, 1, 1, 1));
         whiteImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)&white, VkExtent3D{1, 1, 1}, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
