@@ -18,23 +18,33 @@ namespace Engine
 
     void Camera::Update(float deltaTime)
     {
+        float yawDelta = 0;
+        float pitchDelta = 0;
         velocity = glm::vec3(0);
-        if (Input::IsKeyPressed(FAST_KEY_A))
-            velocity.x = -1;
-        if (Input::IsKeyPressed(FAST_KEY_D))
-            velocity.x = 1;
-        if (Input::IsKeyPressed(FAST_KEY_W))
-            velocity.z = 1;
-        if (Input::IsKeyPressed(FAST_KEY_S))
-            velocity.z = -1;
+        
+        if (Input::IsMouseButtonPressed(FAST_MOUSE_BUTTON_RIGHT))
+        {
+            if (Input::IsKeyPressed(FAST_KEY_A))
+                velocity.x = -.1;
+            if (Input::IsKeyPressed(FAST_KEY_D))
+                velocity.x = .1;
+            if (Input::IsKeyPressed(FAST_KEY_W))
+                velocity.z = -.1;
+            if (Input::IsKeyPressed(FAST_KEY_S))
+                velocity.z = .1;
 
-        float yawDelta = (Input::GetMouseX() - mousePosition.x) * 0.003f;
+            yawDelta = (Input::GetMouseX() - mousePosition.x) * 0.003f;
+            pitchDelta = (Input::GetMouseY() - mousePosition.y) * 0.003f;
+
+        }
+
+        
         mousePosition.x = Input::GetMouseX();
         yaw += yawDelta;
 
-        float pitchDelta = (Input::GetMouseY() - mousePosition.y) * 0.003f;
+        
         mousePosition.y = Input::GetMouseY();
-        pitch += pitchDelta;
+        pitch -= pitchDelta;
 
         glm::mat4 rotation = GetRotationMatrix();
         position += glm::vec3(rotation * glm::vec4(velocity * 0.5f, 0.0f));
@@ -55,5 +65,16 @@ namespace Engine
 
         return glm::toMat4(yawRotation) * glm::toMat4(pitchRotation);
         
+    }
+
+    void Camera::OnMouseScroll(Event& e)
+    {
+        
+    }
+
+    void Camera::OnEvent(Event& e)
+    {
+        if (e.GetEventType() == EventType::MouseScrolled)
+            OnMouseScroll(e);
     }
 }

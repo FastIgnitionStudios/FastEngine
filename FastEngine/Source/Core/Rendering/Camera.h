@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "glm.hpp"
+#include "Events/Event.h"
 
 namespace Engine
 {
@@ -34,6 +35,8 @@ namespace Engine
         void SetPitch(float pitch) { this->pitch = pitch; }
         void SetYaw(float yaw) { this->yaw = yaw; }
         void SetMousePosition(float x, float y) { mousePosition = {x, y}; }
+        void OnMouseScroll(Event& e);
+        void OnEvent(Event& e);
 
     private:
         
