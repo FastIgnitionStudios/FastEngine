@@ -3,7 +3,12 @@
 #include "Core.h"
 #include "MaterialVK.h"
 #include "UtilsVK.h"
+#include "fastgltf/core.hpp"
 #include "Rendering/Mesh.h"
+
+#ifdef LoadImage()
+#undef LoadImage
+#endif
 
 namespace Engine
 {
@@ -20,6 +25,7 @@ namespace Engine
         uint32_t startIndex;
         uint32_t indexCount;
         GLTFMaterial material;
+        glm::mat4 offset;
     };
 
     struct MeshAssetVK
@@ -34,6 +40,7 @@ namespace Engine
     public:
         MeshVK();
         MeshVK(MeshComponent mesh, RendererVK* renderer);
+        MeshVK(std::string filePath, RendererVK* renderer);
         virtual ~MeshVK();
 
         std::vector<std::shared_ptr<MeshAssetVK>> CreateMeshAsset(MeshComponent mesh, RendererVK* renderer);
@@ -41,10 +48,18 @@ namespace Engine
         virtual void Draw(const glm::mat4& worldTransform, DrawContext& context) override;
         
     private:
+
+        VkFilter ExtractFilter(fastgltf::Filter filter);
+        VkSamplerMipmapMode ExtractMipmapMode(fastgltf::Filter filter);
         
         MeshComponent meshComp;
         std::vector<std::shared_ptr<MeshAssetVK>> meshes;
-        std::shared_ptr<MeshAssetVK> StaticMesh;
+        std::vector<VkSampler> samplers;
+        std::vector<ImageVK::AllocatedImage> images;
+        std::vector<std::shared_ptr<GLTFMaterial>> materials;
+        
+        DescriptorAllocatorDynamic meshDescriptorPool;
+        AllocatedBuffer materialDataBuffer;
         friend class RendererVK;
         
     };

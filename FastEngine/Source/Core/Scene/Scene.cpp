@@ -21,7 +21,7 @@ namespace Engine
 
         auto meshes = CreateEntity("Meshes");
         auto& meshComp = meshes.AddComponent<MeshComponent>();
-        meshComp.filePath = "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb";
+        meshComp.filePath = "..\\FastEngine\\Source\\Assets\\Meshes\\structure.glb";
         meshComp.id = meshes.GetComponent<IDComponent>().ID;
     }
 

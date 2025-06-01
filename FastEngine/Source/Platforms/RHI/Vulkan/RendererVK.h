@@ -70,6 +70,13 @@ namespace Engine
         VkDescriptorSetLayout GetSceneDataLayout() { return SceneDataLayout; }
         ImageVK::AllocatedImage GetDrawImage() { return Swapchain->GetDrawImage(); }
         ImageVK::AllocatedImage GetDepthImage() { return Swapchain->GetDepthImage(); }
+        ImageVK::AllocatedImage GetNullImage() { return errorCheckerboardImage; }
+        ImageVK::AllocatedImage GetWhiteImage() { return whiteImage; }
+
+        VkSampler GetDefaultSamplerLinear() { return defaultSamplerLinear; }
+        VkSampler GetDefaultSamplerNearest() { return defaultSamplerNearest; }
+
+        PBRMaterialVK GetMetalRoughnessMaterial() { return metalRoughnessMaterial; }
 
     private:
 
@@ -98,7 +105,7 @@ namespace Engine
         VkPipelineLayout meshPipelineLayout;
 
         DrawContext mainDrawContext;
-        std::unordered_map<std::string, std::shared_ptr<MeshVK>> loadedMeshes;
+        std::vector<Ref<MeshVK>> loadedMeshes;
         
 
         DeletionQueue MainDeletionQueue;

@@ -18,7 +18,8 @@ project "FastEngine"
         "EnginePCH.h",
         "EnginePCH.cpp",
         "ThirdParty/GLM/GLM/**.hpp",
-        "ThirdParty/EnTT/include/entt.hpp"
+        "ThirdParty/EnTT/include/entt.hpp",
+        "ThirdParty/STBImage/include/stb_image.h",
     }
     
     includedirs {
@@ -33,8 +34,8 @@ project "FastEngine"
         "ThirdParty/GLM/GLM",
         "%{IncludeDir.FastGLTF}",
         "%{IncludeDir.EnTT}",
-        "%{IncludeDir.YamlCPP}"
-        
+        "%{IncludeDir.YamlCPP}",
+        "ThirdParty"
     }
 
     links {

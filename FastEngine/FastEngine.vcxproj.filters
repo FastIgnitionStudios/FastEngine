@@ -7,6 +7,9 @@
     <Filter Include="Source\Core">
       <UniqueIdentifier>{6E95150F-DA4A-8E04-633F-88DBCFF38408}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Asset">
+      <UniqueIdentifier>{7D243376-E93A-310C-32B2-BC2D9E070294}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core\Events">
       <UniqueIdentifier>{92191B46-7EFD-DB9B-E75D-D6EED360C61D}</UniqueIdentifier>
     </Filter>
@@ -97,10 +100,19 @@
     <Filter Include="ThirdParty\SPDLog\tests">
       <UniqueIdentifier>{AA1734D4-164F-7C6B-1F59-E08E8B0FA364}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ThirdParty\STBImage">
+      <UniqueIdentifier>{6B3C45FF-D79D-220D-600B-69BFCC6B59CC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\STBImage\include">
+      <UniqueIdentifier>{DE9E5149-4AAC-7F2F-D392-7B1A3F9F4BE6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EnginePCH.h" />
+    <ClInclude Include="Source\Core\Asset\GLTFImporter.h">
+      <Filter>Source\Core\Asset</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Core.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -1400,9 +1412,15 @@
     <ClInclude Include="ThirdParty\SPDLog\tests\utils.h">
       <Filter>ThirdParty\SPDLog\tests</Filter>
     </ClInclude>
+    <ClInclude Include="ThirdParty\STBImage\include\stb_image.h">
+      <Filter>ThirdParty\STBImage\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EnginePCH.cpp" />
+    <ClCompile Include="Source\Core\Asset\GLTFImporter.cpp">
+      <Filter>Source\Core\Asset</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\EngineApp.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>

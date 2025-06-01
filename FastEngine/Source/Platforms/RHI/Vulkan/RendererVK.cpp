@@ -23,6 +23,7 @@
 #include <gtx/transform.hpp>
 #include <glm/glm.hpp>
 
+#include "Asset/GLTFImporter.h"
 #include "fastgltf/types.hpp"
 #include "Rendering/Camera.h"
 #include "Scene/Components.h"
@@ -414,7 +415,7 @@ namespace Engine
             camera.camera->Update(.01);
             glm::mat4 viewMatrix = camera.camera->GetViewMatrix();
 
-            glm::mat4 projection = glm::perspective(glm::radians(70.f), 16/9.f, 10000.f, 0.1f);
+            glm::mat4 projection = glm::perspective(glm::radians(70.f), 16/9.f, 100000.f, 0.1f);
 
             projection[1][1] *= -1;
 
@@ -441,7 +442,11 @@ namespace Engine
             * glm::rotate(glm::mat4(1), rotation.z, glm::vec3(0, 0, 1));
         glm::mat4 transform =  glm::translate(glm::mat4(1), translation) * rot * glm::scale(scale);
         mainDrawContext.OpaqueSurfaces.clear();
-        loadedMeshes["Suzanne"]->Draw(transform, mainDrawContext);
+        for (auto& mesh : loadedMeshes)
+        {
+            mesh->Draw(transform, mainDrawContext);
+        }
+        
 
         // sceneData.view =  glm::translate(glm::vec3(0.f, 0.f, -5.f));
         // sceneData.projection = glm::perspective(glm::radians(70.f), 16/9.f,0.1f, 10000.f);
@@ -451,11 +456,7 @@ namespace Engine
         sceneData.ambientColor = glm::vec4(0.1f, 0.1f, 0.1f, 1.f);
         sceneData.sunlightColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
         sceneData.sunlightDirection = glm::vec4(0.f, -1.f, 0.f, 1.f);
-
-        for (int x = -3; x < 3; x++) {
-            
-            loadedMeshes["Cube"]->Draw(glm::translate(glm::mat4(1), glm::vec3{x*3, 0, -5}), mainDrawContext);
-        }
+        
         
     }
 
@@ -676,21 +677,7 @@ namespace Engine
             SceneMeshes.push_back(comp);
         }
 
-        std::vector<Ref<MeshVK>> meshes;
-        for (const MeshComponent& mesh : SceneMeshes)
-        {
-            Ref<MeshVK> newMesh = Ref<MeshVK>::Create(mesh, this);
-            meshes.push_back(newMesh);
-        }
-        // testMesh = Ref<MeshVK>::Create(meshComp, this);
 
-        for (Ref<MeshVK>& mesh : meshes)
-        {
-            for (auto& m : mesh->meshes)
-                testMeshes.push_back(m);
-        }
-        
-        // testMeshes = testMesh->meshes;
 
         uint32_t white = glm::packUnorm4x8(glm::vec4(1, 1, 1, 1));
         whiteImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)&white, VkExtent3D{1, 1, 1}, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
@@ -759,21 +746,42 @@ namespace Engine
         materialResources.dataBuffer = materialConstants.buffer;
         materialResources.dataBufferOffset = 0;
 
+        std::vector<Ref<MeshVK>> meshes;
+        for (const MeshComponent& mesh : SceneMeshes)
+        {
+            Ref<GLTFImporter> importer = Ref<GLTFImporter>::Create(mesh.filePath, this);
+            
+            Ref<MeshVK> newMesh = importer->GetMeshes()[0];
+            meshes.push_back(newMesh);
+        }
+
+        
+        // testMesh = Ref<MeshVK>::Create(meshComp, this);
+
+        for (Ref<MeshVK>& mesh : meshes)
+        {
+            for (auto& m : mesh->meshes)
+                testMeshes.push_back(m);
+        }
+        
+        // testMeshes = testMesh->meshes;
+
         defaultData = metalRoughnessMaterial.WriteMaterial(GetDevice(), MaterialPass::MainColor, materialResources, globalDescriptorAllocator);
 
-        for (auto& m : testMeshes)
+        for (auto& mesh : meshes)
         {
-            std::shared_ptr<MeshVK> newMesh = std::make_shared<MeshVK>(SceneMeshes[0], this);
-            newMesh->meshes = {m};
-
-            for (auto& s : newMesh->meshes[0]->geometries) // Temporary
+            for (auto& m : mesh->meshes)
             {
-                GLTFMaterial mat = {.data = defaultData};
-                s.material = mat;
+                for (auto& s : m->geometries) // Temporary
+                {
+                    GLTFMaterial mat = {.data = defaultData};
+                    s.material = mat;
+                }
             }
 
-            loadedMeshes[m->name] = std::move(newMesh);
+            loadedMeshes.push_back(mesh);
         }
+        
     }
 
     void RendererVK::DrawBackground(VkCommandBuffer cmd)

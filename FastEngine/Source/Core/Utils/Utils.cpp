@@ -1,6 +1,9 @@
 #include "EnginePCH.h"
 #include "Core.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "STBImage/include/stb_image.h"
+
 namespace Engine::Utils
 {
     static std::unordered_set<void*> liveReferences;
