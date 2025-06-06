@@ -1,4 +1,5 @@
 #pragma once
+#include "Buffer.h"
 #include "Core.h"
 #include "Renderer.h"
 #include "Core/UUID.h"
@@ -8,6 +9,9 @@ namespace Engine
     {
         UUID id {UUID()};
         std::string filePath;
+
+        std::vector<Vertex> vertices;
+        std::vector<uint32_t> indices;
     };
 
     class Mesh : public Engine, public IRenderable

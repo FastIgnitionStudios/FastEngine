@@ -106,6 +106,7 @@ namespace Engine
 
         DrawContext mainDrawContext;
         std::vector<Ref<MeshVK>> loadedMeshes;
+        std::vector<MeshComponent> SceneMeshes;
         
 
         DeletionQueue MainDeletionQueue;

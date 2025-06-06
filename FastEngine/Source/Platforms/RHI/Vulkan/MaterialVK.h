@@ -29,7 +29,8 @@ namespace Engine
     {
         MaterialPipelineVK opaquePipeline;
         MaterialPipelineVK transparentPipeline;
-
+        MaterialPipelineVK bilboardPipeline;
+        
         VkDescriptorSetLayout materialLayout;
 
         struct MaterialConstants
@@ -59,4 +60,5 @@ namespace Engine
 
 
     };
+    
 }

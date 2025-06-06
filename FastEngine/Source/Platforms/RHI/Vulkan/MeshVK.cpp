@@ -25,7 +25,6 @@ namespace Engine
 
     MeshVK::MeshVK(MeshComponent mesh, RendererVK* renderer)
     {
-        meshes = CreateMeshAsset(mesh, renderer);
     }
 
     MeshVK::MeshVK(std::string filePath, RendererVK* renderer)
@@ -90,7 +89,7 @@ namespace Engine
 
             samplers.push_back(newSampler);
         }
-        
+
 
         materialDataBuffer = CreateBuffer(sizeof(PBRMaterialVK::MaterialConstants) * gltf.materials.size(),
                                           renderer->Allocator,
@@ -103,7 +102,7 @@ namespace Engine
         {
             images.push_back(renderer->errorCheckerboardImage);
         }
-        
+
         for (fastgltf::Material& mat : gltf.materials)
         {
             std::shared_ptr<GLTFMaterial> newMat = std::make_shared<GLTFMaterial>();
@@ -149,7 +148,6 @@ namespace Engine
 
             indexData++;
         }
-
 
 
         std::vector<uint32_t> indices;
@@ -244,13 +242,84 @@ namespace Engine
 
 
             newMesh->buffers = renderer->UploadMeshes(indices, vertices);
-            
+
             renderer->MainDeletionQueue.PushFunction([=, this]()
             {
                 DestroyBuffer(newMesh->buffers.vertexBuffer, renderer->Allocator);
                 DestroyBuffer(newMesh->buffers.indexBuffer, renderer->Allocator);
             });
         }
+
+        DestroyBuffer(materialDataBuffer, renderer->Allocator);
+    }
+
+    MeshVK::MeshVK(std::vector<uint32_t> indices, std::vector<Vertex> vertices, RendererVK* renderer)
+    {
+
+        std::vector<DescriptorAllocatorDynamic::PoolSizeRatio> sizes = {
+            {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 3},
+            {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 3},
+            {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1}
+        };
+
+        meshDescriptorPool.Init(renderer->GetDevice(), 3,
+                                sizes);
+        
+        std::shared_ptr<MeshAssetVK> newMesh = std::make_shared<MeshAssetVK>();
+        meshes.push_back(newMesh);
+        newMesh->name = "Mesh";
+
+        materialDataBuffer = CreateBuffer(sizeof(PBRMaterialVK::MaterialConstants),
+                                          renderer->Allocator,
+                                          VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
+        int indexData = 0;
+        PBRMaterialVK::MaterialConstants* sceneMaterialConstants = (PBRMaterialVK::MaterialConstants*)materialDataBuffer
+            .allocationInfo.pMappedData;
+
+        images.push_back(renderer->errorCheckerboardImage);
+
+        std::shared_ptr<GLTFMaterial> newMat = std::make_shared<GLTFMaterial>();
+        materials.push_back(newMat);
+
+        PBRMaterialVK::MaterialConstants constants;
+        constants.colorFactors.x = 0;
+        constants.colorFactors.y = 0;
+        constants.colorFactors.z = 0;
+        constants.colorFactors.w = 0;
+
+        constants.metallicRoughnessFactors.x = 0;
+        constants.metallicRoughnessFactors.y = 0;
+
+        sceneMaterialConstants[indexData] = constants;
+
+        MaterialPass passType = MaterialPass::MainColor;
+
+        PBRMaterialVK::MaterialResources materialResources;
+
+        materialResources.colorImage = renderer->GetWhiteImage();
+        materialResources.colorSampler = renderer->GetDefaultSamplerLinear();
+        materialResources.metallicRoughnessImage = renderer->GetWhiteImage();
+        materialResources.metalRoughnessSampler = renderer->GetDefaultSamplerLinear();
+
+        materialResources.dataBuffer = materialDataBuffer.buffer;
+        materialResources.dataBufferOffset = sizeof(PBRMaterialVK::MaterialConstants) * indexData;
+
+
+        newMat->data = renderer->GetMetalRoughnessMaterial().WriteMaterial(
+            renderer->GetDevice(), passType, materialResources,
+            meshDescriptorPool);
+
+        GeometryVK newSurface;
+        newSurface.startIndex = 0;
+        newSurface.indexCount = (uint32_t)indices.size();
+        newMesh->geometries.push_back(newSurface);
+        newMesh->buffers = renderer->UploadMeshes(indices, vertices);
+
+        renderer->MainDeletionQueue.PushFunction([=, this]()
+        {
+            DestroyBuffer(newMesh->buffers.vertexBuffer, renderer->Allocator);
+            DestroyBuffer(newMesh->buffers.indexBuffer, renderer->Allocator);
+        });
 
         DestroyBuffer(materialDataBuffer, renderer->Allocator);
     }
@@ -293,132 +362,7 @@ namespace Engine
             return VK_SAMPLER_MIPMAP_MODE_LINEAR;
         }
     }
-    
 
-    std::vector<std::shared_ptr<MeshAssetVK>> MeshVK::CreateMeshAsset(MeshComponent meshComp, RendererVK* renderer)
-    {
-        fastgltf::Parser parser;
-
-        auto data = fastgltf::GltfDataBuffer::FromPath(meshComp.filePath);
-        if (data.error() != fastgltf::Error::None)
-        {
-            ENGINE_CORE_ERROR("File couldn't be loaded: {0}", meshComp.filePath);
-        }
-
-        auto asset = parser.loadGltf(data.get(), std::filesystem::path(meshComp.filePath).parent_path(),
-                                     fastgltf::Options::LoadExternalBuffers | fastgltf::Options::LoadGLBBuffers);
-        if (auto error = asset.error(); error != fastgltf::Error::None)
-        {
-            ENGINE_CORE_ERROR("File couldn't be loaded: {0}", meshComp.filePath);
-        }
-
-
-        std::vector<std::shared_ptr<MeshAssetVK>> meshes;
-
-        std::vector<uint32_t> indices;
-        std::vector<Vertex> vertices;
-
-        for (fastgltf::Mesh& mesh : asset->meshes)
-        {
-            MeshAssetVK newMesh;
-
-            newMesh.name = mesh.name;
-
-            indices.clear();
-            vertices.clear();
-
-            for (auto&& p : mesh.primitives)
-            {
-                GeometryVK newSurface;
-                newSurface.startIndex = (uint32_t)indices.size();
-                newSurface.indexCount = (uint32_t)asset->accessors[p.indicesAccessor.value()].count;
-
-                size_t initialVtx = vertices.size();
-
-                {
-                    fastgltf::Accessor& indexAccessor = asset->accessors[p.indicesAccessor.value()];
-                    indices.reserve(indices.size() + indexAccessor.count);
-
-                    fastgltf::iterateAccessor<std::uint32_t>(asset.get(), indexAccessor, [&](std::uint32_t idx)
-                    {
-                        indices.push_back(idx + initialVtx);
-                    });
-                }
-
-                {
-                    fastgltf::Accessor& posAccessor = asset->accessors[p.findAttribute("POSITION")->accessorIndex];
-                    vertices.resize(vertices.size() + posAccessor.count);
-
-                    fastgltf::iterateAccessorWithIndex<glm::vec3>(asset.get(), posAccessor,
-                                                                  [&](glm::vec3 v, size_t index)
-                                                                  {
-                                                                      Vertex newvtx;
-                                                                      newvtx.position = v;
-                                                                      newvtx.normal = {1, 0, 0};
-                                                                      newvtx.color = {1, 1, 1, 1};
-                                                                      newvtx.uv_x = 0;
-                                                                      newvtx.uv_y = 0;
-                                                                      vertices[initialVtx + index] = newvtx;
-                                                                  });
-                }
-
-                auto normals = p.findAttribute("NORMAL");
-                if (normals != p.attributes.end())
-                {
-                    fastgltf::iterateAccessorWithIndex<glm::vec3>(asset.get(),
-                                                                  asset->accessors[(*normals).accessorIndex],
-                                                                  [&](glm::vec3 v, size_t index)
-                                                                  {
-                                                                      vertices[initialVtx + index].normal = v;
-                                                                  });
-                }
-
-                auto uv = p.findAttribute("TEXCOORD_0");
-                if (uv != p.attributes.end())
-                {
-                    fastgltf::iterateAccessorWithIndex<glm::vec2>(asset.get(), asset->accessors[(*uv).accessorIndex],
-                                                                  [&](glm::vec2 v, size_t index)
-                                                                  {
-                                                                      vertices[initialVtx + index].uv_x = v.x;
-                                                                      vertices[initialVtx + index].uv_y = v.y;
-                                                                  });
-                }
-
-                auto color = p.findAttribute("COLOR_0");
-                if (color != p.attributes.end())
-                {
-                    fastgltf::iterateAccessorWithIndex<glm::vec4>(asset.get(), asset->accessors[(*color).accessorIndex],
-                                                                  [&](glm::vec4 v, size_t index)
-                                                                  {
-                                                                      vertices[initialVtx + index].color = v;
-                                                                  });
-                }
-
-                newMesh.geometries.emplace_back(newSurface);
-            }
-
-            constexpr bool OverrideColors = false;
-            if (OverrideColors)
-            {
-                for (Vertex& vtx : vertices)
-                {
-                    vtx.color = {vtx.normal, 1};
-                }
-            }
-
-            newMesh.buffers = renderer->UploadMeshes(indices, vertices);
-            renderer->MainDeletionQueue.PushFunction([=, this]()
-            {
-                DestroyBuffer(newMesh.buffers.vertexBuffer, renderer->Allocator);
-                DestroyBuffer(newMesh.buffers.indexBuffer, renderer->Allocator);
-            });
-
-
-            meshes.emplace_back(std::make_shared<MeshAssetVK>(std::move(newMesh)));
-        }
-
-        return meshes;
-    }
 
     void MeshVK::Draw(const glm::mat4& worldTransform, DrawContext& context)
     {

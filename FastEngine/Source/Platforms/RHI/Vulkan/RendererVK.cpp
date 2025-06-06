@@ -94,13 +94,16 @@ namespace Engine
 
         ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_GENERAL,
                                  VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
-        ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetDepthImage().image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL);
+        ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetDepthImage().image, VK_IMAGE_LAYOUT_UNDEFINED,
+                                 VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL);
 
         DrawGeometry(currentCommandBuffer);
 
-        ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetDrawImage().image, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+        ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetDrawImage().image,
+                                 VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
                                  VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-        ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetSwapchainImage(CurrentSwapchainImageIndex), VK_IMAGE_LAYOUT_UNDEFINED,
+        ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetSwapchainImage(CurrentSwapchainImageIndex),
+                                 VK_IMAGE_LAYOUT_UNDEFINED,
                                  VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
         ImageVK::CopyImageToImage(currentCommandBuffer, Swapchain->GetDrawImage().image,
@@ -181,13 +184,11 @@ namespace Engine
                 GradientPipeline = Ref<ComputePipelineVK>::Create(vkPipelineInitInfo);
 
                 resizeRequested = false;
-            
+
                 ENGINE_CORE_INFO("Window Resize Complete");
             };
 
             Swapchain->ResizeSwapchain(vkSwapchainInitInfo);
-        
-
         }
 
         // Get DeviceVK
@@ -195,7 +196,7 @@ namespace Engine
         Ref<DeviceVK> deviceRef = Ref<DeviceVK>(Device);
 
         UpdateScene();
-        
+
         // Wait for previous frame to complete
 
         VK_CHECK(
@@ -211,8 +212,9 @@ namespace Engine
         // Get the next image index from the swapchain
 
         uint32_t swapchainImageIndex;
-        VkResult e = vkAcquireNextImageKHR(deviceRef->GetDevice(), Swapchain->GetSwapchain(), 1000000000, CommandStructure->
-                GetCurrentFrame().swapchainSemaphore, nullptr, &swapchainImageIndex);
+        VkResult e = vkAcquireNextImageKHR(deviceRef->GetDevice(), Swapchain->GetSwapchain(), 1000000000,
+                                           CommandStructure->
+                                           GetCurrentFrame().swapchainSemaphore, nullptr, &swapchainImageIndex);
         if (e == VK_ERROR_OUT_OF_DATE_KHR)
         {
             resizeRequested = true;
@@ -268,7 +270,6 @@ namespace Engine
         //     ImageVK::TransitionImage(cmd, Swapchain->GetSwapchainImage(CurrentSwapchainImageIndex), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
         // });
     }
-    
 
 
     void RendererVK::ImmediateSubmit(std::function<void(VkCommandBuffer cmd)>&& function)
@@ -314,14 +315,13 @@ namespace Engine
 
     void RendererVK::DrawGeometry(VkCommandBuffer cmd)
     {
-
         /*    Create Scene Descriptor Layout      */
 
 
-
-        AllocatedBuffer SceneDataBuffer = CreateBuffer(sizeof(GPUSceneData), Allocator, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
+        AllocatedBuffer SceneDataBuffer = CreateBuffer(sizeof(GPUSceneData), Allocator,
+                                                       VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
         vmaSetAllocationName(Allocator, SceneDataBuffer.allocation, "SceneDataBuffer");
-        
+
         CommandStructure->GetCurrentFrame().DeletionQueue.PushFunction([=, this]
         {
             DestroyBuffer(SceneDataBuffer, Allocator);
@@ -330,26 +330,30 @@ namespace Engine
         GPUSceneData* sceneUniformData = (GPUSceneData*)SceneDataBuffer.allocationInfo.pMappedData;
         *sceneUniformData = sceneData;
 
-        VkDescriptorSet globalDescriptor = CommandStructure->GetCurrentFrame().FrameDescriptors.Allocate(Ref<DeviceVK>(Device)->GetDevice(), SceneDataLayout);
-        
+        VkDescriptorSet globalDescriptor = CommandStructure->GetCurrentFrame().FrameDescriptors.Allocate(
+            Ref<DeviceVK>(Device)->GetDevice(), SceneDataLayout);
+
         DescriptorWriter writer;
         writer.WriteBuffer(0, SceneDataBuffer.buffer, sizeof(GPUSceneData), 0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
         writer.UpdateSet(Ref<DeviceVK>(Device)->GetDevice(), globalDescriptor);
-        
+
         VkRenderingAttachmentInfo colorAttachment = ImageVK::CreateAttachmentInfo(
             Swapchain->GetDrawImage().imageView, nullptr, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
-        VkRenderingAttachmentInfo depthAttachment = ImageVK::CreateDepthAttachmentInfo(Swapchain->GetDepthImage().imageView, VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL);
+        VkRenderingAttachmentInfo depthAttachment = ImageVK::CreateDepthAttachmentInfo(
+            Swapchain->GetDepthImage().imageView, VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL);
 
-        VkRenderingInfo renderInfo = CreateRenderingInfo(Swapchain->GetSwapchainExtent(), &colorAttachment, &depthAttachment);
+        VkRenderingInfo renderInfo = CreateRenderingInfo(Swapchain->GetSwapchainExtent(), &colorAttachment,
+                                                         &depthAttachment);
         vkCmdBeginRendering(cmd, &renderInfo);
 
 
-        
         vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, meshPipeline);
 
-        VkDescriptorSet imageSet = CommandStructure->GetCurrentFrame().FrameDescriptors.Allocate(Ref<DeviceVK>(Device)->GetDevice(), SingleImageLayout);
+        VkDescriptorSet imageSet = CommandStructure->GetCurrentFrame().FrameDescriptors.Allocate(
+            Ref<DeviceVK>(Device)->GetDevice(), SingleImageLayout);
         DescriptorWriter imageWriter;
-        imageWriter.WriteImage(0, errorCheckerboardImage.imageView, defaultSamplerNearest, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
+        imageWriter.WriteImage(0, errorCheckerboardImage.imageView, defaultSamplerNearest,
+                               VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
         imageWriter.UpdateSet(Ref<DeviceVK>(Device)->GetDevice(), imageSet);
 
         vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, meshPipelineLayout, 0, 1, &imageSet, 0, nullptr);
@@ -373,7 +377,6 @@ namespace Engine
         vkCmdSetScissor(cmd, 0, 1, &scissor);
 
 
-
 #if 0
         
         GPUDrawPushConstants pushConstants;
@@ -390,14 +393,17 @@ namespace Engine
         {
             auto material = static_cast<MaterialInstanceVK*>(draw.material);
             vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, material->pipeline->pipeline);
-            vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, material->pipeline->pipelineLayout, 0, 1, &globalDescriptor, 0, nullptr);
-            vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, material->pipeline->pipelineLayout, 1, 1, &material->materialSet, 0, nullptr);
+            vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, material->pipeline->pipelineLayout, 0, 1,
+                                    &globalDescriptor, 0, nullptr);
+            vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, material->pipeline->pipelineLayout, 1, 1,
+                                    &material->materialSet, 0, nullptr);
             vkCmdBindIndexBuffer(cmd, *(VkBuffer*)draw.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
             GPUDrawPushConstants pushConstants;
             pushConstants.vertexBuffer = draw.vertexBufferAddress;
             pushConstants.worldMatrix = draw.transform;
-            vkCmdPushConstants(cmd, meshPipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(GPUDrawPushConstants), &pushConstants);
+            vkCmdPushConstants(cmd, meshPipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(GPUDrawPushConstants),
+                               &pushConstants);
 
             vkCmdDrawIndexed(cmd, draw.indexCount, 1, draw.firstIndex, 0, 0);
         }
@@ -407,15 +413,14 @@ namespace Engine
 
     void RendererVK::UpdateScene()
     {
-        
-        auto view = EngineApp::Get()->GetActiveScene()->GetRegistry().view<TransformComponent, CameraComponent>();
-        for (auto entity : view)
+        auto cameraView = EngineApp::Get()->GetActiveScene()->GetRegistry().view<TransformComponent, CameraComponent>();
+        for (auto entity : cameraView)
         {
-            auto [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
+            auto [transform, camera] = cameraView.get<TransformComponent, CameraComponent>(entity);
             camera.camera->Update(.01);
             glm::mat4 viewMatrix = camera.camera->GetViewMatrix();
 
-            glm::mat4 projection = glm::perspective(glm::radians(70.f), 16/9.f, 100000.f, 0.1f);
+            glm::mat4 projection = glm::perspective(glm::radians(70.f), 16 / 9.f, 100000.f, 0.1f);
 
             projection[1][1] *= -1;
 
@@ -423,15 +428,65 @@ namespace Engine
             sceneData.projection = projection;
             sceneData.viewproj = projection * viewMatrix;
         }
+        SceneMeshes.clear();
+        auto view = EngineApp::Get()->GetActiveScene()->GetRegistry().view<MeshComponent>();
+        for (auto entityID : view)
+        {
+            Ref<Scene> scene = EngineApp::Get()->GetActiveScene();
+            Entity entity = {entityID, scene.Raw()};
+            auto comp = entity.GetComponent<MeshComponent>();
+            SceneMeshes.push_back(comp);
+        }
+
+        for (int i = loadedMeshes.size(); i < SceneMeshes.size(); i++)
+        {
+            ENGINE_CORE_INFO("loadedMeshes size: {0}, SceneMeshes size: {1}", loadedMeshes.size(), SceneMeshes.size());
+            if (SceneMeshes.size() > loadedMeshes.size() && !SceneMeshes.empty())
+            {
+                
+                if (!SceneMeshes[i].filePath.empty())
+                {
+                    Ref<GLTFImporter> importer = Ref<GLTFImporter>::Create(SceneMeshes[i].filePath, this);
+
+                    Ref<MeshVK> newMesh = importer->GetMeshes()[0];
+                    for (auto& m : newMesh->meshes)
+                    {
+                        for (auto& geometry : m->geometries)
+                        {
+                            GLTFMaterial mat = {.data = defaultData};
+                            geometry.material = mat;
+                        }
+                    }
+                    loadedMeshes.push_back(newMesh);
+                }
+                else
+                {
+                    if (!SceneMeshes[i].indices.empty() && SceneMeshes[i].vertices.size() > 0)
+                    {
+                        Ref<MeshVK> newMesh = Ref<MeshVK>::Create(SceneMeshes[i].indices, SceneMeshes[i].vertices, this);
+                        for (auto& m : newMesh->meshes)
+                        {
+                            for (auto& geometry : m->geometries)
+                            {
+                                GLTFMaterial mat = {.data = defaultData};
+                                geometry.material = mat;
+                            }
+                        }
+                        loadedMeshes.push_back(newMesh);
+                    }
+                }
+            }
+        }
+
 
         auto meshView = EngineApp::Get()->GetActiveScene()->GetRegistry().view<MeshComponent>();
         glm::vec3 translation{0};
         glm::vec3 rotation{0};
         glm::vec3 scale{1};
-        
+
         for (auto entityID : meshView)
         {
-            Entity entity {entityID, EngineApp::Get()->GetActiveScene().Raw() };
+            Entity entity{entityID, EngineApp::Get()->GetActiveScene().Raw()};
             auto& comp = entity.GetComponent<TransformComponent>();
             translation = comp.Translation;
             rotation = comp.Rotation;
@@ -440,13 +495,13 @@ namespace Engine
         glm::mat4 rot = glm::rotate(glm::mat4(1), rotation.x, glm::vec3(1, 0, 0))
             * glm::rotate(glm::mat4(1), rotation.y, glm::vec3(0, 1, 0))
             * glm::rotate(glm::mat4(1), rotation.z, glm::vec3(0, 0, 1));
-        glm::mat4 transform =  glm::translate(glm::mat4(1), translation) * rot * glm::scale(scale);
+        glm::mat4 transform = glm::translate(glm::mat4(1), translation) * rot * glm::scale(scale);
         mainDrawContext.OpaqueSurfaces.clear();
         for (auto& mesh : loadedMeshes)
         {
             mesh->Draw(transform, mainDrawContext);
         }
-        
+
 
         // sceneData.view =  glm::translate(glm::vec3(0.f, 0.f, -5.f));
         // sceneData.projection = glm::perspective(glm::radians(70.f), 16/9.f,0.1f, 10000.f);
@@ -456,8 +511,6 @@ namespace Engine
         sceneData.ambientColor = glm::vec4(0.1f, 0.1f, 0.1f, 1.f);
         sceneData.sunlightColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
         sceneData.sunlightDirection = glm::vec4(0.f, -1.f, 0.f, 1.f);
-        
-        
     }
 
     GPUMeshBuffers RendererVK::UploadMeshes(std::span<uint32_t> indices, std::span<Vertex> vertices)
@@ -467,16 +520,23 @@ namespace Engine
 
         GPUMeshBuffers newSurface;
 
-        newSurface.vertexBuffer = CreateBuffer(vertexBufferSize, Allocator, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT,
-            VMA_MEMORY_USAGE_GPU_ONLY);
+        newSurface.vertexBuffer = CreateBuffer(vertexBufferSize, Allocator,
+                                               VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |
+                                               VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT,
+                                               VMA_MEMORY_USAGE_GPU_ONLY);
 
-        VkBufferDeviceAddressInfo bufferDeviceAddressInfo{.sType = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO, .buffer = newSurface.vertexBuffer.buffer};
-        newSurface.vertexBufferAddress = vkGetBufferDeviceAddress(Ref<DeviceVK>(Device)->GetDevice(), &bufferDeviceAddressInfo);
+        VkBufferDeviceAddressInfo bufferDeviceAddressInfo{
+            .sType = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO, .buffer = newSurface.vertexBuffer.buffer
+        };
+        newSurface.vertexBufferAddress = vkGetBufferDeviceAddress(Ref<DeviceVK>(Device)->GetDevice(),
+                                                                  &bufferDeviceAddressInfo);
 
-        newSurface.indexBuffer = CreateBuffer(indexBufferSize, Allocator, VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-            VMA_MEMORY_USAGE_GPU_ONLY);
+        newSurface.indexBuffer = CreateBuffer(indexBufferSize, Allocator,
+                                              VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+                                              VMA_MEMORY_USAGE_GPU_ONLY);
 
-        AllocatedBuffer staging = CreateBuffer(vertexBufferSize + indexBufferSize, Allocator, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VMA_MEMORY_USAGE_CPU_ONLY);
+        AllocatedBuffer staging = CreateBuffer(vertexBufferSize + indexBufferSize, Allocator,
+                                               VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VMA_MEMORY_USAGE_CPU_ONLY);
 
         void* data = staging.allocationInfo.pMappedData;
 
@@ -499,9 +559,7 @@ namespace Engine
 
             vkCmdCopyBuffer(cmd, staging.buffer, newSurface.indexBuffer.buffer, 1, &indexCopy);
         });
-        
 
- 
 
         DestroyBuffer(staging, Allocator);
 
@@ -541,7 +599,6 @@ namespace Engine
 
         MainDeletionQueue.PushFunction([&]()
         {
-            
             vmaDestroyAllocator(Allocator);
         });
 
@@ -603,29 +660,31 @@ namespace Engine
         guiInfo.ImageFormat = Swapchain->GetSwapchainImageFormat();
         guiInfo.PhysicalDevice = Ref<DeviceVK>(Device)->GetPhysicalDevice();
         ImGui->InitImGUI(guiInfo);
-        
+
 
         /*    Initiate Mesh Pipeline      */
 
         Ref<ShaderVK> meshShader = Shader::Create(
-    (std::filesystem::current_path() / "../FastEngine/Source/Assets/Shaders/colored_triangle_mesh.vert").
-    generic_string(),
-    (std::filesystem::current_path() / "../FastEngine/Source/Assets/Shaders/tex_image.frag").
-    generic_string());
+            (std::filesystem::current_path() / "../FastEngine/Source/Assets/Shaders/colored_triangle_mesh.vert").
+            generic_string(),
+            (std::filesystem::current_path() / "../FastEngine/Source/Assets/Shaders/tex_image.frag").
+            generic_string());
         meshShader->CreateShaderModule(Ref<DeviceVK>(Device)->GetDevice());
 
-        VkPushConstantRange bufferRange {};
+        VkPushConstantRange bufferRange{};
         bufferRange.offset = 0;
         bufferRange.size = sizeof(GPUDrawPushConstants);
         bufferRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
-        VkPipelineLayoutCreateInfo meshPipelineLayoutInfo {.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO};
+        VkPipelineLayoutCreateInfo meshPipelineLayoutInfo{.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO};
         meshPipelineLayoutInfo.pushConstantRangeCount = 1;
         meshPipelineLayoutInfo.pPushConstantRanges = &bufferRange;
         meshPipelineLayoutInfo.pSetLayouts = &SingleImageLayout;
         meshPipelineLayoutInfo.setLayoutCount = 1;
 
-        VK_CHECK(vkCreatePipelineLayout(Ref<DeviceVK>(Device)->GetDevice(), &meshPipelineLayoutInfo, nullptr, &meshPipelineLayout));
+        VK_CHECK(
+            vkCreatePipelineLayout(Ref<DeviceVK>(Device)->GetDevice(), &meshPipelineLayoutInfo, nullptr, &
+                meshPipelineLayout));
 
         PipelineBuilder meshPipelineBuilder;
 
@@ -647,7 +706,8 @@ namespace Engine
 
         vkDestroyShaderModule(Ref<DeviceVK>(Device)->GetDevice(), meshShader->GetShaderModule(ShaderType::FRAGMENT),
                               nullptr);
-        vkDestroyShaderModule(Ref<DeviceVK>(Device)->GetDevice(), meshShader->GetShaderModule(ShaderType::VERTEX), nullptr);
+        vkDestroyShaderModule(Ref<DeviceVK>(Device)->GetDevice(), meshShader->GetShaderModule(ShaderType::VERTEX),
+                              nullptr);
 
         MainDeletionQueue.PushFunction([&]()
         {
@@ -658,7 +718,8 @@ namespace Engine
         {
             DescriptorLayoutBuilder layoutBuilder;
             layoutBuilder.AddBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
-            SceneDataLayout = layoutBuilder.Build(Ref<DeviceVK>(Device)->GetDevice(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT);
+            SceneDataLayout = layoutBuilder.Build(Ref<DeviceVK>(Device)->GetDevice(),
+                                                  VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT);
         }
 
         metalRoughnessMaterial.BuildPipelines(this);
@@ -666,9 +727,8 @@ namespace Engine
 
         /*    Init default mesh data      */
 
-        
+
         auto view = EngineApp::Get()->GetActiveScene()->GetRegistry().view<MeshComponent>();
-        std::vector<MeshComponent> SceneMeshes;
         for (auto entityID : view)
         {
             Ref<Scene> scene = EngineApp::Get()->GetActiveScene();
@@ -678,29 +738,33 @@ namespace Engine
         }
 
 
-
         uint32_t white = glm::packUnorm4x8(glm::vec4(1, 1, 1, 1));
-        whiteImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)&white, VkExtent3D{1, 1, 1}, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
+        whiteImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)&white, VkExtent3D{1, 1, 1},
+                                          VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
 
         uint32_t grey = glm::packUnorm4x8(glm::vec4(0.5, 0.5, 0.5, 1));
-        greyImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)&grey, VkExtent3D{1, 1, 1}, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
+        greyImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)&grey, VkExtent3D{1, 1, 1},
+                                         VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
 
         uint32_t black = glm::packUnorm4x8(glm::vec4(0, 0, 0, 1));
-        blackImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)&black, VkExtent3D{1, 1, 1}, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
+        blackImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)&black, VkExtent3D{1, 1, 1},
+                                          VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
 
         uint32_t checkerboard = glm::packUnorm4x8(glm::vec4(1, 0, 1, 1));
-        std::array<uint32_t, 16 *16> pixels;
+        std::array<uint32_t, 16 * 16> pixels;
         for (int x = 0; x < 16; x++)
         {
             for (int y = 0; y < 16; y++)
             {
-                pixels[y*16 + x] = ((x % 2) ^ (y % 2)) ? checkerboard : black;
+                pixels[y * 16 + x] = ((x % 2) ^ (y % 2)) ? checkerboard : black;
             }
         }
 
-        errorCheckerboardImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)pixels.data(), VkExtent3D{16, 16, 1}, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
-        
-        VkSamplerCreateInfo sampler1 {.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO};
+        errorCheckerboardImage = ImageVK::CreateImage(Ref<DeviceVK>(Device)->GetDevice(), this, (void*)pixels.data(),
+                                                      VkExtent3D{16, 16, 1}, VK_FORMAT_R8G8B8A8_UNORM,
+                                                      VK_IMAGE_USAGE_SAMPLED_BIT, Allocator);
+
+        VkSamplerCreateInfo sampler1{.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO};
 
         sampler1.magFilter = VK_FILTER_NEAREST;
         sampler1.minFilter = VK_FILTER_NEAREST;
@@ -711,7 +775,7 @@ namespace Engine
         sampler1.minFilter = VK_FILTER_LINEAR;
 
         vkCreateSampler(Ref<DeviceVK>(Device)->GetDevice(), &sampler1, nullptr, &defaultSamplerLinear);
-        
+
 
         MainDeletionQueue.PushFunction([&]()
         {
@@ -732,9 +796,12 @@ namespace Engine
         materialResources.metallicRoughnessImage = whiteImage;
         materialResources.metalRoughnessSampler = defaultSamplerLinear;
 
-        AllocatedBuffer materialConstants = CreateBuffer(sizeof(PBRMaterialVK::MaterialConstants), Allocator, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
+        AllocatedBuffer materialConstants = CreateBuffer(sizeof(PBRMaterialVK::MaterialConstants), Allocator,
+                                                         VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+                                                         VMA_MEMORY_USAGE_CPU_TO_GPU);
 
-        PBRMaterialVK::MaterialConstants* sceneUniformData = (PBRMaterialVK::MaterialConstants*)materialConstants.allocationInfo.pMappedData;
+        PBRMaterialVK::MaterialConstants* sceneUniformData = (PBRMaterialVK::MaterialConstants*)materialConstants.
+            allocationInfo.pMappedData;
         sceneUniformData->colorFactors = glm::vec4(1, 1, 1, 1);
         sceneUniformData->metallicRoughnessFactors = glm::vec4(1, 0.5, 0, 0);
 
@@ -749,13 +816,24 @@ namespace Engine
         std::vector<Ref<MeshVK>> meshes;
         for (const MeshComponent& mesh : SceneMeshes)
         {
-            Ref<GLTFImporter> importer = Ref<GLTFImporter>::Create(mesh.filePath, this);
-            
-            Ref<MeshVK> newMesh = importer->GetMeshes()[0];
-            meshes.push_back(newMesh);
+            if (!mesh.filePath.empty())
+            {
+                Ref<GLTFImporter> importer = Ref<GLTFImporter>::Create(mesh.filePath, this);
+
+                Ref<MeshVK> newMesh = importer->GetMeshes()[0];
+                meshes.push_back(newMesh);
+            }
+            else
+            {
+                if (!mesh.indices.empty() && mesh.vertices.size() > 0)
+                {
+                    Ref<MeshVK> newMesh = Ref<MeshVK>::Create(mesh.indices, mesh.vertices, this);
+                    meshes.push_back(newMesh);
+                }
+            }
         }
 
-        
+
         // testMesh = Ref<MeshVK>::Create(meshComp, this);
 
         for (Ref<MeshVK>& mesh : meshes)
@@ -763,10 +841,11 @@ namespace Engine
             for (auto& m : mesh->meshes)
                 testMeshes.push_back(m);
         }
-        
+
         // testMeshes = testMesh->meshes;
 
-        defaultData = metalRoughnessMaterial.WriteMaterial(GetDevice(), MaterialPass::MainColor, materialResources, globalDescriptorAllocator);
+        defaultData = metalRoughnessMaterial.WriteMaterial(GetDevice(), MaterialPass::MainColor, materialResources,
+                                                           globalDescriptorAllocator);
 
         for (auto& mesh : meshes)
         {
@@ -781,7 +860,6 @@ namespace Engine
 
             loadedMeshes.push_back(mesh);
         }
-        
     }
 
     void RendererVK::DrawBackground(VkCommandBuffer cmd)

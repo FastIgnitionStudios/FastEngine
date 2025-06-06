@@ -41,9 +41,9 @@ namespace Engine
         MeshVK();
         MeshVK(MeshComponent mesh, RendererVK* renderer);
         MeshVK(std::string filePath, RendererVK* renderer);
+        MeshVK(std::vector<uint32_t> indices, std::vector<Vertex> vertices, RendererVK* renderer);
         virtual ~MeshVK();
-
-        std::vector<std::shared_ptr<MeshAssetVK>> CreateMeshAsset(MeshComponent mesh, RendererVK* renderer);
+        
 
         virtual void Draw(const glm::mat4& worldTransform, DrawContext& context) override;
         
