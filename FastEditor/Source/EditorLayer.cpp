@@ -1,8 +1,10 @@
 #include "EditorLayer.h"
 
+#include "Engine.h"
 #include "imgui.h"
 #include "Panels/SceneHierachyPanel.h"
 #include "Core/Scene/SceneSerializer.h"
+
 
 namespace Engine
 {
@@ -15,6 +17,11 @@ namespace Engine
         ActiveScene = Ref<Scene>::Create();
         SceneHierarchy = Ref<SceneHierarchyPanel>::Create();
         SceneHierarchy->SetContext(ActiveScene);
+
+        auto meshes = ActiveScene->CreateEntity("Meshes");
+        auto& meshComp = meshes.AddComponent<MeshComponent>();
+        meshComp.filePath = "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb";
+        meshComp.id = meshes.GetComponent<IDComponent>().ID;
 
         SceneSerializer serializer(ActiveScene);
         serializer.Serialize("TestScene.fescene");

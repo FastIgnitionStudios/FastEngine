@@ -425,9 +425,9 @@ namespace Engine
         }
 
         auto meshView = EngineApp::Get()->GetActiveScene()->GetRegistry().view<MeshComponent>();
-        glm::vec3 translation;
-        glm::vec3 rotation;
-        glm::vec3 scale;
+        glm::vec3 translation{0};
+        glm::vec3 rotation{0};
+        glm::vec3 scale{1};
         
         for (auto entityID : meshView)
         {

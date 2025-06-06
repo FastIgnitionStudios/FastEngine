@@ -18,3 +18,4 @@ include "Dependencies.lua"
 
 include "FastEngine/"
 include "FastEditor/"
+include "GravitySim/"

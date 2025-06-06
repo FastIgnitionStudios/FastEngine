@@ -10,6 +10,7 @@
 #include "Core.h"
 #include <cstdlib>
 
+
 namespace Engine
 {
     std::filesystem::path Filesystem::EngineDir = "";
@@ -18,7 +19,7 @@ namespace Engine
     void Filesystem::InitFilesystem()
     {
         std::string WorkingDir = std::filesystem::current_path().generic_string();
-        EngineDir = WorkingDir.substr(0, WorkingDir.find("FastEditor")).append("FastEngine/");
+        EngineDir = WorkingDir.substr(0, WorkingDir.find("FastEngine")).append("FastEngine/FastEngine/");
         AppDir = WorkingDir;
         ENGINE_CORE_INFO("Engine Directory: {0}", EngineDir.generic_string());
     }

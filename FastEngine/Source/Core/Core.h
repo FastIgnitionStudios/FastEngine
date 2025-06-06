@@ -20,6 +20,10 @@
     #define ENGINE_CORE_ASSERT(x, ...)
 #endif
 
+
+#define STR(string) #string
+#define TO_STRING(string) STR(string)
+
 #define BIT(x) (1 << x)
 
 #define ENGINE_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }

@@ -49,6 +49,7 @@ project "FastEngine"
     
     buildoptions {"/utf-8"}
 
+
     flags
     {
         "MultiProcessorCompile"
