@@ -72,23 +72,27 @@ namespace Engine
         ImageVK::AllocatedImage GetDepthImage() { return Swapchain->GetDepthImage(); }
         ImageVK::AllocatedImage GetNullImage() { return errorCheckerboardImage; }
         ImageVK::AllocatedImage GetWhiteImage() { return whiteImage; }
-
+        Ref<SwapchainVK> GetSwapchain() { return Swapchain; }
+        Ref<CommandStructureVK> GetCommandStructure() { return CommandStructure; }
         VkSampler GetDefaultSamplerLinear() { return defaultSamplerLinear; }
         VkSampler GetDefaultSamplerNearest() { return defaultSamplerNearest; }
-
+        static VkRenderingInfo CreateRenderingInfo(VkExtent2D renderExtent, VkRenderingAttachmentInfo* colorAttachment, VkRenderingAttachmentInfo* depthAttachment);
         PBRMaterialVK GetMetalRoughnessMaterial() { return metalRoughnessMaterial; }
+        VmaAllocator GetAllocator() { return Allocator; }
+        VkDescriptorSetLayout GetSingleImageLayout() { return SceneDataLayout; }
+        void EnquePrimitive(std::function<Ref<MeshVK>()>&& function);
 
     private:
 
         void CreateInstance();
 
         // TODO: Replace with function to call queue of lambdas
+        void EnqueuPrimitives();
         void DrawBackground(VkCommandBuffer cmd);
         void UpdateScene();
         
 
         VkSubmitInfo2 CreateSubmitInfo(VkCommandBufferSubmitInfo* cmd, VkSemaphoreSubmitInfo* signalSemaphoreInfo, VkSemaphoreSubmitInfo* waitSemaphoreInfo);
-        VkRenderingInfo CreateRenderingInfo(VkExtent2D renderExtent, VkRenderingAttachmentInfo* colorAttachment, VkRenderingAttachmentInfo* depthAttachment);
         
 
             
@@ -103,6 +107,8 @@ namespace Engine
 
         VkPipeline meshPipeline;
         VkPipelineLayout meshPipelineLayout;
+
+        std::vector<std::function<Ref<MeshVK>()>> PrimitiveQueue;
 
         DrawContext mainDrawContext;
         std::vector<Ref<MeshVK>> loadedMeshes;

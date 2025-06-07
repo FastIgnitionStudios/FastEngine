@@ -4,6 +4,7 @@
 
 #include "glm.hpp"
 #define GLM_ENABLE_EXPERIMENTAL
+#include "ScriptEntity.h"
 #include "gtx/transform.hpp"
 
 namespace Engine
@@ -44,6 +45,21 @@ namespace Engine
                 * glm::rotate(glm::mat4(1.0f), Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
             return glm::translate(glm::mat4(1.0f), Translation) * rotation * glm::scale(glm::mat4(1.0f), Scale);
             
+        }
+    };
+
+    struct NativeScriptComponent
+    {
+        ScriptEntity* Instance = nullptr;
+
+        ScriptEntity*(*InstantiateScript)();
+        void(*DestroyScript)(NativeScriptComponent*);
+
+        template<typename T>
+        void Bind()
+        {
+            InstantiateScript = []() { return static_cast<ScriptEntity*>(new T()); };
+            DestroyScript = [](NativeScriptComponent* component) { delete component->Instance; component->Instance = nullptr; };
         }
         
     };

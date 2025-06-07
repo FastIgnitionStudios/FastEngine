@@ -23,6 +23,8 @@
 #include "Core/Scene/Scene.h"
 #include "Core/Scene/Entity.h"
 #include "Core/Scene/Components.h"
+#include "Core/Scene/SceneSerializer.h"
+#include "Core/Scene/ScriptEntity.h"
 
 
 /**  Rendering  **/

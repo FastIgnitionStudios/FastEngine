@@ -7,6 +7,7 @@
 #include "Utils/Log.h"
 #include "Events/ApplicationEvent.h"
 #include "GUI/EngineGUI.h"
+#include "Rendering/PrimitiveRenderer.h"
 #include "Rendering/Renderer.h"
 
 namespace Engine
@@ -28,6 +29,7 @@ namespace Engine
     void EngineApp::Run()
     {
         renderer = Renderer::CreateRenderer();
+        PrimitiveRenderer::InitPrimitiveRenderer();
         while (isRunning)
         {
             renderer->PreFrame();

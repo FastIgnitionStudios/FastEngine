@@ -1,10 +1,11 @@
 #pragma once
 #include "Core.h"
-#include "Rendering/Mesh.h"
+
 
 namespace Engine
 {
-
+    class Mesh;
+    class Renderer;
     class RendererVK;
     
     class GLTFImporter : public Engine

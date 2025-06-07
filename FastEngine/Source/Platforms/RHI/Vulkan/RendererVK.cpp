@@ -97,6 +97,7 @@ namespace Engine
         ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetDepthImage().image, VK_IMAGE_LAYOUT_UNDEFINED,
                                  VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL);
 
+
         DrawGeometry(currentCommandBuffer);
 
         ImageVK::TransitionImage(currentCommandBuffer, Swapchain->GetDrawImage().image,
@@ -389,6 +390,7 @@ namespace Engine
         vkCmdDrawIndexed(cmd, testMeshes[2]->geometries[0].indexCount, 1, testMeshes[2]->geometries[0].startIndex, 0, 0);
 #endif
 
+
         for (const RenderObject& draw : mainDrawContext.OpaqueSurfaces)
         {
             auto material = static_cast<MaterialInstanceVK*>(draw.material);
@@ -429,77 +431,47 @@ namespace Engine
             sceneData.viewproj = projection * viewMatrix;
         }
         SceneMeshes.clear();
+        loadedMeshes.clear();
+        EnqueuPrimitives();
+        for (auto& primitive : loadedMeshes)
+        {
+            for (auto& mesh : primitive->GetMeshes())
+            {
+                for (auto& geo : mesh->geometries)
+                {
+                    GLTFMaterial mat = {.data = defaultData};
+                    geo.material = mat;
+                }
+            }
+        }
         auto view = EngineApp::Get()->GetActiveScene()->GetRegistry().view<MeshComponent>();
         for (auto entityID : view)
         {
             Ref<Scene> scene = EngineApp::Get()->GetActiveScene();
             Entity entity = {entityID, scene.Raw()};
             auto comp = entity.GetComponent<MeshComponent>();
+            auto& transform = entity.GetComponent<TransformComponent>();
             SceneMeshes.push_back(comp);
-        }
-
-        for (int i = loadedMeshes.size(); i < SceneMeshes.size(); i++)
-        {
-            ENGINE_CORE_INFO("loadedMeshes size: {0}, SceneMeshes size: {1}", loadedMeshes.size(), SceneMeshes.size());
-            if (SceneMeshes.size() > loadedMeshes.size() && !SceneMeshes.empty())
+            for (auto& mesh : comp.meshes)
             {
-                
-                if (!SceneMeshes[i].filePath.empty())
+                for (auto& m : mesh.As<MeshVK>()->GetMeshes())
                 {
-                    Ref<GLTFImporter> importer = Ref<GLTFImporter>::Create(SceneMeshes[i].filePath, this);
-
-                    Ref<MeshVK> newMesh = importer->GetMeshes()[0];
-                    for (auto& m : newMesh->meshes)
+                    for (auto& geo : m->geometries)
                     {
-                        for (auto& geometry : m->geometries)
-                        {
-                            GLTFMaterial mat = {.data = defaultData};
-                            geometry.material = mat;
-                        }
-                    }
-                    loadedMeshes.push_back(newMesh);
-                }
-                else
-                {
-                    if (!SceneMeshes[i].indices.empty() && SceneMeshes[i].vertices.size() > 0)
-                    {
-                        Ref<MeshVK> newMesh = Ref<MeshVK>::Create(SceneMeshes[i].indices, SceneMeshes[i].vertices, this);
-                        for (auto& m : newMesh->meshes)
-                        {
-                            for (auto& geometry : m->geometries)
-                            {
-                                GLTFMaterial mat = {.data = defaultData};
-                                geometry.material = mat;
-                            }
-                        }
-                        loadedMeshes.push_back(newMesh);
+                        GLTFMaterial mat = {.data = defaultData};
+                        geo.material = mat;
                     }
                 }
+                mesh.As<MeshVK>()->SetTransform(transform);
+                loadedMeshes.push_back(mesh);
             }
         }
-
-
-        auto meshView = EngineApp::Get()->GetActiveScene()->GetRegistry().view<MeshComponent>();
-        glm::vec3 translation{0};
-        glm::vec3 rotation{0};
-        glm::vec3 scale{1};
-
-        for (auto entityID : meshView)
-        {
-            Entity entity{entityID, EngineApp::Get()->GetActiveScene().Raw()};
-            auto& comp = entity.GetComponent<TransformComponent>();
-            translation = comp.Translation;
-            rotation = comp.Rotation;
-            scale = comp.Scale;
-        }
-        glm::mat4 rot = glm::rotate(glm::mat4(1), rotation.x, glm::vec3(1, 0, 0))
-            * glm::rotate(glm::mat4(1), rotation.y, glm::vec3(0, 1, 0))
-            * glm::rotate(glm::mat4(1), rotation.z, glm::vec3(0, 0, 1));
-        glm::mat4 transform = glm::translate(glm::mat4(1), translation) * rot * glm::scale(scale);
+        
+        
         mainDrawContext.OpaqueSurfaces.clear();
         for (auto& mesh : loadedMeshes)
         {
-            mesh->Draw(transform, mainDrawContext);
+            mesh->Draw(mesh->GetTransform().GetTransform(), mainDrawContext);
         }
 
 
@@ -564,6 +536,11 @@ namespace Engine
         DestroyBuffer(staging, Allocator);
 
         return newSurface;
+    }
+
+    void RendererVK::EnquePrimitive(std::function<Ref<MeshVK>()>&& function)
+    {
+        PrimitiveQueue.push_back(function);
     }
 
     void RendererVK::CreateInstance()
@@ -813,6 +790,25 @@ namespace Engine
         materialResources.dataBuffer = materialConstants.buffer;
         materialResources.dataBufferOffset = 0;
 
+        defaultData = metalRoughnessMaterial.WriteMaterial(GetDevice(), MaterialPass::MainColor, materialResources,
+                                                           globalDescriptorAllocator);
+
+        for (const MeshComponent& meshComp : SceneMeshes)
+        {
+            for (auto& mesh : meshComp.meshes)
+            {
+                for (auto& m : mesh.As<MeshVK>()->GetMeshes())
+                {
+                    for (auto& geo : m->geometries)
+                    {
+                        GLTFMaterial mat = {.data = defaultData};
+                        geo.material = mat;
+                    }
+                }
+                loadedMeshes.push_back(mesh);
+            }
+        }
+#if 0
         std::vector<Ref<MeshVK>> meshes;
         for (const MeshComponent& mesh : SceneMeshes)
         {
@@ -843,9 +839,7 @@ namespace Engine
         }
 
         // testMeshes = testMesh->meshes;
-
-        defaultData = metalRoughnessMaterial.WriteMaterial(GetDevice(), MaterialPass::MainColor, materialResources,
-                                                           globalDescriptorAllocator);
+        
 
         for (auto& mesh : meshes)
         {
@@ -860,6 +854,17 @@ namespace Engine
 
             loadedMeshes.push_back(mesh);
         }
+#endif
+    }
+
+    void RendererVK::EnqueuPrimitives()
+    {
+        for (auto primitive : PrimitiveQueue)
+        {
+            auto prim = primitive();
+            loadedMeshes.push_back(prim);
+        }
+        PrimitiveQueue.clear();
     }
 
     void RendererVK::DrawBackground(VkCommandBuffer cmd)
@@ -877,8 +882,8 @@ namespace Engine
                                 &descriptors, 0, nullptr);
 
         ComputePushConstants pc;
-        pc.data1 = glm::vec4{1, 0, 0, 1};
-        pc.data2 = glm::vec4{0, 0, 1, 1};
+        pc.data1 = glm::vec4{0, 0.25, .8, 1};
+        pc.data2 = glm::vec4{0, 0.125, .4, 1};
 
         vkCmdPushConstants(cmd, GradientPipeline->GetPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT, 0, sizeof(pc), &pc);
 

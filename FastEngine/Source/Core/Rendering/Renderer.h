@@ -1,6 +1,7 @@
 #pragma once
 #include "Core.h"
 #include "glm.hpp"
+#include "Scene/Components.h"
 
 namespace Engine
 {
@@ -14,6 +15,7 @@ namespace Engine
         glm::mat4 transform;
         uint64_t vertexBufferAddress;
     };
+    
 
     struct DrawContext
     {
@@ -40,7 +42,6 @@ namespace Engine
         virtual void PreFrame() = 0;
         virtual void DrawViewport() = 0;
 
-        
-        
+        static Ref<Renderer> GetRenderer();
     };
 }

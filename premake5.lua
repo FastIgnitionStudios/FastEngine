@@ -5,12 +5,15 @@ workspace "FastEngine"
 
 
 
-group "dependencies"
+group "Dependencies"
     include "FastEngine/ThirdParty/GLFW/"
     include "FastEngine/ThirdParty/VMA"
     include "FastEngine/ThirdParty/ImGUI"
     include "FastEngine/ThirdParty/FastGLTF"
     include "FastEngine/ThirdParty/YamlCPP"
+group ""
+
+group "Programs"
 group ""
 
 

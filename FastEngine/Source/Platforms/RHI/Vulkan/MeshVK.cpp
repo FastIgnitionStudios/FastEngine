@@ -253,8 +253,9 @@ namespace Engine
         DestroyBuffer(materialDataBuffer, renderer->Allocator);
     }
 
-    MeshVK::MeshVK(std::vector<uint32_t> indices, std::vector<Vertex> vertices, RendererVK* renderer)
+    MeshVK::MeshVK(std::vector<uint32_t> indices, std::vector<Vertex> vertices, Renderer* renderer)
     {
+        auto vkRenderer = (RendererVK*)renderer;
 
         std::vector<DescriptorAllocatorDynamic::PoolSizeRatio> sizes = {
             {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 3},
@@ -262,7 +263,7 @@ namespace Engine
             {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1}
         };
 
-        meshDescriptorPool.Init(renderer->GetDevice(), 3,
+        meshDescriptorPool.Init(vkRenderer->GetDevice(), 3,
                                 sizes);
         
         std::shared_ptr<MeshAssetVK> newMesh = std::make_shared<MeshAssetVK>();
@@ -270,13 +271,13 @@ namespace Engine
         newMesh->name = "Mesh";
 
         materialDataBuffer = CreateBuffer(sizeof(PBRMaterialVK::MaterialConstants),
-                                          renderer->Allocator,
+                                          vkRenderer->Allocator,
                                           VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
         int indexData = 0;
         PBRMaterialVK::MaterialConstants* sceneMaterialConstants = (PBRMaterialVK::MaterialConstants*)materialDataBuffer
             .allocationInfo.pMappedData;
 
-        images.push_back(renderer->errorCheckerboardImage);
+        images.push_back(vkRenderer->errorCheckerboardImage);
 
         std::shared_ptr<GLTFMaterial> newMat = std::make_shared<GLTFMaterial>();
         materials.push_back(newMat);
@@ -296,32 +297,32 @@ namespace Engine
 
         PBRMaterialVK::MaterialResources materialResources;
 
-        materialResources.colorImage = renderer->GetWhiteImage();
-        materialResources.colorSampler = renderer->GetDefaultSamplerLinear();
-        materialResources.metallicRoughnessImage = renderer->GetWhiteImage();
-        materialResources.metalRoughnessSampler = renderer->GetDefaultSamplerLinear();
+        materialResources.colorImage = vkRenderer->GetWhiteImage();
+        materialResources.colorSampler = vkRenderer->GetDefaultSamplerLinear();
+        materialResources.metallicRoughnessImage = vkRenderer->GetWhiteImage();
+        materialResources.metalRoughnessSampler = vkRenderer->GetDefaultSamplerLinear();
 
         materialResources.dataBuffer = materialDataBuffer.buffer;
         materialResources.dataBufferOffset = sizeof(PBRMaterialVK::MaterialConstants) * indexData;
 
 
-        newMat->data = renderer->GetMetalRoughnessMaterial().WriteMaterial(
-            renderer->GetDevice(), passType, materialResources,
+        newMat->data = vkRenderer->GetMetalRoughnessMaterial().WriteMaterial(
+            vkRenderer->GetDevice(), passType, materialResources,
             meshDescriptorPool);
 
         GeometryVK newSurface;
         newSurface.startIndex = 0;
         newSurface.indexCount = (uint32_t)indices.size();
         newMesh->geometries.push_back(newSurface);
-        newMesh->buffers = renderer->UploadMeshes(indices, vertices);
+        newMesh->buffers = vkRenderer->UploadMeshes(indices, vertices);
 
-        renderer->MainDeletionQueue.PushFunction([=, this]()
+        vkRenderer->MainDeletionQueue.PushFunction([=, this]()
         {
-            DestroyBuffer(newMesh->buffers.vertexBuffer, renderer->Allocator);
-            DestroyBuffer(newMesh->buffers.indexBuffer, renderer->Allocator);
+            DestroyBuffer(newMesh->buffers.vertexBuffer, vkRenderer->Allocator);
+            DestroyBuffer(newMesh->buffers.indexBuffer, vkRenderer->Allocator);
         });
 
-        DestroyBuffer(materialDataBuffer, renderer->Allocator);
+        DestroyBuffer(materialDataBuffer, vkRenderer->Allocator);
     }
 
     MeshVK::~MeshVK()

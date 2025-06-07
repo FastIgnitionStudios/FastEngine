@@ -149,6 +149,9 @@
     <ClInclude Include="Source\Core\Layers\LayerStack.h">
       <Filter>Source\Core\Layers</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Rendering\Buffer.h">
+      <Filter>Source\Core\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Rendering\Camera.h">
       <Filter>Source\Core\Rendering</Filter>
     </ClInclude>
@@ -180,6 +183,9 @@
       <Filter>Source\Core\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Scene\SceneSerializer.h">
+      <Filter>Source\Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Scene\ScriptEntity.h">
       <Filter>Source\Core\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\UUID.h">

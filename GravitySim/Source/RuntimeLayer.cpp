@@ -1,6 +1,8 @@
 #include "RuntimeLayer.h"
 
 #include "imgui.h"
+#include "Rendering/PrimitiveRenderer.h"
+#include "Scripts/PlanetScript.h"
 
 static bool mesh = false;
 static bool meshCreated = false;
@@ -8,6 +10,9 @@ static bool meshCreated = false;
 void RuntimeLayer::OnAttach()
 {
     ActiveScene = Ref<Engine::Scene>::Create();
+
+    auto entity = ActiveScene->CreateEntity("Test");
+    entity.AddComponent<Engine::NativeScriptComponent>().Bind<PlanetScript>();
     
 }
 
@@ -18,7 +23,9 @@ void RuntimeLayer::OnDetach()
 
 void RuntimeLayer::OnUpdate()
 {
-    Layer::OnUpdate();
+    ActiveScene->OnUpdate(0.0f);
+
+    Engine::PrimitiveRenderer::DrawQuad(glm::vec3(0, 0, -15));
 }
 
 void RuntimeLayer::OnRender()
@@ -33,9 +40,7 @@ void RuntimeLayer::OnRender()
     {
         meshCreated = true;
         auto entity = ActiveScene->CreateEntity("Test");
-        auto& meshComp = entity.AddComponent<Engine::MeshComponent>();
-        meshComp.filePath = "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb";
-        meshComp.id = entity.GetComponent<Engine::IDComponent>().ID;
+        auto& meshComp = entity.AddComponent<Engine::MeshComponent>("..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb");
     }
 }
 

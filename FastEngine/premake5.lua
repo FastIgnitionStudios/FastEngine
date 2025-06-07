@@ -63,7 +63,7 @@ project "FastEngine"
     }
 
     filter "configurations:Debug"
-        defines { "ENGINE_DEBUG", "ENGINE_ENABLE_ASSERTS" }
+        defines { "DEBUG_BUILD", "ENGINE_ENABLE_ASSERTS" }
         symbols "on"
         
         links
@@ -74,7 +74,7 @@ project "FastEngine"
         }
         
     filter "configurations:Release"
-        defines { "ENGINE_RELEASE" }
+        defines { "RELEASE_BUILD" }
         optimize "on"
         
         links
@@ -85,7 +85,7 @@ project "FastEngine"
         }
         
     filter "configurations:Dev"
-        defines { "ENGINE_DEV", "ENGINE_ENABLE_ASSERTS" }
+        defines { "DEV_BUILD", "ENGINE_ENABLE_ASSERTS" }
         optimize "on"
         
         links

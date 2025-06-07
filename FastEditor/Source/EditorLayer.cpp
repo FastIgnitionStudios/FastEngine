@@ -4,10 +4,12 @@
 #include "imgui.h"
 #include "Panels/SceneHierachyPanel.h"
 #include "Core/Scene/SceneSerializer.h"
+#include "Rendering/PrimitiveRenderer.h"
 
 
 namespace Engine
 {
+    static bool firstFrame = true;
     EditorLayer::EditorLayer()
     {
     }
@@ -18,13 +20,7 @@ namespace Engine
         SceneHierarchy = Ref<SceneHierarchyPanel>::Create();
         SceneHierarchy->SetContext(ActiveScene);
 
-        auto meshes = ActiveScene->CreateEntity("Meshes");
-        auto& meshComp = meshes.AddComponent<MeshComponent>();
-        meshComp.filePath = "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb";
-        meshComp.id = meshes.GetComponent<IDComponent>().ID;
 
-        SceneSerializer serializer(ActiveScene);
-        serializer.Serialize("TestScene.fescene");
     }
 
     void EditorLayer::OnDetach()
@@ -34,7 +30,17 @@ namespace Engine
 
     void EditorLayer::OnUpdate()
     {
-        Layer::OnUpdate();
+        ActiveScene->OnUpdate(0.0f);
+        PrimitiveRenderer::DrawQuad(glm::vec3(0, 0, 0));
+        if (firstFrame)
+        {
+            auto meshes = ActiveScene->CreateEntity("Meshes");
+            auto& meshComp = meshes.AddComponent<MeshComponent>("..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb");
+
+            SceneSerializer serializer(ActiveScene);
+            serializer.Serialize("TestScene.fescene");
+            firstFrame = false;
+        }
     }
 
     void EditorLayer::OnRender()

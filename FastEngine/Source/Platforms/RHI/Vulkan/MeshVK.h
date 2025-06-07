@@ -6,7 +6,7 @@
 #include "fastgltf/core.hpp"
 #include "Rendering/Mesh.h"
 
-#ifdef LoadImage()
+#ifdef LoadImage
 #undef LoadImage
 #endif
 
@@ -41,23 +41,25 @@ namespace Engine
         MeshVK();
         MeshVK(MeshComponent mesh, RendererVK* renderer);
         MeshVK(std::string filePath, RendererVK* renderer);
-        MeshVK(std::vector<uint32_t> indices, std::vector<Vertex> vertices, RendererVK* renderer);
+        MeshVK(std::vector<uint32_t> indices, std::vector<Vertex> vertices, Renderer* renderer);
         virtual ~MeshVK();
         
-
-        virtual void Draw(const glm::mat4& worldTransform, DrawContext& context) override;
+        TransformComponent& GetTransform() { return transform; }
+        void SetTransform(TransformComponent transform) { this->transform = transform; }
         
+        virtual void Draw(const glm::mat4& worldTransform, DrawContext& context) override;
+        std::vector<std::shared_ptr<MeshAssetVK>> GetMeshes() { return meshes;}
     private:
 
         VkFilter ExtractFilter(fastgltf::Filter filter);
         VkSamplerMipmapMode ExtractMipmapMode(fastgltf::Filter filter);
         
-        MeshComponent meshComp;
         std::vector<std::shared_ptr<MeshAssetVK>> meshes;
         std::vector<VkSampler> samplers;
         std::vector<ImageVK::AllocatedImage> images;
         std::vector<std::shared_ptr<GLTFMaterial>> materials;
         
+        TransformComponent transform;
         DescriptorAllocatorDynamic meshDescriptorPool;
         AllocatedBuffer materialDataBuffer;
         friend class RendererVK;

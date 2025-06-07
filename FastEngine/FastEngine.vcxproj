@@ -75,7 +75,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>EnginePCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;GLM_FORCE_DEPTH_ZERO_TO_ONE;ENGINE_DEBUG;ENGINE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;GLM_FORCE_DEPTH_ZERO_TO_ONE;DEBUG_BUILD;ENGINE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;ThirdParty\GLFW\include;C:\VulkanSDK\1.3.296.0\include;ThirdParty\VMA\include;ThirdParty\ImGUI;ThirdParty\Glm;ThirdParty\GLM\GLM;ThirdParty\FastGLTF\include;ThirdParty\EnTT\include;ThirdParty\YamlCPP\include;ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -99,7 +99,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>EnginePCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;GLM_FORCE_DEPTH_ZERO_TO_ONE;ENGINE_DEV;ENGINE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;GLM_FORCE_DEPTH_ZERO_TO_ONE;DEV_BUILD;ENGINE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;ThirdParty\GLFW\include;C:\VulkanSDK\1.3.296.0\include;ThirdParty\VMA\include;ThirdParty\ImGUI;ThirdParty\Glm;ThirdParty\GLM\GLM;ThirdParty\FastGLTF\include;ThirdParty\EnTT\include;ThirdParty\YamlCPP\include;ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -126,7 +126,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>EnginePCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;GLM_FORCE_DEPTH_ZERO_TO_ONE;ENGINE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PLATFORM_WINDOWS;ENGINE_BUILD_DLL;GLM_FORCE_DEPTH_ZERO_TO_ONE;RELEASE_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>Source;Source\Core;ThirdParty\SPDLog\include;ThirdParty\GLFW\include;C:\VulkanSDK\1.3.296.0\include;ThirdParty\VMA\include;ThirdParty\ImGUI;ThirdParty\Glm;ThirdParty\GLM\GLM;ThirdParty\FastGLTF\include;ThirdParty\EnTT\include;ThirdParty\YamlCPP\include;ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -169,6 +169,7 @@
     <ClInclude Include="Source\Core\Rendering\Device.h" />
     <ClInclude Include="Source\Core\Rendering\Material.h" />
     <ClInclude Include="Source\Core\Rendering\Mesh.h" />
+    <ClInclude Include="Source\Core\Rendering\PrimitiveRenderer.h" />
     <ClInclude Include="Source\Core\Rendering\Renderer.h" />
     <ClInclude Include="Source\Core\Rendering\RendererAPI.h" />
     <ClInclude Include="Source\Core\Rendering\Shader.h" />
@@ -176,6 +177,7 @@
     <ClInclude Include="Source\Core\Scene\Entity.h" />
     <ClInclude Include="Source\Core\Scene\Scene.h" />
     <ClInclude Include="Source\Core\Scene\SceneSerializer.h" />
+    <ClInclude Include="Source\Core\Scene\ScriptEntity.h" />
     <ClInclude Include="Source\Core\UUID.h" />
     <ClInclude Include="Source\Core\Utils\Log.h" />
     <ClInclude Include="Source\Core\Window.h" />
@@ -190,6 +192,7 @@
     <ClInclude Include="Source\Platforms\RHI\Vulkan\ImageVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\MaterialVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\MeshVK.h" />
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\PrimitiveRendererVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\RendererVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\ShaderVK.h" />
     <ClInclude Include="Source\Platforms\RHI\Vulkan\SwapchainVK.h" />
@@ -600,6 +603,7 @@
     <ClCompile Include="Source\Core\Rendering\Camera.cpp" />
     <ClCompile Include="Source\Core\Rendering\Device.cpp" />
     <ClCompile Include="Source\Core\Rendering\Mesh.cpp" />
+    <ClCompile Include="Source\Core\Rendering\PrimitiveRenderer.cpp" />
     <ClCompile Include="Source\Core\Rendering\Renderer.cpp" />
     <ClCompile Include="Source\Core\Rendering\RendererAPI.cpp" />
     <ClCompile Include="Source\Core\Rendering\Shader.cpp" />
@@ -620,6 +624,7 @@
     <ClCompile Include="Source\Platforms\RHI\Vulkan\ImageVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\MaterialVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\MeshVK.cpp" />
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\PrimitiveRendererVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\RendererVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\ShaderVK.cpp" />
     <ClCompile Include="Source\Platforms\RHI\Vulkan\SwapchainVK.cpp" />
