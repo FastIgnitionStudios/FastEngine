@@ -25,7 +25,7 @@ void RuntimeLayer::OnUpdate()
 {
     ActiveScene->OnUpdate(0.0f);
 
-    Engine::PrimitiveRenderer::DrawQuad(glm::vec3(0, 0, -15));
+    Engine::PrimitiveRenderer::DrawSphere(glm::vec3(0, 0, 0), 1);
 }
 
 void RuntimeLayer::OnRender()
