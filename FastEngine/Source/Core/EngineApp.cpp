@@ -30,27 +30,50 @@ namespace Engine
     {
         renderer = Renderer::CreateRenderer();
         PrimitiveRenderer::InitPrimitiveRenderer();
+        auto start = std::chrono::high_resolution_clock::now();
+        auto end = std::chrono::high_resolution_clock::now();
+        float frameTime = 0.0f;
+        std::vector<float> deltaTimes;
         while (isRunning)
         {
+            start = std::chrono::high_resolution_clock::now();
             renderer->PreFrame();
             window->OnUpdate();
-
+            EngineGUI::BeginFrame();
+                            
+            ImGui::Begin("DeltaTime");
+            ImGui::Text("DeltaTime: %f", frameTime);
+            ImGui::End();
             for (const auto& layer : LayerStack)
             {
-                layer->OnUpdate();
+                layer->OnUpdate(frameTime);
 
-                EngineGUI::BeginFrame();
 
-                layer->OnRender();
 
-                EngineGUI::EndFrame();
+                layer->OnRender(frameTime);
+
+                
             }
+
+            EngineGUI::EndFrame();
 
             renderer->DrawViewport();
             
-            
-            
             renderer->DrawFrame();
+            
+            end = std::chrono::high_resolution_clock::now();
+            frameTime = std::chrono::duration<float, std::milli>(end - start).count();
+            deltaTimes.insert(deltaTimes.begin(), frameTime);
+            if (deltaTimes.size() > 25)
+            {
+                deltaTimes.pop_back();
+            }
+            float sum = 0.0f;
+            for (auto&dt : deltaTimes)
+            {
+                sum += dt;
+            }
+            frameTime = sum / deltaTimes.size();
         }
 
         ENGINE_CORE_INFO("Engine shutting down");

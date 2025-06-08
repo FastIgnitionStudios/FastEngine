@@ -53,6 +53,8 @@ namespace Engine
             return !(*this == other);
         }
 
+        Scene* GetScene() const { return Scene; }
+
     private:
         entt::entity EntityID = entt::null;
         Scene* Scene = nullptr;

@@ -4,6 +4,15 @@
 #include "entt.hpp"
 
 
+namespace Engine
+{
+    class ScriptEntity;
+}
+
+namespace Engine
+{
+    struct NativeScriptComponent;
+}
 
 namespace Engine 
 {
@@ -16,8 +25,15 @@ namespace Engine
         ~Scene();
 
         Entity CreateEntity(const std::string& name = std::string());
-        entt::registry& GetRegistry() { return Registry; }
 
+        template<typename ...Args>
+        auto GetEntitiesByComponents()
+        {
+            return Registry.view<Args...>();
+        }
+
+        Entity GetEntityByTag(const std::string& tag);
+        
         void OnUpdate(float DeltaTime);
 
     private:

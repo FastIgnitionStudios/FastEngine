@@ -35,6 +35,19 @@ namespace Engine
         return entity;
     }
 
+    Entity Scene::GetEntityByTag(const std::string& tag)
+    {
+        auto view = Registry.view<NameComponent>();
+        for (auto entity : view)
+        {
+            if (view.get<NameComponent>(entity).Name == tag)
+            {
+                return Entity(entity, this);
+            }
+        }
+        return Entity();
+    }
+
     void Scene::OnUpdate(float DeltaTime)
     {
         auto view = Registry.view<TransformComponent>();
@@ -42,19 +55,15 @@ namespace Engine
         {
             auto& transform = view.get<TransformComponent>(entity);
         }
-
-        Registry.view<NativeScriptComponent>().each([=](auto entity, NativeScriptComponent& script)
-        {
-            if (!script.Instance)
-            {
-                script.Instance = script.InstantiateScript();
-                script.Instance->entity = Entity(entity, this);
-                script.Instance->OnCreate();
-            }
-
-            script.Instance->OnUpdate(DeltaTime);
-        });
         
-
+        Registry.view<NativeScriptComponent>().each([&](auto entity, NativeScriptComponent& script)
+        {
+            if (!script.script)
+            {
+                script.script->entity = Entity(entity, this);
+                script.script->OnCreate();
+            }
+            script.script->OnUpdate(DeltaTime);
+        });
     }
 }

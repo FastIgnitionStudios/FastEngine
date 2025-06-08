@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Core/UUID.h"
-
+#include "ScriptEntity.h"
 #include "glm.hpp"
 #define GLM_ENABLE_EXPERIMENTAL
-#include "ScriptEntity.h"
+
 #include "gtx/transform.hpp"
 
 namespace Engine
@@ -50,18 +50,23 @@ namespace Engine
 
     struct NativeScriptComponent
     {
-        ScriptEntity* Instance = nullptr;
+        Ref<ScriptEntity> script;
+        entt::type_info scriptType{std::in_place_type<void>};
+        
 
-        ScriptEntity*(*InstantiateScript)();
-        void(*DestroyScript)(NativeScriptComponent*);
-
-        template<typename T>
-        void Bind()
+        template<typename T, typename... Args>
+        void CreateScript(Entity entity, Args&&... args)
         {
-            InstantiateScript = []() { return static_cast<ScriptEntity*>(new T()); };
-            DestroyScript = [](NativeScriptComponent* component) { delete component->Instance; component->Instance = nullptr; };
+            script = Ref<T>::Create(entity, std::forward<Args>(args)...);
+            scriptType = entt::type_id<T>();
         }
         
+
+        template<typename T>
+        bool IsType() const
+        {
+            return scriptType == entt::type_id<T>();
+        }
     };
     
 }

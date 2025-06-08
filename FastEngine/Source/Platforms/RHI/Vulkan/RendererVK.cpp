@@ -347,7 +347,7 @@ namespace Engine
                                                          &depthAttachment);
         vkCmdBeginRendering(cmd, &renderInfo);
 
-
+#if 0
         vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, meshPipeline);
 
         VkDescriptorSet imageSet = CommandStructure->GetCurrentFrame().FrameDescriptors.Allocate(
@@ -359,26 +359,10 @@ namespace Engine
 
         vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, meshPipelineLayout, 0, 1, &imageSet, 0, nullptr);
 
-        VkViewport viewport = {};
-        viewport.x = 0.0f;
-        viewport.y = 0.0f;
-        viewport.width = Swapchain->GetDrawImage().imageExtent.width;
-        viewport.height = Swapchain->GetDrawImage().imageExtent.height;
-        viewport.minDepth = 0.0f;
-        viewport.maxDepth = 1.0f;
-
-        vkCmdSetViewport(cmd, 0, 1, &viewport);
-
-        VkRect2D scissor = {};
-        scissor.offset.x = 0;
-        scissor.offset.y = 0;
-        scissor.extent.width = Swapchain->GetDrawImage().imageExtent.width;
-        scissor.extent.height = Swapchain->GetDrawImage().imageExtent.height;
-
-        vkCmdSetScissor(cmd, 0, 1, &scissor);
 
 
-#if 0
+
+
         
         GPUDrawPushConstants pushConstants;
         pushConstants.worldMatrix = projection * view;
@@ -390,16 +374,49 @@ namespace Engine
         vkCmdDrawIndexed(cmd, testMeshes[2]->geometries[0].indexCount, 1, testMeshes[2]->geometries[0].startIndex, 0, 0);
 #endif
 
-
+        MaterialPipelineVK* lastPipeline = nullptr;
+        MaterialInstanceVK* lastMaterial = nullptr;
+        VkBuffer lasIndexBuffer = VK_NULL_HANDLE;
         for (const RenderObject& draw : mainDrawContext.OpaqueSurfaces)
         {
             auto material = static_cast<MaterialInstanceVK*>(draw.material);
-            vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, material->pipeline->pipeline);
-            vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, material->pipeline->pipelineLayout, 0, 1,
-                                    &globalDescriptor, 0, nullptr);
-            vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, material->pipeline->pipelineLayout, 1, 1,
-                                    &material->materialSet, 0, nullptr);
-            vkCmdBindIndexBuffer(cmd, *(VkBuffer*)draw.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+            
+            if (material != lastMaterial)
+            {
+                lastMaterial = material;
+                if (material->pipeline != lastPipeline)
+                {
+                    lastPipeline = material->pipeline;
+                    vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, material->pipeline->pipeline);
+                    vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, material->pipeline->pipelineLayout, 0, 1,
+                                            &globalDescriptor, 0, nullptr);
+                    VkViewport viewport = {};
+                    viewport.x = 0.0f;
+                    viewport.y = 0.0f;
+                    viewport.width = Swapchain->GetDrawImage().imageExtent.width;
+                    viewport.height = Swapchain->GetDrawImage().imageExtent.height;
+                    viewport.minDepth = 0.0f;
+                    viewport.maxDepth = 1.0f;
+
+                    vkCmdSetViewport(cmd, 0, 1, &viewport);
+
+                    VkRect2D scissor = {};
+                    scissor.offset.x = 0;
+                    scissor.offset.y = 0;
+                    scissor.extent.width = Swapchain->GetDrawImage().imageExtent.width;
+                    scissor.extent.height = Swapchain->GetDrawImage().imageExtent.height;
+
+                    vkCmdSetScissor(cmd, 0, 1, &scissor);
+                }
+                
+                vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, material->pipeline->pipelineLayout, 1, 1,
+                                        &material->materialSet, 0, nullptr);
+            }
+            if (*(VkBuffer*)draw.indexBuffer != lasIndexBuffer)
+            {
+                lasIndexBuffer = *(VkBuffer*)draw.indexBuffer;
+                vkCmdBindIndexBuffer(cmd, *(VkBuffer*)draw.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+            }
 
             GPUDrawPushConstants pushConstants;
             pushConstants.vertexBuffer = draw.vertexBufferAddress;
@@ -415,7 +432,7 @@ namespace Engine
 
     void RendererVK::UpdateScene()
     {
-        auto cameraView = EngineApp::Get()->GetActiveScene()->GetRegistry().view<TransformComponent, CameraComponent>();
+        auto cameraView = EngineApp::Get()->GetActiveScene()->GetEntitiesByComponents<TransformComponent, CameraComponent>();
         for (auto entity : cameraView)
         {
             auto [transform, camera] = cameraView.get<TransformComponent, CameraComponent>(entity);
@@ -444,7 +461,7 @@ namespace Engine
                 }
             }
         }
-        auto view = EngineApp::Get()->GetActiveScene()->GetRegistry().view<MeshComponent>();
+        auto view = EngineApp::Get()->GetActiveScene()->GetEntitiesByComponents<MeshComponent>();
         for (auto entityID : view)
         {
             Ref<Scene> scene = EngineApp::Get()->GetActiveScene();
@@ -705,7 +722,7 @@ namespace Engine
         /*    Init default mesh data      */
 
 
-        auto view = EngineApp::Get()->GetActiveScene()->GetRegistry().view<MeshComponent>();
+        auto view = EngineApp::Get()->GetActiveScene()->GetEntitiesByComponents<MeshComponent>();
         for (auto entityID : view)
         {
             Ref<Scene> scene = EngineApp::Get()->GetActiveScene();

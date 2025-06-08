@@ -28,7 +28,7 @@ namespace Engine
         Layer::OnDetach();
     }
 
-    void EditorLayer::OnUpdate()
+    void EditorLayer::OnUpdate(float deltaTime)
     {
         ActiveScene->OnUpdate(0.0f);
         PrimitiveRenderer::DrawQuad(glm::vec3(0, 0, 0));
@@ -43,7 +43,7 @@ namespace Engine
         }
     }
 
-    void EditorLayer::OnRender()
+    void EditorLayer::OnRender(float deltaTime)
     {
         SceneHierarchy->OnImGuiRender();   
     }

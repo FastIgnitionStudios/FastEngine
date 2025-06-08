@@ -7,7 +7,7 @@ namespace Engine
     class ScriptEntity : public Engine
     {
     public:
-
+        ScriptEntity(Entity entity) : entity(entity) {}
         virtual ~ScriptEntity() {}
         
         template<typename T>
@@ -15,12 +15,12 @@ namespace Engine
         {
             return entity.GetComponent<T>();
         }
+    
 
     protected:
         virtual void OnCreate() {}
         virtual void OnDestroy() {}
         virtual void OnUpdate(float DeltaTime) {}
-    private:
         Entity entity;
         friend class Scene;
     };

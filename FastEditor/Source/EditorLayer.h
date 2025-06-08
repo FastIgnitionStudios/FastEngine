@@ -11,8 +11,8 @@ namespace Engine
 
         void OnAttach() override;
         void OnDetach() override;
-        void OnUpdate() override;
-        void OnRender() override;
+        void OnUpdate(float deltaTime) override;
+        void OnRender(float deltaTime) override;
         void OnEvent(Event& e) override;
 
         Ref<Scene> GetActiveScene() { return ActiveScene; }
