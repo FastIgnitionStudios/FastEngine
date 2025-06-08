@@ -482,7 +482,7 @@ namespace Engine
 
         sceneData.ambientColor = glm::vec4(0.1f, 0.1f, 0.1f, 1.f);
         sceneData.sunlightColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
-        sceneData.sunlightDirection = glm::vec4(0.f, -1.f, 0.f, 1.f);
+        sceneData.sunlightDirection = glm::vec4(0.5f, 1.f, 0.f, 1.f);
     }
 
     GPUMeshBuffers RendererVK::UploadMeshes(std::span<uint32_t> indices, std::span<Vertex> vertices)

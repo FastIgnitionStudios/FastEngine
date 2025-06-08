@@ -27,10 +27,10 @@ namespace Engine
             auto renderer = Renderer::GetRenderer();
             std::vector<uint32_t> indices = {0, 1, 2, 2, 3, 0};
             std::vector<Vertex> vertices = {
-                {{0, 0, 0,}},
-                {{0, 1, 0,}},
-                {{1, 1, 0,}},
-                {{1, 0, 0,}},
+                {{0, 0, 0,}, 0, {1, 1, 1}, 0, {1, 1, 1, 1}},
+                {{0, 1, 0,}, 0, {1, 1, 1}, 0, {1, 1, 1, 1}},
+                {{1, 1, 0,}, 0, {1, 1, 1}, 0, {1, 1, 1, 1}},
+                {{1, 0, 0,}, 0, {1, 1, 1}, 0, {1, 1, 1, 1}},
             };
 
             auto mesh = Ref<MeshVK>::Create(indices, vertices, renderer.Raw());
@@ -87,7 +87,7 @@ namespace Engine
                     glm::float32_t x = radius * glm::sin(theta) * glm::cos(phi);
                     glm::float32_t y = radius * glm::cos(theta);
                     glm::float32_t z = -radius * glm::sin(theta) * glm::sin(phi);
-                    vertices.push_back({{x, y, z}});
+                    vertices.push_back({{x, y, z}, 0, glm::normalize(glm::vec3{x, y, z}), 0, {1, 1, 1, 1}});
                 }
             }
             // Bottom vertex

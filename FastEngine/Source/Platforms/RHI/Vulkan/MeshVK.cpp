@@ -283,13 +283,13 @@ namespace Engine
         materials.push_back(newMat);
 
         PBRMaterialVK::MaterialConstants constants;
-        constants.colorFactors.x = 0;
-        constants.colorFactors.y = 0;
-        constants.colorFactors.z = 0;
-        constants.colorFactors.w = 0;
+        constants.colorFactors.x = 1;
+        constants.colorFactors.y = 1;
+        constants.colorFactors.z = 1;
+        constants.colorFactors.w = 1;
 
-        constants.metallicRoughnessFactors.x = 0;
-        constants.metallicRoughnessFactors.y = 0;
+        constants.metallicRoughnessFactors.x = .5;
+        constants.metallicRoughnessFactors.y = .5;
 
         sceneMaterialConstants[indexData] = constants;
 
@@ -313,7 +313,10 @@ namespace Engine
         GeometryVK newSurface;
         newSurface.startIndex = 0;
         newSurface.indexCount = (uint32_t)indices.size();
+        newSurface.material = *newMat;
         newMesh->geometries.push_back(newSurface);
+
+        
         newMesh->buffers = vkRenderer->UploadMeshes(indices, vertices);
 
         vkRenderer->MainDeletionQueue.PushFunction([=, this]()

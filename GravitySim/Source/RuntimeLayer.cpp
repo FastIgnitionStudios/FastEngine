@@ -6,6 +6,7 @@
 
 static bool mesh = false;
 static bool meshCreated = false;
+static int frame = 0;
 
 void RuntimeLayer::OnAttach()
 {
@@ -25,7 +26,8 @@ void RuntimeLayer::OnUpdate()
 {
     ActiveScene->OnUpdate(0.0f);
 
-    Engine::PrimitiveRenderer::DrawSphere(glm::vec3(0, 0, 0), 1);
+    Engine::PrimitiveRenderer::DrawSphere(glm::vec3(5.f, 0, 0.f), 2);
+    frame++;
 }
 
 void RuntimeLayer::OnRender()
