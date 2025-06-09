@@ -13,7 +13,13 @@ void RuntimeLayer::OnAttach()
     ActiveScene = Ref<Engine::Scene>::Create();
 
     auto planet = ActiveScene->CreateEntity("Planet");
-    planet.AddComponent<Engine::NativeScriptComponent>().CreateScript<PlanetScript>(planet);
+    planet.AddComponent<Engine::NativeScriptComponent>().CreateScript<PlanetScript>(planet, 1, glm::vec3(0.001, -0.001,0 ));
+    auto planet2 = ActiveScene->CreateEntity("Planet2");
+    planet2.AddComponent<Engine::NativeScriptComponent>().CreateScript<PlanetScript>(planet2, 1);
+    auto& transform = planet.GetComponent<Engine::TransformComponent>();
+    transform.Translation = glm::vec3(0.0f, 10.0f, 0);
+    auto planetManager = ActiveScene->CreateEntity("PlanetManager");
+    planetManager.AddComponent<Engine::NativeScriptComponent>().CreateScript<PlanetManager>(planetManager);
 }
 
 void RuntimeLayer::OnDetach()

@@ -1,7 +1,6 @@
 #include "PlanetManager.h"
 
 #include "PlanetScript.h"
-#include "gtc/type_ptr.hpp"
 
 void PlanetManager::OnCreate()
 {
@@ -10,7 +9,14 @@ void PlanetManager::OnCreate()
 
 void PlanetManager::OnUpdate(float DeltaTime)
 {
-    std::vector<PlanetScript*> planets;
+    std::vector<Ref<PlanetScript>> planets;
+    entity.GetScene()->GetEntitiesByComponents<::Engine::NativeScriptComponent>().each([&](auto entity, ::Engine::NativeScriptComponent& script)
+    {
+        if (script.IsType<PlanetScript>())
+        {
+            planets.push_back(script.script);
+        }
+    });
 
     for (auto planet : planets)
     {
@@ -27,7 +33,7 @@ void PlanetManager::OnUpdate(float DeltaTime)
             if (planet == other) continue;
             float vel = 0.0f;
             float acc1 = 0.0f;
-            float mass = 0.000001f;
+            float mass = 0.00001f;
            
             
             float dx = otherTransform.Translation.x - thisTransform.Translation.x;
@@ -35,7 +41,7 @@ void PlanetManager::OnUpdate(float DeltaTime)
             float dz = otherTransform.Translation.z - thisTransform.Translation.z;
             float dist = sqrt(dx * dx + dy * dy + dz * dz);
             glm::vec3 dir {dx / dist, dy / dist, dz / dist};
-            float force = (9.81 * mass * mass) / (dist * dist);
+            float force = (1 * mass * mass) / (dist * dist);
             acc1 = force / mass;
             glm::vec3 acc {acc1 * dir.x, acc1 * dir.y, acc1 * dir.z};
 
