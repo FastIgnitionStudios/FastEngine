@@ -228,3 +228,4 @@ namespace Engine
     };
 
 #include "Utils/Log.h"
+#include "Reflection/Types.h"

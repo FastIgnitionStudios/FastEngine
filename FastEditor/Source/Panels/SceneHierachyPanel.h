@@ -40,6 +40,12 @@ namespace Engine
             }
         }
 
+        template<typename T>
+        void SetComponentPropertiesPanel(std::function<void()>&& func)
+        {
+            ComponentPanels.push_back(func);
+        }
+
     private:
 
         void DrawComponents(Entity entity);
@@ -47,5 +53,7 @@ namespace Engine
         
         Ref<Scene> SceneContext;
         Entity SelectedEntity {};
+
+        std::vector<std::function<void()>> ComponentPanels;
     };
 }

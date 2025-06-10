@@ -39,7 +39,6 @@ namespace Engine
     {
     public:
         MeshVK();
-        MeshVK(MeshComponent mesh, RendererVK* renderer);
         MeshVK(std::string filePath, RendererVK* renderer);
         MeshVK(std::vector<uint32_t> indices, std::vector<Vertex> vertices, Renderer* renderer);
         virtual ~MeshVK();

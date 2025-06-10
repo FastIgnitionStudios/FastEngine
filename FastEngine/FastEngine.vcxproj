@@ -164,6 +164,7 @@
     <ClInclude Include="Source\Core\Input\Keycodes.h" />
     <ClInclude Include="Source\Core\Layers\Layer.h" />
     <ClInclude Include="Source\Core\Layers\LayerStack.h" />
+    <ClInclude Include="Source\Core\Reflection\Types.h" />
     <ClInclude Include="Source\Core\Rendering\Buffer.h" />
     <ClInclude Include="Source\Core\Rendering\Camera.h" />
     <ClInclude Include="Source\Core\Rendering\Device.h" />

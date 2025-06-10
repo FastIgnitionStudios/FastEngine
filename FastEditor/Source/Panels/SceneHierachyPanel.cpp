@@ -21,7 +21,7 @@ namespace Engine
         {
             if (ImGui::BeginMenu("+"))
             {
-                AddEntityPopup<MeshComponent>("Mesh", SceneContext.Raw(), "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb");
+                AddEntityPopup<MeshComponent>("Mesh", SceneContext.Raw());
                 ImGui::EndMenu();
             }
             ImGui::EndMenuBar();

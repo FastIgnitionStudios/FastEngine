@@ -17,6 +17,10 @@ namespace Engine
             meshes = importer->GetMeshes();
         }
         MeshComponent(std::vector<uint32_t> indices, std::vector<Vertex> vertices);
+        MeshComponent() = default;
+
+        void AssignMesh(std::string filePath);
+        void AssignMesh(std::vector<uint32_t> indices, std::vector<Vertex> vertices);
     };
 
     class Mesh : public Engine, public IRenderable

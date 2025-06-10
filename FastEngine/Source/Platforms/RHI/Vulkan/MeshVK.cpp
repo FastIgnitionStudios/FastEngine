@@ -23,10 +23,6 @@ namespace Engine
     {
     }
 
-    MeshVK::MeshVK(MeshComponent mesh, RendererVK* renderer)
-    {
-    }
-
     MeshVK::MeshVK(std::string filePath, RendererVK* renderer)
     {
         fastgltf::Parser parser;
