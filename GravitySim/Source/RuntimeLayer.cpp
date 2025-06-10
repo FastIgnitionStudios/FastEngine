@@ -47,6 +47,17 @@ void RuntimeLayer::OnRender(float deltaTime)
         auto entity = ActiveScene->CreateEntity("Test");
         auto& meshComp = entity.AddComponent<Engine::MeshComponent>("..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb");
     }
+    ImGui::SetNextWindowBgAlpha(.5);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+    ImGui::Begin("Timing", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Text("Delta Time: %f", deltaTime);
+    ImGui::Text("FPS: %f", (1.0f / deltaTime) * 1000);
+    ImGui::End();
+    ImGui::PopStyleColor();
+    ImGui::PopStyleVar();
+    ImGui::PopStyleVar();
 }
 
 void RuntimeLayer::OnEvent(Engine::Event& e)

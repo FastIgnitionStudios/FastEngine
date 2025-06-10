@@ -16,16 +16,25 @@ namespace Engine
 
     void SceneHierarchyPanel::OnImGuiRender()
     {
-        ImGui::Begin("Scene Hierarchy");
-
-
+        ImGui::Begin("Scene Hierarchy", 0, ImGuiWindowFlags_MenuBar);
+        if (ImGui::BeginMenuBar())
+        {
+            if (ImGui::BeginMenu("+"))
+            {
+                AddEntityPopup<MeshComponent>("Mesh", SceneContext.Raw(), "..\\FastEngine\\Source\\Assets\\Meshes\\basicmesh.glb");
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenuBar();
+        }
         auto view = SceneContext->Registry.view<NameComponent>();
         for (auto entityID : view)
         {
             Entity entity{entityID, SceneContext.Raw()};
             DrawEntityNode(entity);
         }
-
+        
+        
+        
         ImGui::End();
 
         ImGui::Begin("Properties");
@@ -48,8 +57,23 @@ namespace Engine
         {
             SelectedEntity = entity;
         }
+        bool entityDeleted = false;
+        if (ImGui::BeginPopupContextItem())
+        {
+            if (ImGui::MenuItem("Delete Entity"))
+                entityDeleted = true;
+            
+            ImGui::EndPopup();
+        }
         if (isOpen)
             ImGui::TreePop();
+
+        if (entityDeleted)
+        {
+            if (SelectedEntity == entity)
+                SelectedEntity = {};
+            SceneContext->DestroyEntity(entity);
+        }
     }
 
     void SceneHierarchyPanel::DrawComponents(Entity entity)

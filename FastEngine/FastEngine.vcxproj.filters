@@ -164,6 +164,9 @@
     <ClInclude Include="Source\Core\Rendering\Mesh.h">
       <Filter>Source\Core\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Rendering\PrimitiveRenderer.h">
+      <Filter>Source\Core\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Core\Rendering\Renderer.h">
       <Filter>Source\Core\Rendering</Filter>
     </ClInclude>
@@ -228,6 +231,9 @@
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Platforms\RHI\Vulkan\MeshVK.h">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Platforms\RHI\Vulkan\PrimitiveRendererVK.h">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Source\Platforms\RHI\Vulkan\RendererVK.h">
@@ -1448,6 +1454,9 @@
     <ClCompile Include="Source\Core\Rendering\Mesh.cpp">
       <Filter>Source\Core\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Rendering\PrimitiveRenderer.cpp">
+      <Filter>Source\Core\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Core\Rendering\Renderer.cpp">
       <Filter>Source\Core\Rendering</Filter>
     </ClCompile>
@@ -1506,6 +1515,9 @@
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platforms\RHI\Vulkan\MeshVK.cpp">
+      <Filter>Source\Platforms\RHI\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Platforms\RHI\Vulkan\PrimitiveRendererVK.cpp">
       <Filter>Source\Platforms\RHI\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platforms\RHI\Vulkan\RendererVK.cpp">

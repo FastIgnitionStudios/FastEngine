@@ -40,10 +40,7 @@ namespace Engine
             renderer->PreFrame();
             window->OnUpdate();
             EngineGUI::BeginFrame();
-                            
-            ImGui::Begin("DeltaTime");
-            ImGui::Text("DeltaTime: %f", frameTime);
-            ImGui::End();
+            
             for (const auto& layer : LayerStack)
             {
                 layer->OnUpdate(frameTime);

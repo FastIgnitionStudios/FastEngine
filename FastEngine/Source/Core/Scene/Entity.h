@@ -43,6 +43,7 @@ namespace Engine
         }
 
         operator uint32_t() const { return (uint32_t)EntityID; }
+        operator entt::entity() const { return EntityID; }
         operator bool() const { return EntityID != entt::null; }
         bool operator==(const Entity& other) const
         {

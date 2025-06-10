@@ -25,6 +25,7 @@ namespace Engine
         ~Scene();
 
         Entity CreateEntity(const std::string& name = std::string());
+        void DestroyEntity(Entity entity);
 
         template<typename ...Args>
         auto GetEntitiesByComponents()

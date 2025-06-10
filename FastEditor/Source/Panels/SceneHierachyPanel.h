@@ -2,6 +2,7 @@
 #include "Engine.h"
 #include "imgui.h"
 
+
 namespace Engine
 {
     class SceneHierarchyPanel : public Engine
@@ -26,6 +27,16 @@ namespace Engine
                 bool isOpen = ImGui::CollapsingHeader(name.c_str(), flags);
                 if (isOpen)
                     func(component);
+            }
+        }
+        // TODO: Add some sort of reflection system to auto generate all classes/structs with the macro REGISTER_COMPONENT() and add them to this menu
+        template<typename T, typename... ConstructArgs>
+        static void AddEntityPopup(std::string className, Scene* scene, ConstructArgs&&... args)
+        {
+            if (ImGui::MenuItem(className.c_str()))
+            {
+                auto newEntity = scene->CreateEntity(className);
+                newEntity.AddComponent<T>(std::forward<ConstructArgs>(args)...);
             }
         }
 

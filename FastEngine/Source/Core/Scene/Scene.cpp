@@ -35,6 +35,11 @@ namespace Engine
         return entity;
     }
 
+    void Scene::DestroyEntity(Entity entity)
+    {
+        Registry.destroy(entity);
+    }
+
     Entity Scene::GetEntityByTag(const std::string& tag)
     {
         auto view = Registry.view<NameComponent>();

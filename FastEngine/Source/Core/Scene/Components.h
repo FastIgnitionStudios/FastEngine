@@ -7,6 +7,7 @@
 
 #include "gtx/transform.hpp"
 
+
 namespace Engine
 {
     struct IDComponent
@@ -68,5 +69,6 @@ namespace Engine
             return scriptType == entt::type_id<T>();
         }
     };
+    
     
 }

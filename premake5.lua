@@ -13,7 +13,7 @@ group "Dependencies"
     include "FastEngine/ThirdParty/YamlCPP"
 group ""
 
-group "Programs"
+group "Tools"
 group ""
 
 
