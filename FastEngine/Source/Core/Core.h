@@ -229,3 +229,9 @@ namespace Engine
 
 #include "Utils/Log.h"
 #include "Reflection/Types.h"
+
+#ifndef EDITOR_BUILD
+#define REGISTER_COMPONENT()
+#endif
+
+#define RCLASS(...)

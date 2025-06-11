@@ -4,9 +4,14 @@
 
 namespace Engine
 {
+
     SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& scene)
     {
         SetContext(scene);
+    }
+
+    SceneHierarchyPanel::SceneHierarchyPanel()
+    {
     }
 
     void SceneHierarchyPanel::SetContext(const Ref<Scene>& scene)
@@ -21,7 +26,6 @@ namespace Engine
         {
             if (ImGui::BeginMenu("+"))
             {
-                AddEntityPopup<MeshComponent>("Mesh", SceneContext.Raw());
                 ImGui::EndMenu();
             }
             ImGui::EndMenuBar();
@@ -32,9 +36,8 @@ namespace Engine
             Entity entity{entityID, SceneContext.Raw()};
             DrawEntityNode(entity);
         }
-        
-        
-        
+
+
         ImGui::End();
 
         ImGui::Begin("Properties");
@@ -62,7 +65,7 @@ namespace Engine
         {
             if (ImGui::MenuItem("Delete Entity"))
                 entityDeleted = true;
-            
+
             ImGui::EndPopup();
         }
         if (isOpen)
@@ -102,7 +105,7 @@ namespace Engine
             if (ImGui::Button("X##2"))
                 tempRot = glm::vec3(0.0f);
             ImGui::SameLine();
-            
+
             ImGui::DragFloat3("Rotation", value_ptr(tempRot), 0.1f);
             rotation = glm::radians(tempRot);
 

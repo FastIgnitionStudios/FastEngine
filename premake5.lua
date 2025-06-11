@@ -14,6 +14,7 @@ group "Dependencies"
 group ""
 
 group "Tools"
+    include "Tools/FastReflection"
 group ""
 
 

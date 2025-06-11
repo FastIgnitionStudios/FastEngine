@@ -19,6 +19,9 @@
     <Filter Include="Source\Core\Layers">
       <UniqueIdentifier>{6D04FE54-59E8-BEAA-C248-B9FDAE4BA92C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Reflection">
+      <UniqueIdentifier>{684B0751-5445-30A3-3DB2-C6B3294B960F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core\Rendering">
       <UniqueIdentifier>{3B809D38-A7EC-5833-70E0-F090DC0B7B9B}</UniqueIdentifier>
     </Filter>
@@ -148,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="Source\Core\Layers\LayerStack.h">
       <Filter>Source\Core\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Reflection\Types.h">
+      <Filter>Source\Core\Reflection</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Rendering\Buffer.h">
       <Filter>Source\Core\Rendering</Filter>

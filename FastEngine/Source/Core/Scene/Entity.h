@@ -6,6 +6,7 @@
 
 namespace Engine
 {
+    RCLASS()
     class Entity
     {
     public:
