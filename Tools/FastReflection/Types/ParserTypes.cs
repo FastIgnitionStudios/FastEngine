@@ -9,14 +9,19 @@ namespace FastReflection.Types
         Private,
     }
     
+    
     public class ReflectedClass
     {
         public string Name { get; set; }
         public string Namespace { get; set; }
+        
+        public string ClassType { get; set; }
         public List<ReflectedProperty> Properties { get; set; } = new();
         public List<ReflectedMethod> Methods { get; set; } = new();
         public List<string> Flags { get; set; } = new();
         public string SourceFile { get; set; }
+        
+        
     }
 
     public class ReflectedProperty

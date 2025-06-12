@@ -6,10 +6,11 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include "gtx/transform.hpp"
-
+#include "Components_RGen.h"
 
 namespace Engine
 {
+    RCOMPONENT()
     struct IDComponent
     {
         UUID ID;
@@ -17,9 +18,18 @@ namespace Engine
         IDComponent() = default;
         IDComponent(const IDComponent&) = default;
     };
+
+    RCOMPONENT()
+    struct MiscComponent
+    {
+        bool Active = true;
+    };
+
     
+    RCOMPONENT()
     struct NameComponent
     {
+        
         std::string Name;
 
         NameComponent() = default;
@@ -29,6 +39,7 @@ namespace Engine
         operator std::string() const { return Name; }
     };
 
+    RCOMPONENT()
     struct TransformComponent
     {
         glm::vec3 Translation = glm::vec3(0.0f);
@@ -49,6 +60,7 @@ namespace Engine
         }
     };
 
+    RCOMPONENT()
     struct NativeScriptComponent
     {
         Ref<ScriptEntity> script;

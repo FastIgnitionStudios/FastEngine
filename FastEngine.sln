@@ -16,6 +16,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FastEditor", "FastEditor\FastEditor.vcxproj", "{FA9DEF1E-E655-316C-4F5D-0AC83B34CC5C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FastEngine", "FastEngine\FastEngine.vcxproj", "{494BA31F-3503-E56C-9E0A-BEC88AE17F5D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7ED96E8D-6AA7-6293-533B-D3B93FA83EF8} = {7ED96E8D-6AA7-6293-533B-D3B93FA83EF8}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GravitySim", "GravitySim\GravitySim.vcxproj", "{74A9B431-6061-F67E-C968-CFDAB53F916F}"
 EndProject

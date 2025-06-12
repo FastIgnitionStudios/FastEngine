@@ -4,8 +4,8 @@ project "FastEngine"
     cppdialect "C++20"
     staticruntime "on"
 
-    targetdir "../Binaries/%{cfg.buildcfg}"
-    objdir "../Intermediate/%{cfg.buildcfg}"
+    targetdir "%{wks.location}/Binaries/%{cfg.buildcfg}"
+    objdir "%{wks.location}/Intermediate/%{cfg.buildcfg}"
     
     pchheader "EnginePCH.h"
     pchsource "EnginePCH.cpp"
@@ -20,6 +20,8 @@ project "FastEngine"
         "ThirdParty/GLM/GLM/**.hpp",
         "ThirdParty/EnTT/include/entt.hpp",
         "ThirdParty/STBImage/include/stb_image.h",
+        "%{wks.location}/Intermediate/Generated/**.h",
+        "%{wks.location}/Intermediate/Generated/**.cpp",
     }
     
     includedirs {
@@ -35,7 +37,8 @@ project "FastEngine"
         "%{IncludeDir.FastGLTF}",
         "%{IncludeDir.EnTT}",
         "%{IncludeDir.YamlCPP}",
-        "ThirdParty"
+        "ThirdParty",
+        "%{wks.location}/Intermediate/Generated/"
     }
 
     links {
@@ -48,6 +51,13 @@ project "FastEngine"
     }
     
     buildoptions {"/utf-8"}
+
+    dependson {"FastReflection"}
+
+    prebuildcommands{
+        "\"../Binaries/Debug/net8.0/FastReflection.exe\" %{wks.location} \"../Intermediate/Generated\"",
+        "\"../Setup/GenProject-Windows.bat\""
+    }
 
 
     flags

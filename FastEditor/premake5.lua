@@ -15,8 +15,8 @@ project "FastEditor"
     
     includedirs {
         "Source",
-        "../FastEngine/",
         "../FastEngine/Source",
+        "../FastEngine/",
         "../FastEngine/Source/Core/",
         "../FastEngine/ThirdParty/SPDLog/Include/",
         "%{IncludeDir.ImGui}",
@@ -24,6 +24,7 @@ project "FastEditor"
         "../FastEngine/ThirdParty/GLM/GLM",
         "%{IncludeDir.EnTT}",
         "%{IncludeDir.FastGLTF}",
+        "%{wks.location}/Intermediate/Generated/"
     }
     
     links {"FastEngine", "ImGUI", "FastGLTF"}

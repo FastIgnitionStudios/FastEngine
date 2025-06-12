@@ -393,8 +393,8 @@ namespace Engine
                     VkViewport viewport = {};
                     viewport.x = 0.0f;
                     viewport.y = 0.0f;
-                    viewport.width = Swapchain->GetDrawImage().imageExtent.width;
-                    viewport.height = Swapchain->GetDrawImage().imageExtent.height;
+                    viewport.width = (float)Swapchain->GetDrawImage().imageExtent.width;
+                    viewport.height = (float)Swapchain->GetDrawImage().imageExtent.height;
                     viewport.minDepth = 0.0f;
                     viewport.maxDepth = 1.0f;
 
@@ -436,7 +436,7 @@ namespace Engine
         for (auto entity : cameraView)
         {
             auto [transform, camera] = cameraView.get<TransformComponent, CameraComponent>(entity);
-            camera.camera->Update(.01);
+            camera.camera->Update(.01f);
             glm::mat4 viewMatrix = camera.camera->GetViewMatrix();
 
             glm::mat4 projection = glm::perspective(glm::radians(70.f), 16 / 9.f, 100000.f, 0.1f);
@@ -904,8 +904,8 @@ namespace Engine
 
         vkCmdPushConstants(cmd, GradientPipeline->GetPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT, 0, sizeof(pc), &pc);
 
-        vkCmdDispatch(cmd, std::ceil(Swapchain->GetDrawExtent().width / 16.0),
-                      std::ceil(Swapchain->GetDrawExtent().height / 16.0), 1);
+        vkCmdDispatch(cmd, (uint32_t)std::ceil(Swapchain->GetDrawExtent().width / 16.0f),
+                      (uint32_t)std::ceil(Swapchain->GetDrawExtent().height / 16.0f), 1);
     }
 
 

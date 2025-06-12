@@ -78,7 +78,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>EDITOR;YAML_CPP_STATIC_DEFINE;PLATFORM_WINDOWS;EDITOR_DEBUG;EDITOR_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;..\FastEngine;..\FastEngine\Source;..\FastEngine\Source\Core;..\FastEngine\ThirdParty\SPDLog\Include;..\FastEngine\ThirdParty\ImGUI;..\FastEngine\ThirdParty\Glm;..\FastEngine\ThirdParty\GLM\GLM;..\FastEngine\ThirdParty\EnTT\include;..\FastEngine\ThirdParty\FastGLTF\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;..\FastEngine\Source;..\FastEngine;..\FastEngine\Source\Core;..\FastEngine\ThirdParty\SPDLog\Include;..\FastEngine\ThirdParty\ImGUI;..\FastEngine\ThirdParty\Glm;..\FastEngine\ThirdParty\GLM\GLM;..\FastEngine\ThirdParty\EnTT\include;..\FastEngine\ThirdParty\FastGLTF\include;..\Intermediate\Generated;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -98,7 +98,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>EDITOR;YAML_CPP_STATIC_DEFINE;PLATFORM_WINDOWS;EDITOR_DEV;EDITOR_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;..\FastEngine;..\FastEngine\Source;..\FastEngine\Source\Core;..\FastEngine\ThirdParty\SPDLog\Include;..\FastEngine\ThirdParty\ImGUI;..\FastEngine\ThirdParty\Glm;..\FastEngine\ThirdParty\GLM\GLM;..\FastEngine\ThirdParty\EnTT\include;..\FastEngine\ThirdParty\FastGLTF\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;..\FastEngine\Source;..\FastEngine;..\FastEngine\Source\Core;..\FastEngine\ThirdParty\SPDLog\Include;..\FastEngine\ThirdParty\ImGUI;..\FastEngine\ThirdParty\Glm;..\FastEngine\ThirdParty\GLM\GLM;..\FastEngine\ThirdParty\EnTT\include;..\FastEngine\ThirdParty\FastGLTF\include;..\Intermediate\Generated;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -121,7 +121,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>EDITOR;YAML_CPP_STATIC_DEFINE;PLATFORM_WINDOWS;EDITOR_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;..\FastEngine;..\FastEngine\Source;..\FastEngine\Source\Core;..\FastEngine\ThirdParty\SPDLog\Include;..\FastEngine\ThirdParty\ImGUI;..\FastEngine\ThirdParty\Glm;..\FastEngine\ThirdParty\GLM\GLM;..\FastEngine\ThirdParty\EnTT\include;..\FastEngine\ThirdParty\FastGLTF\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;..\FastEngine\Source;..\FastEngine;..\FastEngine\Source\Core;..\FastEngine\ThirdParty\SPDLog\Include;..\FastEngine\ThirdParty\ImGUI;..\FastEngine\ThirdParty\Glm;..\FastEngine\ThirdParty\GLM\GLM;..\FastEngine\ThirdParty\EnTT\include;..\FastEngine\ThirdParty\FastGLTF\include;..\Intermediate\Generated;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

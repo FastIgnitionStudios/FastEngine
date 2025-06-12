@@ -3,13 +3,18 @@
 #include "Core.h"
 #include "Scene.h"
 #include "entt.hpp"
+#include "Entity_RGen.h"
 
 namespace Engine
 {
+    
     RCLASS()
     class Entity
     {
     public:
+
+        RGEN()
+        
         Entity(entt::entity id, Scene* scene);
         Entity() = default;
 
@@ -20,6 +25,7 @@ namespace Engine
             
             return Scene->Registry.emplace<T>(EntityID, std::forward<Args>(args)...);
         }
+        
 
         template<typename T>
         T& GetComponent()

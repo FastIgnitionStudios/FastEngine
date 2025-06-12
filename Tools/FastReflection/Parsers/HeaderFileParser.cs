@@ -13,13 +13,16 @@ namespace FastReflection.Parsers
         {
             "RCLASS",
             "RSTRUCT",
+            "RCOMPONENT",
             "RPROPERTY",
             "RMETHOD",
-            "RENUM"
+            "RENUM",
         };
 
         public List<ReflectedClass> ParseFile(string filePath)
         {
+            if (filePath.Contains("_RGEN")) return null;
+            
             var content = File.ReadAllText(filePath);
             var classes = new List<ReflectedClass>();
 
@@ -30,18 +33,19 @@ namespace FastReflection.Parsers
 
             // Find all classes/structs with the coresponding macros
             var classMatches = Regex.Matches(content,
-                @"(RCLASS|RSTRUCT)\s*\(\s*([^)]*)\s*\)\s*(?:class|struct)\s+(\w+)", RegexOptions.Multiline);
+                @"(RCLASS|RSTRUCT|RCOMPONENT)\s*\(\s*([^)]*)\s*\)\s*(class|struct)\s+(\w+)", RegexOptions.Multiline);
 
             foreach (Match match in classMatches)
             {
                 var reflectedClass = new ReflectedClass
                 {
-                    Name = match.Groups[3].Value,
+                    ClassType = match.Groups[3].Value.Trim(),
+                    Name = match.Groups[4].Value,
                     SourceFile = filePath
                 };
                 
                 // Parse namespace
-                for (int i = lines.FindIndex(s => s.Contains(match.Groups[3].Value)); i >= 0; i--)
+                for (int i = lines.FindIndex(s => s.Contains(match.Groups[3].Value + " " + match.Groups[4].Value)); i >= 0; i--)
                 {
                     var line = lines[i];
                     if (line.StartsWith("namespace "))

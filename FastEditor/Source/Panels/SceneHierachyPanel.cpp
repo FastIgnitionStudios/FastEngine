@@ -26,6 +26,14 @@ namespace Engine
         {
             if (ImGui::BeginMenu("+"))
             {
+                for (auto comp : Scene::GetRegisteredComponents())
+                {
+                    if (ImGui::MenuItem(comp.first.c_str()))
+                    {
+                        auto newEntity = SceneContext->CreateEntity(comp.first);
+                        comp.second(SceneContext->Registry, newEntity);
+                    }
+                }
                 ImGui::EndMenu();
             }
             ImGui::EndMenuBar();

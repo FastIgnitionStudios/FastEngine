@@ -65,7 +65,7 @@ namespace Engine
             {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1}
         };
 
-        meshDescriptorPool.Init(renderer->GetDevice(), gltf.materials.size(),
+        meshDescriptorPool.Init(renderer->GetDevice(), (uint32_t)gltf.materials.size(),
                                 sizes);
 
         for (fastgltf::Sampler& sampler : gltf.samplers)
@@ -173,7 +173,7 @@ namespace Engine
 
                     fastgltf::iterateAccessor<std::uint32_t>(gltf, indexAccessor, [&](std::uint32_t idx)
                     {
-                        indices.push_back(idx + initialVtx);
+                        indices.push_back(idx + (uint32_t)initialVtx);
                     });
                 }
 
