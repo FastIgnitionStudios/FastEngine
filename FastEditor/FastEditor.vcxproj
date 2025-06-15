@@ -141,13 +141,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\FastEngine\ThirdParty\EnTT\include\entt.hpp" />
+    <ClInclude Include="..\Intermediate\Generated\Components_RGen.h" />
+    <ClInclude Include="..\Intermediate\Generated\Entity_RGen.h" />
     <ClInclude Include="Source\EditorApp.h" />
     <ClInclude Include="Source\EditorLayer.h" />
+    <ClInclude Include="Source\ObjectTypes.h" />
     <ClInclude Include="Source\Panels\SceneHierachyPanel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Intermediate\Generated\Components_RGen.cpp" />
+    <ClCompile Include="..\Intermediate\Generated\Entity_RGen.cpp" />
     <ClCompile Include="Source\EditorApp.cpp" />
     <ClCompile Include="Source\EditorLayer.cpp" />
+    <ClCompile Include="Source\ObjectTypes.cpp" />
     <ClCompile Include="Source\Panels\SceneHierachyPanel.cpp" />
   </ItemGroup>
   <ItemGroup>

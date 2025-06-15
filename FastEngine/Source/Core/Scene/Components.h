@@ -63,6 +63,7 @@ namespace Engine
     RCOMPONENT()
     struct NativeScriptComponent
     {
+        RGEN()
         Ref<ScriptEntity> script;
         entt::type_info scriptType{std::in_place_type<void>};
         

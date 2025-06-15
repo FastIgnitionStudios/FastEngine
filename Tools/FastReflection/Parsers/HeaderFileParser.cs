@@ -39,6 +39,7 @@ namespace FastReflection.Parsers
             {
                 var reflectedClass = new ReflectedClass
                 {
+                    MacroType = match.Groups[1].Value,
                     ClassType = match.Groups[3].Value.Trim(),
                     Name = match.Groups[4].Value,
                     SourceFile = filePath

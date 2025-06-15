@@ -11,6 +11,8 @@ project "FastEditor"
         "Source/**.cpp",
         "Source/**.h",
         "../FastEngine/ThirdParty/EnTT/include/entt.hpp",
+        "%{wks.location}/Intermediate/Generated/**.h",
+        "%{wks.location}/Intermediate/Generated/**.cpp",
     }
     
     includedirs {
@@ -54,4 +56,5 @@ project "FastEditor"
     filter "configurations:Dev"
         defines { "EDITOR_DEV", "EDITOR_ENABLE_ASSERTS" }
         optimize "on"
+
 

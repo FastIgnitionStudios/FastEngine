@@ -16,6 +16,7 @@ namespace FastReflection.Types
         public string Namespace { get; set; }
         
         public string ClassType { get; set; }
+        public string MacroType { get; set; }
         public List<ReflectedProperty> Properties { get; set; } = new();
         public List<ReflectedMethod> Methods { get; set; } = new();
         public List<string> Flags { get; set; } = new();

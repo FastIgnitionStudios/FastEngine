@@ -9,6 +9,7 @@ namespace Engine
     {
         editorLayer = new EditorLayer();
         PushLayer(editorLayer);
+        
     }
 
     EditorApp::~EditorApp()

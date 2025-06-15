@@ -161,8 +161,6 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Intermediate\Generated\Components_RGen.h" />
-    <ClInclude Include="..\Intermediate\Generated\Entity_RGen.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EnginePCH.h" />
     <ClInclude Include="Source\Core\Asset\GLTFImporter.h" />
@@ -607,8 +605,6 @@
     <ClInclude Include="ThirdParty\STBImage\include\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Intermediate\Generated\Components_RGen.cpp" />
-    <ClCompile Include="..\Intermediate\Generated\Entity_RGen.cpp" />
     <ClCompile Include="EnginePCH.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

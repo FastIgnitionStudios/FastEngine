@@ -34,16 +34,20 @@ namespace Engine
         }
 
         template <typename T, typename... Args>
-        static void RegisterComponentDeferred(Args&&... args)
+        static bool RegisterComponentDeferred(Args&&... args)
         {
-            RegisteredComponents[std::string(GetClassName<T>())] = [&](entt::registry& reg, entt::entity entity)
+           GetRegisteredComponents()[std::string(GetClassName<T>())] = [&](entt::registry& reg, entt::entity entity)
             {
                 reg.emplace<T>(entity, std::forward<Args>(args)...);
             };
+            return true;
         }
 
-        static std::function<void(entt::registry&, entt::entity)> GetRegisteredComponentByClass(const std::string& className);
-        static std::map<std::string, std::function<void(entt::registry&, entt::entity)>>& GetRegisteredComponents() { return RegisteredComponents; }
+        static std::map<std::string, std::function<void(entt::registry&, entt::entity)>>& GetRegisteredComponents()
+        {
+            static std::map<std::string, std::function<void(entt::registry&, entt::entity)>> RegisteredComponents;
+            return RegisteredComponents;
+        }
 
         Entity GetEntityByTag(const std::string& tag);
 
@@ -52,7 +56,7 @@ namespace Engine
     private:
         entt::registry Registry;
 
-        static std::map<std::string, std::function<void(entt::registry&, entt::entity)>> RegisteredComponents;
+        
 
         friend class Entity;
         friend class SceneHierarchyPanel;

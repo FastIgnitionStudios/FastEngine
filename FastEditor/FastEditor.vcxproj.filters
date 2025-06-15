@@ -1,17 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="FastEngine">
-      <UniqueIdentifier>{494BA31F-3503-E56C-9E0A-BEC88AE17F5D}</UniqueIdentifier>
+    <Filter Include="..">
+      <UniqueIdentifier>{61705900-4DFC-870B-B6AA-880BA255880B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FastEngine\ThirdParty">
-      <UniqueIdentifier>{63E420B5-CF50-DCAF-9844-740D0470FE17}</UniqueIdentifier>
+    <Filter Include="..\FastEngine">
+      <UniqueIdentifier>{B484C4E1-2045-4018-E97F-899555FF84F4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FastEngine\ThirdParty\EnTT">
-      <UniqueIdentifier>{2D4FB8AB-195F-647C-8218-C99A6E475315}</UniqueIdentifier>
+    <Filter Include="..\FastEngine\ThirdParty">
+      <UniqueIdentifier>{EE8424E6-DAA9-7366-03F5-58F6EF787284}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FastEngine\ThirdParty\EnTT\include">
-      <UniqueIdentifier>{A05304BF-8C8F-0729-F5A1-1F20E1FCAF43}</UniqueIdentifier>
+    <Filter Include="..\FastEngine\ThirdParty\EnTT">
+      <UniqueIdentifier>{98FE3C74-0417-249E-CDC3-B337399BB837}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\FastEngine\ThirdParty\EnTT\include">
+      <UniqueIdentifier>{0B3ECB8C-7702-CA7C-4068-FA46ACEB65B2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\Intermediate">
+      <UniqueIdentifier>{AB63D823-17EF-45E8-2000-C9DC8C0AA2E8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\Intermediate\Generated">
+      <UniqueIdentifier>{0966AF0A-7528-E394-BED8-71212ADABB72}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source">
       <UniqueIdentifier>{56EB95D1-428D-C0A7-2B48-D4FB178947F8}</UniqueIdentifier>
@@ -22,7 +31,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\FastEngine\ThirdParty\EnTT\include\entt.hpp">
-      <Filter>FastEngine\ThirdParty\EnTT\include</Filter>
+      <Filter>..\FastEngine\ThirdParty\EnTT\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Intermediate\Generated\Components_RGen.h">
+      <Filter>..\Intermediate\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Intermediate\Generated\Entity_RGen.h">
+      <Filter>..\Intermediate\Generated</Filter>
     </ClInclude>
     <ClInclude Include="Source\EditorApp.h">
       <Filter>Source</Filter>
@@ -30,15 +45,27 @@
     <ClInclude Include="Source\EditorLayer.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ObjectTypes.h">
+      <Filter>Source</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Panels\SceneHierachyPanel.h">
       <Filter>Source\Panels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Intermediate\Generated\Components_RGen.cpp">
+      <Filter>..\Intermediate\Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Intermediate\Generated\Entity_RGen.cpp">
+      <Filter>..\Intermediate\Generated</Filter>
+    </ClCompile>
     <ClCompile Include="Source\EditorApp.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\EditorLayer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectTypes.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Panels\SceneHierachyPanel.cpp">

@@ -10,8 +10,6 @@
 
 namespace Engine
 {
-    std::map<std::string, std::function<void(entt::registry& reg, entt::entity entity)>> Scene::RegisteredComponents;
-    
     Scene::Scene()
     {
         CreateEntity("Test");
@@ -22,10 +20,7 @@ namespace Engine
         cameraComp.camera->SetPitch(0);
         cameraComp.camera->SetYaw(0);
         cameraComp.camera->SetMousePosition(Input::GetMouseX(), Input::GetMouseY());
-
-        RegisterComponentDeferred<MiscComponent>();
     }
-
     Scene::~Scene()
     {
     }
@@ -39,17 +34,13 @@ namespace Engine
         tag.Name = name.empty() ? "Entity" : name;
         return entity;
     }
+    
 
     void Scene::DestroyEntity(Entity entity)
     {
         Registry.destroy(entity);
     }
-
-    std::function<void(entt::registry&, entt::entity)> Scene::GetRegisteredComponentByClass(
-        const std::string& className)
-    {
-        return RegisteredComponents[className];
-    }
+    
 
     Entity Scene::GetEntityByTag(const std::string& tag)
     {

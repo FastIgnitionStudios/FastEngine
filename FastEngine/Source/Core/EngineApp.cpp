@@ -28,6 +28,7 @@ namespace Engine
 
     void EngineApp::Run()
     {
+        
         renderer = Renderer::CreateRenderer();
         PrimitiveRenderer::InitPrimitiveRenderer();
         auto start = std::chrono::high_resolution_clock::now();

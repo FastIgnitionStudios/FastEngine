@@ -20,8 +20,7 @@ project "FastEngine"
         "ThirdParty/GLM/GLM/**.hpp",
         "ThirdParty/EnTT/include/entt.hpp",
         "ThirdParty/STBImage/include/stb_image.h",
-        "%{wks.location}/Intermediate/Generated/**.h",
-        "%{wks.location}/Intermediate/Generated/**.cpp",
+
     }
     
     includedirs {
@@ -66,11 +65,13 @@ project "FastEngine"
     }
     
     filter "system:windows"
-    defines {
-        "PLATFORM_WINDOWS",
-        "ENGINE_BUILD_DLL",
-        "GLM_FORCE_DEPTH_ZERO_TO_ONE"
-    }
+        defines {
+            "PLATFORM_WINDOWS",
+            "ENGINE_BUILD_DLL",
+            "GLM_FORCE_DEPTH_ZERO_TO_ONE"
+        }
+        
+    
 
     filter "configurations:Debug"
         defines { "DEBUG_BUILD", "ENGINE_ENABLE_ASSERTS" }
