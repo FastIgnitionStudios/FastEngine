@@ -13,8 +13,9 @@ namespace Engine
     RCOMPONENT()
     struct IDComponent
     {
+        RGEN()
         UUID ID;
-
+        
         IDComponent() = default;
         IDComponent(const IDComponent&) = default;
     };
@@ -22,6 +23,7 @@ namespace Engine
     RCOMPONENT()
     struct MiscComponent
     {
+        RGEN()
         bool Active = true;
     };
 
@@ -29,7 +31,7 @@ namespace Engine
     RCOMPONENT()
     struct NameComponent
     {
-        
+        RGEN()
         std::string Name;
 
         NameComponent() = default;
@@ -42,6 +44,7 @@ namespace Engine
     RCOMPONENT()
     struct TransformComponent
     {
+        RGEN()
         glm::vec3 Translation = glm::vec3(0.0f);
         glm::vec3 Rotation = glm::vec3(0.f); // Stored as radians
         glm::vec3 Scale = glm::vec3(1.0f);

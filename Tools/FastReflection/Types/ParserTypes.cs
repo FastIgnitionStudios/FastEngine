@@ -8,7 +8,12 @@ namespace FastReflection.Types
         Protected,
         Private,
     }
-    
+
+    public class SourceFile
+    {
+        public string path { get; set; }
+        public List<ReflectedClass> classes { get; set; } = new();
+    }
     
     public class ReflectedClass
     {
@@ -21,7 +26,6 @@ namespace FastReflection.Types
         public List<ReflectedMethod> Methods { get; set; } = new();
         public List<string> Flags { get; set; } = new();
         public string SourceFile { get; set; }
-        
         
     }
 

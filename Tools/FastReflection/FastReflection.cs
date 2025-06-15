@@ -30,23 +30,23 @@ namespace FastReflection
 
             var parser = new HeaderFileParser();
             var generator = new HeaderSourceGenerator();
-            var allClasses = new List<ReflectedClass>();
+            var allFiles = new List<SourceFile>();
+            var totalClasses = 0;
             
             var headerFiles = Directory.GetFiles(inputDir, "*.h", SearchOption.AllDirectories);
             
             Console.WriteLine($"Parsing {headerFiles.Length} header files");
-
             foreach (var headerFile in headerFiles)
             {
-                Console.WriteLine($"Parsing {headerFile}");
-                var classes = parser.ParseFile(headerFile);
-                allClasses.AddRange(classes);
-                
-                Console.WriteLine($"Found {classes.Count} reflected classes");
+                SourceFile sourceFile = new();
+                sourceFile.classes = parser.ParseFile(headerFile);
+                sourceFile.path = headerFile;
+                allFiles.Add(sourceFile);
+                totalClasses += sourceFile.classes.Count;
             }
             
-            Console.Write($"\nGenerating reflection code for {allClasses.Count} classes");
-            generator.GenerateReflectionCode(allClasses, outputDir);
+            Console.Write($"\nGenerating reflection code for {totalClasses} classes");
+            generator.GenerateReflectionCode(allFiles, outputDir);
         }
     }
 }
