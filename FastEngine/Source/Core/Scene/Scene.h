@@ -14,6 +14,8 @@ namespace Engine
     struct NativeScriptComponent;
 }
 
+static const char* DefaultComponents[] = { "TransformComponent",  "IDComponent", "NameComponent" };
+
 namespace Engine
 {
     class Entity;

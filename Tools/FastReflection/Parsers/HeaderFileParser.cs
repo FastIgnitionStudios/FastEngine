@@ -67,7 +67,6 @@ namespace FastReflection.Parsers
                 
                 classes.Add(reflectedClass);
             }
-
             return classes;
         }
 

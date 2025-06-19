@@ -1,7 +1,6 @@
 #include "SceneHierachyPanel.h"
 #include "imgui.h"
 #include "gtc/type_ptr.hpp"
-
 namespace Engine
 {
 
@@ -28,6 +27,7 @@ namespace Engine
             {
                 for (auto comp : Scene::GetRegisteredComponents())
                 {
+                    if (comp.first == "NameComponent" || comp.first == "TransformComponent" || comp.first == "IDComponent") continue;
                     if (ImGui::MenuItem(comp.first.c_str()))
                     {
                         auto newEntity = SceneContext->CreateEntity(comp.first);

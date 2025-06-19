@@ -40,6 +40,7 @@ namespace FastReflection
             {
                 SourceFile sourceFile = new();
                 sourceFile.classes = parser.ParseFile(headerFile);
+                if (sourceFile.classes.Count == 0) continue;
                 sourceFile.path = headerFile;
                 allFiles.Add(sourceFile);
                 totalClasses += sourceFile.classes.Count;

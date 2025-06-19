@@ -13,7 +13,7 @@ namespace Engine
     RCOMPONENT()
     struct IDComponent
     {
-        RGEN()
+        RGENERATED()
         UUID ID;
         
         IDComponent() = default;
@@ -23,7 +23,7 @@ namespace Engine
     RCOMPONENT()
     struct MiscComponent
     {
-        RGEN()
+        RGENERATED()
         bool Active = true;
     };
 
@@ -31,7 +31,7 @@ namespace Engine
     RCOMPONENT()
     struct NameComponent
     {
-        RGEN()
+        RGENERATED()
         std::string Name;
 
         NameComponent() = default;
@@ -44,7 +44,7 @@ namespace Engine
     RCOMPONENT()
     struct TransformComponent
     {
-        RGEN()
+        RGENERATED()
         glm::vec3 Translation = glm::vec3(0.0f);
         glm::vec3 Rotation = glm::vec3(0.f); // Stored as radians
         glm::vec3 Scale = glm::vec3(1.0f);
@@ -66,7 +66,7 @@ namespace Engine
     RCOMPONENT()
     struct NativeScriptComponent
     {
-        RGEN()
+        RGENERATED()
         Ref<ScriptEntity> script;
         entt::type_info scriptType{std::in_place_type<void>};
         

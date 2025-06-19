@@ -239,7 +239,7 @@ private:
 #endif
 
 // for implementing generated code inside native class's/structs
-#define RGEN()
+#define RGENERATED()
 
 // Define macros for FastReflection parser
 

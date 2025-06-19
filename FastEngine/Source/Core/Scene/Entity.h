@@ -13,7 +13,7 @@ namespace Engine
     {
     public:
 
-        RGEN()
+        RGENERATED()
         
         Entity(entt::entity id, Scene* scene);
         Entity() = default;
