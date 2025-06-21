@@ -17,7 +17,7 @@ namespace Engine
         return stageInfo;
     }
 
-    void PipelineBuilder::Clear()
+    void GraphicsPipelineBuilder::Clear()
     {
         inputAssembly = {.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO};
 
@@ -36,7 +36,7 @@ namespace Engine
         shaderStages.clear();
     }
 
-    void PipelineBuilder::SetShaders(VkShaderModule vertexShader, VkShaderModule fragmentShader)
+    void GraphicsPipelineBuilder::SetShaders(VkShaderModule vertexShader, VkShaderModule fragmentShader)
     {
         shaderStages.clear();
         shaderStages.push_back(CreateShaderStageInfo(VK_SHADER_STAGE_VERTEX_BIT, vertexShader));
@@ -44,26 +44,26 @@ namespace Engine
         
     }
 
-    void PipelineBuilder::SetInputTopology(VkPrimitiveTopology topology)
+    void GraphicsPipelineBuilder::SetInputTopology(VkPrimitiveTopology topology)
     {
         inputAssembly.topology = topology;
 
         inputAssembly.primitiveRestartEnable = VK_FALSE;
     }
 
-    void PipelineBuilder::SetPolygonMode(VkPolygonMode mode)
+    void GraphicsPipelineBuilder::SetPolygonMode(VkPolygonMode mode)
     {
         rasterizer.polygonMode = mode;
         rasterizer.lineWidth = 1.0f;
     }
 
-    void PipelineBuilder::SetCullMode(VkCullModeFlags mode, VkFrontFace frontFace)
+    void GraphicsPipelineBuilder::SetCullMode(VkCullModeFlags mode, VkFrontFace frontFace)
     {
         rasterizer.cullMode = mode;
         rasterizer.frontFace = frontFace;
     }
 
-    void PipelineBuilder::SetMultisamplingNone()
+    void GraphicsPipelineBuilder::SetMultisamplingNone()
     {
         multisampling.sampleShadingEnable = VK_FALSE;
         multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
@@ -74,13 +74,13 @@ namespace Engine
         multisampling.alphaToOneEnable = VK_FALSE;
     }
 
-    void PipelineBuilder::DisableBlending()
+    void GraphicsPipelineBuilder::DisableBlending()
     {
         colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
         colorBlendAttachment.blendEnable = VK_FALSE;
     }
 
-    void PipelineBuilder::EnableBlendingAdditive()
+    void GraphicsPipelineBuilder::EnableBlendingAdditive()
     {
         colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
         colorBlendAttachment.blendEnable = VK_TRUE;
@@ -92,7 +92,7 @@ namespace Engine
         colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
     }
 
-    void PipelineBuilder::EnableBlendingAlpha()
+    void GraphicsPipelineBuilder::EnableBlendingAlpha()
     {
         colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
         colorBlendAttachment.blendEnable = VK_TRUE;
@@ -104,7 +104,7 @@ namespace Engine
         colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
     }
 
-    void PipelineBuilder::SetColorAttachmentFormat(VkFormat format)
+    void GraphicsPipelineBuilder::SetColorAttachmentFormat(VkFormat format)
     {
         colorAttachmentFormat = format;
 
@@ -112,12 +112,12 @@ namespace Engine
         renderInfo.pColorAttachmentFormats = &colorAttachmentFormat;
     }
 
-    void PipelineBuilder::SetDepthFormat(VkFormat format)
+    void GraphicsPipelineBuilder::SetDepthFormat(VkFormat format)
     {
         renderInfo.depthAttachmentFormat = format;
     }
 
-    void PipelineBuilder::DisableDepthTest()
+    void GraphicsPipelineBuilder::DisableDepthTest()
     {
         depthStencil.depthTestEnable = VK_FALSE;
         depthStencil.depthWriteEnable = VK_FALSE;
@@ -130,7 +130,7 @@ namespace Engine
         depthStencil.maxDepthBounds = 1.f;
     }
 
-    void PipelineBuilder::EnableDepthTest(bool depthWriteEnable, VkCompareOp depthCompareOp)
+    void GraphicsPipelineBuilder::EnableDepthTest(bool depthWriteEnable, VkCompareOp depthCompareOp)
     {
         depthStencil.depthTestEnable = VK_TRUE;
         depthStencil.depthWriteEnable = depthWriteEnable;
@@ -143,7 +143,7 @@ namespace Engine
         depthStencil.maxDepthBounds = 1.f;
     }
 
-    VkPipeline PipelineBuilder::BuildPipeline(VkDevice device)
+    VkPipeline GraphicsPipelineBuilder::BuildPipeline(VkDevice device)
     {
         VkPipelineViewportStateCreateInfo viewportState = {};
         viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;

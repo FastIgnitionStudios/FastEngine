@@ -87,6 +87,6 @@ namespace Engine
         computePipeline.stage = stageInfo;
 
         VK_CHECK(vkCreateComputePipelines(initInfo.Device, VK_NULL_HANDLE, 1, &computePipeline, nullptr, &GradientPipeline));
-
+        
     }
 }

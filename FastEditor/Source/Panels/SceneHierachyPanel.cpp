@@ -21,23 +21,7 @@ namespace Engine
     void SceneHierarchyPanel::OnImGuiRender()
     {
         ImGui::Begin("Scene Hierarchy", 0, ImGuiWindowFlags_MenuBar);
-        if (ImGui::BeginMenuBar())
-        {
-            if (ImGui::BeginMenu("+"))
-            {
-                for (auto comp : Scene::GetRegisteredComponents())
-                {
-                    if (comp.first == "NameComponent" || comp.first == "TransformComponent" || comp.first == "IDComponent") continue;
-                    if (ImGui::MenuItem(comp.first.c_str()))
-                    {
-                        auto newEntity = SceneContext->CreateEntity(comp.first);
-                        comp.second(SceneContext->Registry, newEntity);
-                    }
-                }
-                ImGui::EndMenu();
-            }
-            ImGui::EndMenuBar();
-        }
+        DrawHierarchyMenuBar();
         auto view = SceneContext->Registry.view<NameComponent>();
         for (auto entityID : view)
         {
@@ -48,14 +32,36 @@ namespace Engine
 
         ImGui::End();
 
-        ImGui::Begin("Properties");
+        ImGui::Begin("Properties", 0, ImGuiWindowFlags_MenuBar);
 
         if (SelectedEntity)
         {
+            DrawPropertiesMenuBar(SelectedEntity);
             DrawComponents(SelectedEntity);
         }
 
         ImGui::End();
+    }
+
+    void SceneHierarchyPanel::DrawHierarchyMenuBar()
+    {
+        if (ImGui::BeginMenuBar())
+        {
+            if (ImGui::BeginMenu("+"))
+            {
+                for (auto comp : Scene::GetRegisteredComponents())
+                {
+                    if (comp.ComponentName == "NameComponent" || comp.ComponentName == "TransformComponent" || comp.ComponentName == "IDComponent") continue;
+                    if (ImGui::MenuItem(comp.ComponentName.c_str()))
+                    {
+                        auto newEntity = SceneContext->CreateEntity(comp.ComponentName);
+                        comp.Constructor(SceneContext->Registry, newEntity);
+                    }
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenuBar();
+        }
     }
 
     void SceneHierarchyPanel::DrawEntityNode(Entity entity)
@@ -122,5 +128,31 @@ namespace Engine
             ImGui::SameLine();
             ImGui::DragFloat3("Scale", value_ptr(scale), 0.1f);
         });
+
+        DrawComponent<MiscComponent>("Misc", entity, [](MiscComponent& comp)
+        {
+            
+        });
+    }
+
+    void SceneHierarchyPanel::DrawPropertiesMenuBar(Entity entity)
+    {
+        if (ImGui::BeginMenuBar())
+        {
+            if (ImGui::BeginMenu("+"))
+            {
+                for (auto comp : Scene::GetRegisteredComponents())
+                {
+                    if (!comp.EntityHasComponent(SceneContext->Registry, SelectedEntity))
+                    {
+                        if (ImGui::MenuItem(comp.ComponentName.c_str()))
+                            comp.Constructor(SceneContext->Registry, SelectedEntity);
+                    }
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenuBar();
+        }
+       
     }
 }

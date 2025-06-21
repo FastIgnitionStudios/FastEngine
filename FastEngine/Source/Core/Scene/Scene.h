@@ -20,6 +20,13 @@ namespace Engine
 {
     class Entity;
 
+    struct RegisteredComponent
+    {
+        std::string ComponentName;
+        std::function<void(entt::registry&, entt::entity)> Constructor;
+        std::function<bool(entt::registry&, entt::entity)> EntityHasComponent;
+    };
+
     class Scene : public Engine
     {
     public:
@@ -38,18 +45,28 @@ namespace Engine
         template <typename T, typename... Args>
         static bool RegisterComponentDeferred(Args&&... args)
         {
-           GetRegisteredComponents()[std::string(GetClassName<T>())] = [&](entt::registry& reg, entt::entity entity)
+            auto& comps = GetRegisteredComponents();
+            RegisteredComponent registat{};
+            registat.ComponentName = GetClassName<T>();
+            registat.Constructor = [&](entt::registry& registry, entt::entity entity)
             {
-                reg.emplace<T>(entity, std::forward<Args>(args)...);
+                registry.emplace<T>(entity, std::forward<Args>(args)...);
             };
+            registat.EntityHasComponent = [&](entt::registry& registry, entt::entity entity)
+            {
+                return registry.any_of<T>(entity);
+            };
+            comps.push_back(registat);
             return true;
         }
+        
 
-        static std::map<std::string, std::function<void(entt::registry&, entt::entity)>>& GetRegisteredComponents()
+        static std::vector<RegisteredComponent>& GetRegisteredComponents()
         {
-            static std::map<std::string, std::function<void(entt::registry&, entt::entity)>> RegisteredComponents;
+            static std::vector<RegisteredComponent> RegisteredComponents;
             return RegisteredComponents;
         }
+        
 
         Entity GetEntityByTag(const std::string& tag);
 

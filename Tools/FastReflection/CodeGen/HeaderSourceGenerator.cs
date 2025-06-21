@@ -55,6 +55,11 @@ namespace FastReflection.CodeGen
                 sb.AppendLine();
                 sb.AppendLine(
                     $"// Reflection macro for: {reflectedClass.Name} in namespace: {reflectedClass.Namespace}");
+
+                sb.AppendLine($"#undef RGENERATED()");
+                sb.AppendLine($"#define RGENERATED() public: \\");
+                sb.AppendLine($"    static constexpr const char* GetClassName() {{ return \"{reflectedClass.Name}\"; }} \\");
+
             }
             
             var outputPath = Path.Combine(outputDir, $"{sourceFile.Split("\\").Last().Split(".").First()}_RGen.h");
@@ -65,6 +70,7 @@ namespace FastReflection.CodeGen
         {
             var sb = new StringBuilder();
             foreach (var reflectedClass in classesInFile.classes)
+                
             {
                 
 
@@ -117,7 +123,7 @@ namespace FastReflection.CodeGen
 
                 sb.AppendLine(
                     $"static RegisterObjectDeferred init_{reflectedClass.Name} = RegisterObjectDeferred(&ObjectInitializer_{reflectedClass.Name}::objectInfo[0]);");
-
+                
             }
             
             var outputPath = Path.Combine(outputDir, $"{sourceFile.Split("\\").Last().Split(".").First()}_RGen.cpp");

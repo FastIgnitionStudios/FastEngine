@@ -49,7 +49,7 @@ namespace Engine
         opaquePipeline.pipelineLayout = newLayout;
         transparentPipeline.pipelineLayout = newLayout;
 
-        PipelineBuilder pipelineBuilder;
+        GraphicsPipelineBuilder pipelineBuilder;
         pipelineBuilder.SetShaders(meshVertShader, meshFragShader);
         pipelineBuilder.SetInputTopology(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
         pipelineBuilder.SetPolygonMode(VK_POLYGON_MODE_FILL);

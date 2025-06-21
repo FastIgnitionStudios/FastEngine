@@ -47,8 +47,17 @@ namespace Engine
 
         VkPipeline GradientPipeline;
         VkPipelineLayout GradientPipelineLayout;
-
         
-    
     };
+    // TODO: Add Compute shader builder and create Compute API to easily run code on the GPU - EXTRA: Use async-compute to optimise graphics/compute rendering
+    // class ComputePipelineBuilder
+    // {
+    // public:
+    //
+    //     ComputePipelineBuilder() { Clear(); }
+    //     
+    //     void Clear();
+    //     void SetComputeShader(VkShaderModule shaderModule);
+    //     
+    // };
 }

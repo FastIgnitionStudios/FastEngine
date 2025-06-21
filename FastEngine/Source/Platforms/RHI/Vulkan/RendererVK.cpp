@@ -680,7 +680,7 @@ namespace Engine
             vkCreatePipelineLayout(Ref<DeviceVK>(Device)->GetDevice(), &meshPipelineLayoutInfo, nullptr, &
                 meshPipelineLayout));
 
-        PipelineBuilder meshPipelineBuilder;
+        GraphicsPipelineBuilder meshPipelineBuilder;
 
         meshPipelineBuilder.pipelineLayout = meshPipelineLayout;
 

@@ -7,7 +7,7 @@ namespace Engine
 {
     static VkPipelineShaderStageCreateInfo CreateShaderStageInfo(VkShaderStageFlagBits stage, VkShaderModule module);
     
-    class PipelineBuilder
+    class GraphicsPipelineBuilder
     {
     public:
         std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
@@ -21,7 +21,7 @@ namespace Engine
         VkPipelineRenderingCreateInfo renderInfo;
         VkFormat colorAttachmentFormat;
 
-        PipelineBuilder() { Clear(); }
+        GraphicsPipelineBuilder() { Clear(); }
 
         void Clear();
         void SetShaders(VkShaderModule vertexShader, VkShaderModule fragmentShader);

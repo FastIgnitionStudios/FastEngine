@@ -18,6 +18,7 @@ namespace Engine
         void OnImGuiRender();
 
 
+
         template <typename T>
         static void DrawComponent(std::string name, Entity entity, std::function<void(T&)> func)
         {
@@ -47,10 +48,14 @@ namespace Engine
     private:
         void DrawComponents(Entity entity);
         void DrawEntityNode(Entity entity);
+        void DrawPropertiesMenuBar(Entity entity);
+        void DrawHierarchyMenuBar();
+        
 
         Ref<Scene> SceneContext;
         Entity SelectedEntity{};
         
         
     };
+    
 }
