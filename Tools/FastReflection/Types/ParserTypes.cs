@@ -27,6 +27,12 @@ namespace FastReflection.Types
         public List<string> Flags { get; set; } = new();
         public string SourceFile { get; set; }
         
+        public int MacroLineNumber { get; set; }
+        
+        public int ClassLineNumber { get; set; }
+        
+        public int GeneratedLineNumber { get; set; }
+        
     }
 
     public class ReflectedProperty

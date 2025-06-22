@@ -19,6 +19,8 @@ namespace FastReflection.CodeGen
 
         public void GenerateHeaderFile(SourceFile classesInFile, string outputDir, string sourceFile = "")
         {
+            var fileId = sourceFile.Replace("\\", "_").Split("FastEngine").Last().Split('.').First();
+            fileId = fileId.Remove(0, 1);
             var sb = new StringBuilder();
             
             foreach (var reflectedClass in classesInFile.classes)
@@ -47,20 +49,24 @@ namespace FastReflection.CodeGen
                 sb.AppendLine();
 
 
+                sb.AppendLine(
+                    $"#define {fileId}_{reflectedClass.GeneratedLineNumber}_RGENERATED");
+
                 if (!string.IsNullOrEmpty(reflectedClass.Namespace))
                 {
                     sb.AppendLine("}");
                 }
 
                 sb.AppendLine();
-                sb.AppendLine(
-                    $"// Reflection macro for: {reflectedClass.Name} in namespace: {reflectedClass.Namespace}");
 
-                sb.AppendLine($"#undef RGENERATED()");
-                sb.AppendLine($"#define RGENERATED() public: \\");
-                sb.AppendLine($"    static constexpr const char* GetClassName() {{ return \"{reflectedClass.Name}\"; }} \\");
-
+                
             }
+            
+            sb.AppendLine(
+                $"// Reflection macro for: {sourceFile}");
+
+            sb.AppendLine($"#undef CURRENT_FILE_ID");
+            sb.AppendLine($"#define CURRENT_FILE_ID {fileId}");
             
             var outputPath = Path.Combine(outputDir, $"{sourceFile.Split("\\").Last().Split(".").First()}_RGen.h");
             File.WriteAllText(outputPath, sb.ToString());
@@ -115,14 +121,14 @@ namespace FastReflection.CodeGen
 
                 sb.AppendLine();
                 sb.AppendLine($"struct ObjectInitializer_{reflectedClass.Name} {{");
-                sb.AppendLine($"    static constexpr ObjectDeferredInitInfo objectInfo[] = {{{{");
+                sb.AppendLine($"    static constexpr ObjectDeferredInitInfo objectInfo = {{");
                 sb.AppendLine($"        {reflectedClass.Namespace}::ConstructClass_Type_{reflectedClass.Name},");
                 sb.AppendLine($"        \"{reflectedClass.Name}\"");
-                sb.AppendLine($"    }},}};");
+                sb.AppendLine($"    }};");
                 sb.AppendLine($"}};");
 
                 sb.AppendLine(
-                    $"static RegisterObjectDeferred init_{reflectedClass.Name} = RegisterObjectDeferred(&ObjectInitializer_{reflectedClass.Name}::objectInfo[0]);");
+                    $"static RegisterObjectDeferred init_{reflectedClass.Name} = RegisterObjectDeferred(&ObjectInitializer_{reflectedClass.Name}::objectInfo);");
                 
             }
             

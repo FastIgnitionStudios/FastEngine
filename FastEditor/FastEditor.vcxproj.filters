@@ -51,6 +51,9 @@
     <ClInclude Include="Source\Panels\SceneHierachyPanel.h">
       <Filter>Source\Panels</Filter>
     </ClInclude>
+    <ClInclude Include="Source\PropertyTypes.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Intermediate\Generated\Components_RGen.cpp">
@@ -70,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="Source\Panels\SceneHierachyPanel.cpp">
       <Filter>Source\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PropertyTypes.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

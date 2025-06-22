@@ -238,8 +238,12 @@ private:
 #define REGISTER_COMPONENT()
 #endif
 
+#define CONCATENATE_IMPL(x, y, z, w) x##y##z##w
+#define CONCATENATE(x, y, z, w) CONCATENATE_IMPL(x, y, z, w)
+
 // for implementing generated code inside native class's/structs
-#define RGENERATED()
+#define RGENERATED() CONCATENATE(CURRENT_FILE_ID,_,__LINE__,_RGENERATED)
+#define CURRENT_FILE_ID
 
 // Define macros for FastReflection parser
 

@@ -39,11 +39,22 @@ namespace FastReflection.Parsers
             {
                 var reflectedClass = new ReflectedClass
                 {
+                    MacroLineNumber = lines.FindIndex(x => x.Contains(match.Groups[4].Value)),
+                    ClassLineNumber = lines.FindIndex(x => x.Contains(match.Groups[4].Value)) + 1,
                     MacroType = match.Groups[1].Value,
                     ClassType = match.Groups[3].Value.Trim(),
                     Name = match.Groups[4].Value,
                     SourceFile = filePath
                 };
+
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    if (lines[i].Contains("RGENERATED") && i > reflectedClass.MacroLineNumber)
+                    {
+                        reflectedClass.GeneratedLineNumber = i + 1;
+                        break;
+                    }
+                }
                 
                 // Parse namespace
                 for (int i = lines.FindIndex(s => s.Contains(match.Groups[3].Value + " " + match.Groups[4].Value)); i >= 0; i--)
@@ -113,6 +124,7 @@ namespace FastReflection.Parsers
         {
             var propertyMatches = Regex.Matches(classBody, @"RPROPERTY\s*\(\s*([^)]*)\s*\)\s*([^;]+)\s+(\w+)\s*;",
                 RegexOptions.Multiline);
+            
 
             foreach (Match match in propertyMatches)
             {
@@ -152,7 +164,7 @@ namespace FastReflection.Parsers
                         }
                     }
                 }
-
+                
                 reflectedClass.Methods.Add(method);
             }
         }

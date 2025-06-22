@@ -128,11 +128,7 @@ namespace Engine
             ImGui::SameLine();
             ImGui::DragFloat3("Scale", value_ptr(scale), 0.1f);
         });
-
-        DrawComponent<MiscComponent>("Misc", entity, [](MiscComponent& comp)
-        {
-            
-        });
+        
     }
 
     void SceneHierarchyPanel::DrawPropertiesMenuBar(Entity entity)

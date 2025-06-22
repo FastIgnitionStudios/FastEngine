@@ -147,6 +147,7 @@
     <ClInclude Include="Source\EditorLayer.h" />
     <ClInclude Include="Source\ObjectTypes.h" />
     <ClInclude Include="Source\Panels\SceneHierachyPanel.h" />
+    <ClInclude Include="Source\PropertyTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Intermediate\Generated\Components_RGen.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="Source\EditorLayer.cpp" />
     <ClCompile Include="Source\ObjectTypes.cpp" />
     <ClCompile Include="Source\Panels\SceneHierachyPanel.cpp" />
+    <ClCompile Include="Source\PropertyTypes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FastEngine\FastEngine.vcxproj">
